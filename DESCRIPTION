@@ -5,9 +5,26 @@ Authors@R: person('Javier', 'Gracia-Tabuenca', email = 'javier.graciatabuenca@tu
 Description: Shiny App to run operate cohorts
 License: What license is it under?
 Imports: 
+    attempt,
+    bigrquery,
+    CDMTools,
     config,
+    DT,
+    FinnGenTableTypes,
+    glue,
     golem,
-    shiny
+    htmltools,
+    processx,
+    shiny,
+    shinydashboard,
+    toastui
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.1.1
+Suggests: 
+    spelling,
+    testthat (>= 3.0.0)
+Config/testthat/edition: 3
+Language: en-US
+Depends: 
+    R (>= 2.10)
