@@ -61,7 +61,7 @@ app_ui <- function(request) {
 modal_import_cohorts <- function(){modalDialog(
   size = "l",
   title = "Import cohorts",
-  footer = modalButton("Cancel"),
+  footer = NULL,
   easyClose = FALSE,
   #
   tabsetPanel(
@@ -69,14 +69,11 @@ modal_import_cohorts <- function(){modalDialog(
     # panel FILE
     tabPanel("from File",
              h2("This is possible if file in cohortTable format"),
-             mod_import_cohort_file_ui("in_modal_import_cohorts")
+             mod_import_cohort_file_ui("in_modal_import_file")
     ),
     # panel ATLAS
     tabPanel("from Atlas",
-             selectInput('importcohorts_import_atlas_si', 'Select CDM-database:',
-                         c("DF8", "DF7", "DF6")),
-             #DT::renderDataTable(mock_atlas_cohorts),
-             actionButton("importcohorts_import_atlas_import_b", "Import Selected")
+             mod_import_cohort_atlas_ui("in_modal_import_atlas")
     ),
     # panel ENDPOINT
     tabPanel("from Endploint",

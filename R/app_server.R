@@ -8,10 +8,13 @@ app_server <- function(input, output, session) {
   # Your application server logic
 
   # INFO connection tab ---------------------------------------------
-  r <- reactiveValues(cdm_webapi_conn = configCDMTools())
+  r_conn <- reactiveValues(cdm_webapi_conn = configCDMTools())
+  r_cohorts <- reactiveValues(
+    cohortData = FinnGenTableTypes::empty_cohortData()
+  )
 
   output$info_connstatus_dg <- toastui::renderDatagrid({
-    r$cdm_webapi_conn$conn_status_tibble  %>%
+    r_conn$cdm_webapi_conn$conn_status_tibble  %>%
       select(error, step, message) %>%
       mutate(step = str_replace(step, "Test c", "C")) %>%
       toastui::datagrid(
@@ -35,23 +38,30 @@ app_server <- function(input, output, session) {
   })
 
   shiny::observeEvent(input$info_connstatus_refresh_b,{
-    r$cdm_webapi_conn <- configCDMTools()
+    r_conn$cdm_webapi_conn <- configCDMTools()
   })
 
 
   # IMPORT tab ---------------------------------------------
-  r2 <- reactiveValues(
-    cohortData = FinnGenTableTypes::empty_cohortData()
-    )
 
+  mod_import_cohort_file_server("in_modal_import_file", r_cohorts)
 
-  rf <-  mod_import_cohort_file_server("in_modal_import_cohorts")
+  mod_import_cohort_atlas_server("in_modal_import_atlas", r_conn, r_cohorts)
 
   output$importcohorts_cohorts_dg <- toastui::renderDatagrid({
-   rf() %>%
-    #r2$cohortData %>%
+
+
+    FinnGenTableTypes::is_cohortData(r_cohorts$cohortData, verbose = TRUE)
+
+     r_cohorts$cohortData %>%
+    #r_cohorts$cohortData %>%
       FinnGenTableTypes::summarise_cohortData() %>%
-      FinnGenTableTypes::table_summarycohortData(display_mode = "duration" )
+      FinnGenTableTypes::table_summarycohortData(display_mode = "duration" ) %>%
+      toastui::grid_selection_row(
+        inputId = "sel_check",
+        type = "checkbox",
+        return = "index"
+      )
   })
 
 

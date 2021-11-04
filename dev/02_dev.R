@@ -21,12 +21,16 @@ usethis::use_package( "shinydashboard" )
 usethis::use_package( "toastui" )
 usethis::use_package( "bigrquery" )
 usethis::use_package( "FinnGenTableTypes" )
+usethis::use_package("shinyWidgets")
 
 ## Add modules ----
 ## Create a module infrastructure in R/
 golem::add_module( name = "info_box" )
 #golem::add_module( name = "name_of_module2" ) # Name of the module
 golem::add_module( name = "import_cohort_file" )
+golem::add_module( name = "import_cohort_atlas" )
+
+
 
 ## Add helper functions ----
 ## Creates fct_* and utils_*
