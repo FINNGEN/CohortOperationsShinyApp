@@ -38,17 +38,19 @@ app_ui <- function(request) {
           shinydashboard::tabItem(
             tabName = "info",
             includeMarkdown(app_sys("app/info_md/info_main_page.md")),
-            h6("Connection status:"),
-            toastui::datagridOutput("info_connstatus_dg"),
-            shiny::actionButton("info_connstatus_refresh_b", "Reconnect")
+            tags$b("Connection status:"),
+            mod_connection_to_db_ui("mod_connection_to_db")
+
           ),
           ## Import Cohorts
-          shinydashboard::tabItem(tabName = "importcohorts",
-                  toastui::datagridOutput(outputId = "importcohorts_cohorts_dg"),
-                  #
-                  shiny::actionButton("importcohorts_import_b", "Import"), # calls modal_import_cohorts
-                  shiny::actionButton("importcohorts_delete_b", "Delete"),
-                  shiny::actionButton("importcohorts_save_b", "Save Cohorts"),
+          shinydashboard::tabItem(
+            tabName = "importcohorts",
+            mod_import_cohorts_ui("mod_import_cohorts"),
+          ),
+          ## Operate Cohorts
+          shinydashboard::tabItem(
+            tabName = "operatecohorts",
+            mod_operate_cohorts_ui("mod_operate_cohorts")
           )
         )
       )
@@ -56,31 +58,6 @@ app_ui <- function(request) {
   )
 }
 
-
-# MODAL called by importcohorts_import_b
-modal_import_cohorts <- function(){modalDialog(
-  size = "l",
-  title = "Import cohorts",
-  footer = NULL,
-  easyClose = FALSE,
-  #
-  tabsetPanel(
-    type = "tabs",
-    # panel FILE
-    tabPanel("from File",
-             h2("This is possible if file in cohortTable format"),
-             mod_import_cohort_file_ui("in_modal_import_file")
-    ),
-    # panel ATLAS
-    tabPanel("from Atlas",
-             mod_import_cohort_atlas_ui("in_modal_import_atlas")
-    ),
-    # panel ENDPOINT
-    tabPanel("from Endploint",
-             h2("Possible if endpoint results in a BQ database in cohortTable format ")
-    )
-  )
-)}
 
 #' Add external Resources to the Application
 #'

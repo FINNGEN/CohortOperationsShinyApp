@@ -45,6 +45,6 @@ configCDMTools <- function() {
     connection_details = connection_details
   )
 
-  print(cdm_webapi_conn)
+  #print(cdm_webapi_conn)
   return(cdm_webapi_conn)
 }

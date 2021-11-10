@@ -22,13 +22,20 @@ usethis::use_package( "toastui" )
 usethis::use_package( "bigrquery" )
 usethis::use_package( "FinnGenTableTypes" )
 usethis::use_package("shinyWidgets")
+usethis::use_package("shinyjqui")
+usethis::use_package("shinycssloaders")
 
 ## Add modules ----
 ## Create a module infrastructure in R/
 golem::add_module( name = "info_box" )
 #golem::add_module( name = "name_of_module2" ) # Name of the module
+golem::add_module( name = "connection_to_db" )
+#
+golem::add_module( name = "import_cohorts" )
 golem::add_module( name = "import_cohort_file" )
 golem::add_module( name = "import_cohort_atlas" )
+#
+golem::add_module( name = "operate_cohorts" )
 
 
 
@@ -50,7 +57,8 @@ usethis::use_data_raw( name = "testing_data", open = FALSE )
 
 ## Tests ----
 ## Add one line by test you want to create
-#usethis::use_test( "app" )
+usethis::use_test( "mod_import_cohort_file" )
+usethis::use_test("mod_import_cohorts")
 
 # Documentation
 
@@ -70,7 +78,7 @@ usethis::use_data_raw( name = "testing_data", open = FALSE )
 ## service for your application
 ##
 ## (You'll need GitHub there)
-usethis::use_github()
+usethis::use_github(organisation = "FINNGEN", private = TRUE)
 
 # GitHub Actions
 #usethis::use_github_action()

@@ -25,7 +25,7 @@ mod_import_cohort_file_ui <- function(id){
 #' import_cohort_file Server Functions
 #'
 #' @noRd
-mod_import_cohort_file_server <- function(id, main){
+mod_import_cohort_file_server <- function(id, r_cohorts){
   moduleServer( id, function(input, output, session){
     ns <- session$ns
 
@@ -33,64 +33,141 @@ mod_import_cohort_file_server <- function(id, main){
     # reactive variables
     #
     r <- reactiveValues(
+      tmp_file = NULL,
       imported_cohortData = NULL,
+      selected_cohortData = NULL,
       asked_intersect_names = NULL
     )
 
     #
+    #just pass the info to make it writable
+    #
+    observe({r$tmp_file <- input$file_fi})
+
+    #
     # updates output$cohorts_reactable with uploaded file
     #
-    observeEvent(input$file_fi, {
-      file <- input$file_fi
-      ext <- tools::file_ext(file$datapath)
+    output$cohorts_reactable <- reactable::renderReactable({
+      req(r$tmp_file)
+      ext <- tools::file_ext(r$tmp_file$datapath)
 
-      req(file)
+      validate(need(ext == "tsv", "Uploaded file is not a tabular-separated-values (.tsv) file. Please upload a tsv file."))
 
-      # update reactable or error
-      output$cohorts_reactable <- reactable::renderReactable({
+      tmp_imported_file <- read_tsv(r$tmp_file$datapath, show_col_types = FALSE)
 
-        validate(need(ext == "tsv", "Uploaded file is not a tabular-separated-values (.tsv) file. Please upload a tsv file."))
+      is_cohortData_message <- tryCatch(
+        {as.character(FinnGenTableTypes::is_cohortData(tmp_imported_file, verbose = TRUE))}, message = function(m){m$message}
+      )
 
-        tmp_imported_file <- read_tsv(file$datapath, show_col_types = FALSE)
+      validate(
+        need(is_cohortData_message=="TRUE",
+             str_c("Uploaded tsv file is not in cohortData format.\n These are the reasons: \n", is_cohortData_message))
+      )
 
-        is_cohortData_message <- tryCatch(
-          {as.character(FinnGenTableTypes::is_cohortData(tmp_imported_file, verbose = TRUE))}, message = function(m){m$message}
-        )
+      r$imported_cohortData <- tmp_imported_file
 
-        validate(
-          need(is_cohortData_message=="TRUE",
-               str_c("Uploaded tsv file is not in cohortData format.\n These are the reasons: \n", is_cohortData_message))
-        )
+      # output reactable
+      r$imported_cohortData %>%
+        distinct(COHORT_NAME, COHORT_SOURCE, COHORT_DATAFREEZE) %>%
+        select(COHORT_NAME, COHORT_SOURCE, COHORT_DATAFREEZE) %>%
+        reactable::reactable(
+          selectionId = ns("selected_index"), selection = "multiple", onClick = "select",
+          searchable = TRUE)
+    })
 
-        r$imported_cohortData <- tmp_imported_file
+    #
+    # button import selected: checks selected cohorts
+    #
+    observeEvent(input$import_b, {
 
+      req(input$selected_index)
+
+      r$selected_cohortData <- semi_join(
+        r$imported_cohortData,
         r$imported_cohortData %>%
           distinct(COHORT_NAME, COHORT_SOURCE, COHORT_DATAFREEZE) %>%
-          reactable::reactable(
-            selectionId = ns("selected_index"), selection = "multiple", onClick = "select",
-            searchable = TRUE)
+          slice(input$selected_index),
+        by = c("COHORT_DATAFREEZE", "COHORT_SOURCE", "COHORT_NAME")
+      )
+
+      # ask if existing cohorts should be replaced
+      intersect_names <- inner_join(
+        r_cohorts$cohortData %>% distinct(COHORT_DATAFREEZE, COHORT_SOURCE, COHORT_NAME),
+        r$selected_cohortData %>% distinct(COHORT_DATAFREEZE, COHORT_SOURCE, COHORT_NAME),
+        by = c("COHORT_DATAFREEZE", "COHORT_SOURCE", "COHORT_NAME")
+      ) %>%
+        mutate(name = str_c(COHORT_DATAFREEZE, COHORT_SOURCE, COHORT_NAME, sep = " ")) %>%
+        pull(name)
 
 
+      if(length(intersect_names)>0){
+        shinyWidgets::confirmSweetAlert(
+          session = session,
+          inputId = "asked_intersect_names_alert",
+          type = "question",
+          title = "Some selected cohorts had been alredy imported:",
+          text = HTML("The following cohorts had been alredy imported: <ul>",
+                      str_c(str_c("<li> ", intersect_names, "</li>"), collapse = ""),
+                      "</ul> Should these be replaced or ignored."),
+          btn_labels = c("Not-import", "Replace"),
+          html = TRUE
+        )
+      }else{
+        r$asked_intersect_names <- TRUE
+      }
 
-      })
+    })
+
+    # just pass the info to make it writable
+    observe({r$asked_intersect_names <- input$asked_intersect_names_alert})
+
+    #
+    # confirmSweetAlert asked_intersect_names
+    #
+    observeEvent(r$asked_intersect_names, {
+      # take names from main and imported
+      intersect_names <- inner_join(
+        r_cohorts$cohortData %>% distinct(COHORT_DATAFREEZE, COHORT_SOURCE, COHORT_NAME),
+        r$selected_cohortData %>% distinct(COHORT_DATAFREEZE, COHORT_SOURCE, COHORT_NAME),
+        by = c("COHORT_DATAFREEZE", "COHORT_SOURCE", "COHORT_NAME")
+      )
+
+      if(r$asked_intersect_names){
+        r_cohorts$cohortData <- anti_join(
+          r_cohorts$cohortData,
+          intersect_names,
+          by = c("COHORT_DATAFREEZE", "COHORT_SOURCE", "COHORT_NAME")
+        )
+      }else{
+        r$selected_cohortData <- anti_join(
+          r$selected_cohortData,
+          intersect_names,
+          by = c("COHORT_DATAFREEZE", "COHORT_SOURCE", "COHORT_NAME")
+        )
+      }
+
+      r_cohorts$cohortData <- bind_rows(
+        r_cohorts$cohortData,
+        r$selected_cohortData
+      )
+      .close_and_reset()
+    })
+
+    #
+    # button cancel selected: close modal
+    #
+    observeEvent(input$cancel_b, {
+      .close_and_reset()
     })
 
 
-
-    # on import_b click
-    observeEvent(input$import_b, {
-      main$cohortData <- r$uploaded_cohortData %>%
-        filter(COHORT_NAME %in% input$import_picker)
-      # r_imported_cohortData$summaryCohortData <- r_imported_cohortData$imported_cohortData %>%
-      #   FinnGenTableTypes::summarise_cohortData()
-
-      r$uploaded_cohortData <- FinnGenTableTypes::empty_cohortData()
-      r$filtered_cohortData <- FinnGenTableTypes::empty_cohortData()
-      output$picker_ui <- NULL
+    .close_and_reset <- function(){
+      r$tmp_file <- NULL
+      r$imported_cohortData <-  NULL
+      r$selected_cohortData <-  NULL
+      r$asked_intersect_names <- NULL
       removeModal()
-    })
-
-    #return(reactive(r$filtered_cohortData))
+    }
 
   })
 }

@@ -132,7 +132,7 @@ mod_import_cohort_atlas_server <- function(id, r_conn, r_cohorts){
         transmute(
           COHORT_DATAFREEZE="DF0",
           COHORT_SOURCE = "Atlas",
-          COHORT_NAME = cohort_name,
+          COHORT_NAME = str_replace_all(cohort_name, "[:blank:]", "_"),
           FINNGENID = finngenid,
           COHORT_START_DATE = cohort_start_date,
           COHORT_END_DATE = cohort_end_date,
