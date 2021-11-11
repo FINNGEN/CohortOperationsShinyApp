@@ -57,8 +57,10 @@ usethis::use_data_raw( name = "testing_data", open = FALSE )
 
 ## Tests ----
 ## Add one line by test you want to create
-usethis::use_test( "mod_import_cohort_file" )
+usethis::use_test("mod_connection_to_db")
+#
 usethis::use_test("mod_import_cohorts")
+usethis::use_test( "mod_import_cohort_file" )
 
 # Documentation
 

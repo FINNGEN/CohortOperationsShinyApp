@@ -7,6 +7,7 @@
 #' @noRd
 #'
 #' @importFrom shiny NS tagList
+#' @import readr
 mod_import_cohort_file_ui <- function(id){
   ns <- NS(id)
   tagList(
@@ -15,7 +16,8 @@ mod_import_cohort_file_ui <- function(id){
               multiple = FALSE,
               accept = c("text/tsv","text/tabular-separated-values,text/plain",".tsv")
     ),
-    reactable::reactableOutput(ns("cohorts_reactable")),
+    reactable::reactableOutput(ns("cohorts_reactable")) %>%
+      shinycssloaders::withSpinner(proxy.height = "200px"),
     hr(),
     actionButton(ns("import_b"), "Import Selected"),
     actionButton(ns("cancel_b"), "Cancel")
@@ -68,8 +70,8 @@ mod_import_cohort_file_server <- function(id, r_cohorts){
 
       # output reactable
       r$imported_cohortData %>%
-        distinct(COHORT_NAME, COHORT_SOURCE, COHORT_DATAFREEZE) %>%
-        select(COHORT_NAME, COHORT_SOURCE, COHORT_DATAFREEZE) %>%
+        distinct(COHORT_NAME, COHORT_SOURCE) %>%
+        select(COHORT_NAME, COHORT_SOURCE) %>%
         reactable::reactable(
           selectionId = ns("selected_index"), selection = "multiple", onClick = "select",
           searchable = TRUE)
@@ -85,18 +87,18 @@ mod_import_cohort_file_server <- function(id, r_cohorts){
       r$selected_cohortData <- semi_join(
         r$imported_cohortData,
         r$imported_cohortData %>%
-          distinct(COHORT_NAME, COHORT_SOURCE, COHORT_DATAFREEZE) %>%
+          distinct(COHORT_NAME, COHORT_SOURCE) %>%
           slice(input$selected_index),
-        by = c("COHORT_DATAFREEZE", "COHORT_SOURCE", "COHORT_NAME")
+        by = c("COHORT_SOURCE", "COHORT_NAME")
       )
 
       # ask if existing cohorts should be replaced
       intersect_names <- inner_join(
-        r_cohorts$cohortData %>% distinct(COHORT_DATAFREEZE, COHORT_SOURCE, COHORT_NAME),
-        r$selected_cohortData %>% distinct(COHORT_DATAFREEZE, COHORT_SOURCE, COHORT_NAME),
-        by = c("COHORT_DATAFREEZE", "COHORT_SOURCE", "COHORT_NAME")
+        r_cohorts$cohortData %>% distinct(COHORT_SOURCE, COHORT_NAME),
+        r$selected_cohortData %>% distinct(COHORT_SOURCE, COHORT_NAME),
+        by = c("COHORT_SOURCE", "COHORT_NAME")
       ) %>%
-        mutate(name = str_c(COHORT_DATAFREEZE, COHORT_SOURCE, COHORT_NAME, sep = " ")) %>%
+        mutate(name = str_c(COHORT_SOURCE, COHORT_NAME, sep = " ")) %>%
         pull(name)
 
 
@@ -127,22 +129,28 @@ mod_import_cohort_file_server <- function(id, r_cohorts){
     observeEvent(r$asked_intersect_names, {
       # take names from main and imported
       intersect_names <- inner_join(
-        r_cohorts$cohortData %>% distinct(COHORT_DATAFREEZE, COHORT_SOURCE, COHORT_NAME),
-        r$selected_cohortData %>% distinct(COHORT_DATAFREEZE, COHORT_SOURCE, COHORT_NAME),
-        by = c("COHORT_DATAFREEZE", "COHORT_SOURCE", "COHORT_NAME")
+        r_cohorts$cohortData %>% distinct(COHORT_SOURCE, COHORT_NAME),
+        r$selected_cohortData %>% distinct( COHORT_SOURCE, COHORT_NAME),
+        by = c("COHORT_SOURCE", "COHORT_NAME")
       )
 
       if(r$asked_intersect_names){
+        # remove from main
         r_cohorts$cohortData <- anti_join(
           r_cohorts$cohortData,
           intersect_names,
-          by = c("COHORT_DATAFREEZE", "COHORT_SOURCE", "COHORT_NAME")
+          by = c("COHORT_SOURCE", "COHORT_NAME")
+        )
+        r_cohorts$summaryCohortData <- anti_join(
+          r_cohorts$summaryCohortData,
+          intersect_names,
+          by = c("COHORT_SOURCE", "COHORT_NAME")
         )
       }else{
         r$selected_cohortData <- anti_join(
           r$selected_cohortData,
           intersect_names,
-          by = c("COHORT_DATAFREEZE", "COHORT_SOURCE", "COHORT_NAME")
+          by = c("COHORT_SOURCE", "COHORT_NAME")
         )
       }
 
@@ -150,6 +158,11 @@ mod_import_cohort_file_server <- function(id, r_cohorts){
         r_cohorts$cohortData,
         r$selected_cohortData
       )
+      r_cohorts$summaryCohortData <- bind_rows(
+        r_cohorts$summaryCohortData,
+        FinnGenTableTypes::summarise_cohortData(r$selected_cohortData)
+      )
+
       .close_and_reset()
     })
 
@@ -172,9 +185,12 @@ mod_import_cohort_file_server <- function(id, r_cohorts){
   })
 }
 
-## To be copied in the UI
-# mod_import_cohort_file_ui("import_cohort_file_ui_1")
-
-## To be copied in the server
-# mod_import_cohort_file_server("import_cohort_file_ui_1")
-
+# r_cohorts <- reactiveValues(
+#   cohortData = FinnGenTableTypes::empty_cohortData(),
+#   summaryCohortData = FinnGenTableTypes::summarise_cohortData(FinnGenTableTypes::empty_cohortData())
+# )
+#
+# shinyApp(
+#   fluidPage(mod_import_cohort_file_ui("test")),
+#   function(input,output,session){mod_import_cohort_file_server("test", r_cohorts)}
+# )
