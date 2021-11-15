@@ -18,5 +18,13 @@ dev_no_connection:
   golem_version: 0.0.0.9000
   enviroment: no_connection
   app_prod: no
+dev_sandbox_javier:
+  enviroment: sandbox
+  app_prod: no
+  CDMTOOLS_dbms: bigquery-dbi
+  GCP_PROJECT_ID: finngen-production-library
+  GCP_BILLING_PROJECT_ID: fg-production-sandbox-4
+  CDMTOOLS_webapi_url: https://ohdsi-webapi.app.finngen.fi/WebAPI
+  CDMTOOLS_CDM_source_key_test: FINNGEN_CDM_R7
 dev:
   golem_wd: !expr here::here()

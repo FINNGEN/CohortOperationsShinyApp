@@ -122,14 +122,19 @@ mod_import_cohort_atlas_server <- function(id, r_connection, r_cohorts){
       ## Import cohorts
       sweetAlert_spiner("Importing cohorts")
 
-      r$imported_cohortData <- CDMTools::getCohortData(r_connection$cdm_webapi_conn, selected_cohorts %>% pull(cohort_id)) %>%
+      tmp_r_imported_cohortData <- CDMTools::getCohortData(r_connection$cdm_webapi_conn, selected_cohorts %>% pull(cohort_id))
+      if(get_golem_config("enviroment") == "atlas-development"){
+        tmp_r_imported_cohortData <- tmp_r_imported_cohortData%>%
         #TEMPFIX
         mutate(
           BIRTH_DATE = pmin(BIRTH_DATE, COHORT_START_DATE),
           DEATH_DATE = pmax(DEATH_DATE, COHORT_END_DATE)
         )
+
+        #TEMPFIX
+      }
+      r$imported_cohortData <- tmp_r_imported_cohortData
       #print(FinnGenTableTypes::is_cohortData(r$imported_cohortData, verbose = T))
-      #TEMPFIX
       remove_sweetAlert_spiner()
 
       # ask if existing cohorts should be replaced
