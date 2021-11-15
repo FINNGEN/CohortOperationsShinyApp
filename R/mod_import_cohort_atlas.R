@@ -181,11 +181,6 @@ mod_import_cohort_atlas_server <- function(id, r_connection, r_cohorts){
           intersect_names,
           by = c("COHORT_SOURCE", "COHORT_NAME")
         )
-        r_cohorts$summaryCohortData <- anti_join(
-          r_cohorts$summaryCohortData,
-          intersect_names,
-          by = c("COHORT_SOURCE", "COHORT_NAME")
-        )
       }else{
         r$imported_cohortData <- anti_join(
           r$imported_cohortData,
@@ -198,10 +193,8 @@ mod_import_cohort_atlas_server <- function(id, r_connection, r_cohorts){
         r_cohorts$cohortData,
         r$imported_cohortData
       )
-      r_cohorts$summaryCohortData <- bind_rows(
-        r_cohorts$summaryCohortData,
-        FinnGenTableTypes::summarise_cohortData(r$imported_cohortData)
-      )
+      # re calcualte all, to get the rigth years in dates
+      r_cohorts$summaryCohortData <- FinnGenTableTypes::summarise_cohortData(r_cohorts$cohortData)
 
       .close_and_reset()
     })

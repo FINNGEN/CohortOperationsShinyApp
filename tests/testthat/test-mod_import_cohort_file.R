@@ -95,7 +95,7 @@ test_that("mod_import_cohort_file_server overlaping cohots replaced",{
       )
 
     r_cohorts$summaryCohortData %>% pull(COHORT_NAME) %>%
-       expect_equal(c("B", "C", "A"))
+       expect_equal(c("A", "B", "C"))
 
     r$tmp_file %>% expect_equal(NULL)
     r$imported_cohortData %>% expect_equal(NULL)
