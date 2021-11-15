@@ -15,23 +15,15 @@ app_server <- function(input, output, session) {
   )
 
 
-  mod_connection_to_db_server("mod_connection_to_db", r_connection)
-
-
-  # IMPORT tab ---------------------------------------------
-
-
-
-
-
-
-
 
 
 
 
   # INFO modules ---------------------------------------------
-  #mod_info_box_server("includedConceptsInfo", "test", "info_test.md")
+  mod_connection_to_db_server("mod_connection_to_db", r_connection)
+
+  mod_import_cohorts_server("mod_import_cohorts",r_connection, r_cohorts)
+
   mod_operate_cohorts_server("mod_operate_cohorts", r_cohorts)
 
 

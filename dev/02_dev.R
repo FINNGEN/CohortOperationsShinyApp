@@ -61,6 +61,7 @@ usethis::use_test("mod_connection_to_db")
 #
 usethis::use_test("mod_import_cohorts")
 usethis::use_test( "mod_import_cohort_file" )
+usethis::use_test( "mod_import_cohort_atlas" )
 
 # Documentation
 

@@ -18,12 +18,6 @@ app_ui <- function(request) {
       ## SIDEBAR
       shinydashboard::dashboardSidebar(
         shinydashboard::sidebarMenu(
-
-          # mod_info_box_ui(
-          #   id = "includedConceptsInfo",
-          #   item = shinydashboard::menuItem(text = "test", tabName = "test", icon = icon("info"))
-          # ),
-
           shinydashboard::menuItem("Info", tabName = "info", icon = icon("info")),
           h4("Settings"),
           shinydashboard::menuItem("Import Cohorts", tabName = "importcohorts", icon = icon("address-card-o")),

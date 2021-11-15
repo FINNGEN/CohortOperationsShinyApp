@@ -11,10 +11,15 @@ configCDMTools <- function() {
 
 
   # testing
-  if (get_golem_config("enviroment") == "no-connection") {
-    data("test_cdm_webapi_conn", package = "CDMTools")
-    Sys.sleep(1)
-      return(test_cdm_webapi_conn)
+  if (get_golem_config("enviroment") == "no_connection") {
+    return(
+      list(conn_status_tibble = tibble(
+        step = "Connection to webAPI",
+        error = TRUE,
+        message = "This is procued by CohortOperations"
+      ))
+
+    )
   }
 
 

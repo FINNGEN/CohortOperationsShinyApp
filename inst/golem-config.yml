@@ -16,7 +16,7 @@ dev_laptop_javier:
 dev_no_connection:
   golem_name: CohortOperationsShinyApp
   golem_version: 0.0.0.9000
-  enviroment: no-connection
+  enviroment: no_connection
   app_prod: no
 dev:
   golem_wd: !expr here::here()
