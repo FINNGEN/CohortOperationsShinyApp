@@ -16,7 +16,7 @@ mod_import_cohort_file_ui <- function(id){
               multiple = FALSE,
               accept = c("text/tsv","text/tabular-separated-values,text/plain",".tsv")
     ),
-    reactable::reactableOutput(ns("cohorts_reactable")) %>% ui_load_spiner(),
+    reactable::reactableOutput(ns("cohorts_reactable"), height = "300px") %>% ui_load_spiner(),
     hr(),
     actionButton(ns("import_b"), "Import Selected"),
     actionButton(ns("cancel_b"), "Cancel")
@@ -185,4 +185,4 @@ mod_import_cohort_file_server <- function(id, r_cohorts){
 # shinyApp(
 #   fluidPage(mod_import_cohort_file_ui("test")),
 #   function(input,output,session){mod_import_cohort_file_server("test", r_cohorts)}
-# )
+# ) )
