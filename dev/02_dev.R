@@ -42,6 +42,7 @@ golem::add_module( name = "operate_cohorts" )
 ## Add helper functions ----
 ## Creates fct_* and utils_*
 golem::add_fct( "config_CDMTools" )
+golem::add_fct( "spiners" )
 #golem::add_utils( "helpers" )
 
 ## External resources

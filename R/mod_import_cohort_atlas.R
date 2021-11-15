@@ -96,13 +96,13 @@ mod_import_cohort_atlas_server <- function(id, r_connection, r_cohorts){
       selected_cohorts <- r$atlas_cohorts_list %>%  slice(input$selected_index)
 
       ## Check status of selected cohorts
-      #shinybusy::show_modal_spinner(text = "Reading status of selcted cohorts.")
+      sweetAlert_spiner("Checking cohorts' status")
 
       n_selected <- nrow(selected_cohorts)
       for (i in 1:n_selected) {
         selected_cohorts[i,"status"] <- CDMTools::getCohortStatus(r_connection$cdm_webapi_conn, selected_cohorts[[i,"cohort_id"]])
       }
-      #shinybusy::remove_modal_spinner()
+      remove_sweetAlert_spiner()
 
       # if any of the status is not COMPLETED error user
       not_compleated_cohorts <- selected_cohorts %>% filter(status!="COMPLETE") %>% pull(cohort_name)
@@ -120,10 +120,7 @@ mod_import_cohort_atlas_server <- function(id, r_connection, r_cohorts){
       }
 
       ## Import cohorts
-      shinybusy::show_modal_spinner(
-        spin = "trinity-rings",
-        text = "Importing from atlas cohort:",
-      )
+      sweetAlert_spiner("Importing cohorts")
 
       r$imported_cohortData <- CDMTools::getCohortData(r_connection$cdm_webapi_conn, selected_cohorts %>% pull(cohort_id)) %>%
         #TEMPFIX
@@ -133,7 +130,7 @@ mod_import_cohort_atlas_server <- function(id, r_connection, r_cohorts){
         )
       #print(FinnGenTableTypes::is_cohortData(r$imported_cohortData, verbose = T))
       #TEMPFIX
-      shinybusy::remove_modal_spinner()
+      remove_sweetAlert_spiner()
 
       # ask if existing cohorts should be replaced
       intersect_names <- inner_join(
