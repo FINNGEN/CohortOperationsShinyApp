@@ -10,7 +10,7 @@
 mod_operate_cohorts_ui <- function(id){
   ns <- NS(id)
   tagList(
-    reactable::reactableOutput(ns("cohorts_reactable")),
+    reactable::reactableOutput(ns("cohorts_reactable")) %>% ui_load_spiner(),
     hr(),
     # TEMP FIX: shinyjqui::updateOrderInput does not update when shinyjqui::orderInput is in as_source = TRUE mode. Lets build the whole thing on server
     uiOutput(ns("operation_expresion")),
@@ -18,9 +18,10 @@ mod_operate_cohorts_ui <- function(id){
     tags$b("Operation Expresion: "),
     htmlOutput(ns("entry_cohort_names_text")),
     hr(),
-    plotOutput(ns("upset_plot")),
+    plotOutput(ns("upset_plot")) %>% ui_load_spiner(),
     hr(),
-    reactable::reactableOutput(ns("cohort_output_reactable"))
+    reactable::reactableOutput(ns("cohort_output_reactable")),
+    shiny::downloadButton(ns("save_db"), "Save cohorts")
   )
 }
 
@@ -69,7 +70,7 @@ mod_operate_cohorts_server <- function(id, r_cohorts){
         shinyjqui::orderInput(
           ns("source_boxes"),
           'Operation Elements',
-          items = c("(", ")", "&", "|", "!", cohort_names ),
+          items = c("(", ")", "AND-IN", "OR-IN", "NOT-IN", cohort_names ),
           as_source = TRUE, connect = ns('dest_boxes')
         ),
         shinyjqui::orderInput(
@@ -92,7 +93,7 @@ mod_operate_cohorts_server <- function(id, r_cohorts){
       }
       if(!is.null(input$dest_boxes)){
         if(nchar(result_expresion)!=0){ result_expresion <- str_c(result_expresion, "&") }
-        result_expresion <- str_c(result_expresion, "(",  str_c(input$dest_boxes, collapse = ""),")")
+        result_expresion <- str_c(result_expresion, "(",  str_c(input$dest_boxes, collapse = " "),")")
       }
 
       if(nchar(result_expresion)==0){
@@ -110,7 +111,9 @@ mod_operate_cohorts_server <- function(id, r_cohorts){
 
       op_exp <- NULL
       if(!is.null(input$dest_boxes)){
-        op_exp <- str_c(input$dest_boxes, collapse = "")
+        reparsed_input_dest_boxes <- input$dest_boxes %>%
+          str_replace("^AND-IN$", "&") %>%  str_replace("^OR-IN$", "|") %>% str_replace("^NOT-IN$", "!")
+        op_exp <- str_c(reparsed_input_dest_boxes, collapse = "")
       }
 
       result_operation <- tryCatch({
@@ -152,6 +155,18 @@ mod_operate_cohorts_server <- function(id, r_cohorts){
     })
 
 
+    #
+    # download save_db : download cohortData
+    #
+    output$save_db <- downloadHandler(
+      filename = "cohorts_from_cohortOperations.tsv",
+      content = function(file) {
+        write_tsv(
+          file = file,
+          x = bind_rows(r_cohorts$cohortData, r$result_cohortData)
+        )
+      }
+    )
 
 
   })

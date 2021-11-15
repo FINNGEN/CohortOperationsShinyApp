@@ -15,8 +15,7 @@ mod_import_cohorts_ui <- function(id){
     hr(),
     #
     shiny::actionButton(ns("import_b"), "Import cohorts"), # calls modal_import_cohorts
-    shiny::actionButton(ns("delete_b"), "Delete selected"),
-    shiny::downloadButton(ns("save_db"), "Save cohorts")
+    shiny::actionButton(ns("delete_b"), "Delete selected")
   )
 }
 
@@ -80,15 +79,6 @@ mod_import_cohorts_server <- function(id, r_connection, r_cohorts){
       }
     })
 
-    #
-    # download save_db : download cohortData
-    #
-    output$save_db <- downloadHandler(
-      filename = "your_name_cohortData.tsv",
-      content = function(file) {
-       write_tsv(r_cohorts$cohortData, file = file)
-      }
-    )
 
   })
 }
