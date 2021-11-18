@@ -13,13 +13,13 @@ mod_operate_cohorts_ui <- function(id){
     reactable::reactableOutput(ns("cohorts_reactable")) %>% ui_load_spiner(),
     hr(),
     # TEMP FIX: shinyjqui::updateOrderInput does not update when shinyjqui::orderInput is in as_source = TRUE mode. Lets build the whole thing on server
-    uiOutput(ns("operation_expresion")),
-    hr(),
-    tags$b("Operation Expresion: "),
-    htmlOutput(ns("entry_cohort_names_text")),
-    hr(),
-    plotOutput(ns("upset_plot")) %>% ui_load_spiner(),
-    hr(),
+    shiny::uiOutput(ns("operation_expresion")),
+    shiny::hr(),
+    shiny::tags$b("Operation Expresion: "),
+    shiny::htmlOutput(ns("entry_cohort_names_text")),
+    shiny::hr(),
+    shiny::plotOutput(ns("upset_plot")) %>% ui_load_spiner(),
+    shiny::hr(),
     reactable::reactableOutput(ns("cohort_output_reactable")),
     shiny::downloadButton(ns("save_db"), "Save cohorts")
   )
@@ -44,8 +44,7 @@ mod_operate_cohorts_server <- function(id, r_cohorts){
     # updates output$cohorts_reactable with given r_cohorts
     #
     output$cohorts_reactable <- reactable::renderReactable({
-      r_cohorts$cohortData %>%
-        FinnGenTableTypes::summarise_cohortData() %>%
+      r_cohorts$summaryCohortData %>%
         FinnGenTableTypes::table_summarycohortData()
     })
 
@@ -57,7 +56,7 @@ mod_operate_cohorts_server <- function(id, r_cohorts){
       # req(r_cohorts$cohortData)
 
       cohort_names <- r_cohorts$cohortData %>%
-        FinnGenTableTypes::summarise_cohortData() %>%
+        distinct(COHORT_NAME) %>%
         pull(COHORT_NAME)
 
       tagList(
@@ -112,7 +111,12 @@ mod_operate_cohorts_server <- function(id, r_cohorts){
       op_exp <- NULL
       if(!is.null(input$dest_boxes)){
         reparsed_input_dest_boxes <- input$dest_boxes %>%
-          str_replace("^AND-IN$", "&") %>%  str_replace("^OR-IN$", "|") %>% str_replace("^NOT-IN$", "!")
+          str_c("`", ., "`") %>%
+          str_replace("^`AND-IN`$", "&") %>%
+          str_replace("^`OR-IN`$", "|") %>%
+          str_replace("^`NOT-IN`$", "!")%>%
+          str_replace("^`\\(`$", "(")%>%
+          str_replace("^`\\)`$", ")")
         op_exp <- str_c(reparsed_input_dest_boxes, collapse = "")
       }
 
@@ -172,12 +176,11 @@ mod_operate_cohorts_server <- function(id, r_cohorts){
   })
 }
 
-## To be copied in the UI
-# mod_operate_cohorts_ui("operate_cohorts_ui_1")
+# r_cohorts <- reactiveValues(
+#   cohortData = test_cohortData,
+#   summaryCohortData = FinnGenTableTypes::summarise_cohortData(test_cohortData)
+# )
 #
-# ## To be copied in the server
-# # mod_operate_cohorts_server("operate_cohorts_ui_1")
-# r_cohorts <- reactiveValues(cohortData=read_tsv("data-raw/test_cohortData_3cohorts.tsv"))
 # shinyApp(
 #   fluidPage(mod_operate_cohorts_ui("test")),
 #   function(input,output,session){mod_operate_cohorts_server("test", r_cohorts)}

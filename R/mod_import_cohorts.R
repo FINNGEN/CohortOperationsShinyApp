@@ -109,9 +109,9 @@ modal_import_cohorts <- function(ns){modalDialog(
 )}
 
 
-
-# no connection
-#Sys.setenv(GOLEM_CONFIG_ACTIVE="dev_no_connection")
+#
+# # no connection
+# Sys.setenv(GOLEM_CONFIG_ACTIVE="dev_no_connection")
 # r_connection <- reactiveValues(cdm_webapi_conn = configCDMTools())
 #
 #
