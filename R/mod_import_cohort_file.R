@@ -56,8 +56,20 @@ mod_import_cohort_file_server <- function(id, r_cohorts){
 
       tmp_imported_file <- read_tsv(r$tmp_file$datapath, show_col_types = FALSE)
 
+      # TEMP HACK
+      #if it has columns variant and gt
+      if(tmp_imported_file %>% hasName(c("variant", "gt")) %>% sum() == 2){
+        tmp_imported_file <- tmp_imported_file %>%
+          dplyr::mutate(
+            COHORT_SOURCE = "Genobrowser[DF6]",
+            COHORT_NAME = paste0(variant, "-", gt)
+            )
+        message("TEMP HACK: genobrowser table converter to cohortData")
+      }
+      # END TEMP HACK
+
       is_cohortData_message <- tryCatch(
-        {as.character(FinnGenTableTypes::is_cohortData(tmp_imported_file, verbose = TRUE))}, message = function(m){m$message}
+        {as.character(FinnGenTableTypes::is_cohortData(tmp_imported_file, extrict = FALSE, verbose = TRUE))}, message = function(m){m$message}
       )
 
       validate(
@@ -65,7 +77,7 @@ mod_import_cohort_file_server <- function(id, r_cohorts){
              str_c("Uploaded tsv file is not in cohortData format.\n These are the reasons: \n", is_cohortData_message))
       )
 
-      r$imported_cohortData <- tmp_imported_file
+      r$imported_cohortData <- FinnGenTableTypes::as_cohortData(tmp_imported_file)
 
       # output reactable
       r$imported_cohortData %>%
@@ -185,4 +197,4 @@ mod_import_cohort_file_server <- function(id, r_cohorts){
 # shinyApp(
 #   fluidPage(mod_import_cohort_file_ui("test")),
 #   function(input,output,session){mod_import_cohort_file_server("test", r_cohorts)}
-# ) )
+# )

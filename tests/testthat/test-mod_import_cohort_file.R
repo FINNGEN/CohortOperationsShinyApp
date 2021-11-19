@@ -143,3 +143,38 @@ test_that("mod_import_cohort_file_server overlaping cohots NOT replaced",{
 
 })
 
+
+test_that("mod_import_cohort_file_server TRMPORL HACK convert genobrowser works",{
+
+  r_cohorts <- reactiveValues(
+    cohortData = FinnGenTableTypes::empty_cohortData(),
+    summaryCohortData = FinnGenTableTypes::empty_cohortData() %>% FinnGenTableTypes::summarise_cohortData()
+  )
+
+  testServer(mod_import_cohort_file_server, args = list(r_cohorts=r_cohorts), {
+
+    session$setInputs(file_fi = list(datapath = "../../data-raw/test_genobrowser_output.tsv"))
+    # loaded is same as in test data
+    tmp <- test_cohortData %>%
+      transmute(
+        FINNGENID = FINNGENID ,
+        variant = "16r3839507os",
+        gt = case_when(
+          COHORT_NAME =="A" ~ "1|1",
+          COHORT_NAME =="B" ~ "0|1",
+          COHORT_NAME =="C" ~ "0|0"
+        )
+      ) %>%
+      dplyr::mutate(
+        COHORT_SOURCE = "Genobrowser[DF6]",
+        COHORT_NAME = paste0(variant, "-", gt)
+      ) %>%
+      FinnGenTableTypes::as_cohortData()
+
+    r$imported_cohortData %>% expect_equal(tmp)
+
+    output$cohorts_reactable
+
+  })
+
+})

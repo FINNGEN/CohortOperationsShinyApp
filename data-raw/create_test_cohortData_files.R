@@ -18,4 +18,17 @@ test_cohortData %>% select(-COHORT_NAME)%>%  write_tsv("data-raw/test_cohortData
 
 test_cohortData %>% write_tsv("data-raw/test_cohortData_no_tsv.csv")
 
+# temporal hack
+test_cohortData %>%
+  transmute(
+    FINNGENID = FINNGENID ,
+    variant = "16r3839507os",
+    gt = case_when(
+      COHORT_NAME =="A" ~ "1|1",
+      COHORT_NAME =="B" ~ "0|1",
+      COHORT_NAME =="C" ~ "0|0"
+    )
+  )  %>%
+  write_tsv("data-raw/test_genobrowser_output.tsv")
+
 usethis::use_data(test_cohortData, overwrite = TRUE)

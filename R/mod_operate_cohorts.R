@@ -106,7 +106,7 @@ mod_operate_cohorts_server <- function(id, r_cohorts){
     # plots overlap
     #
     output$upset_plot <- renderPlot({
-      req(r_cohorts$cohortData)
+      req(nrow(r_cohorts$cohortData)!=0)
 
       op_exp <- NULL
       if(!is.null(input$dest_boxes)){
