@@ -19,8 +19,8 @@ sweetAlert_spiner <- function(test, wait_time_sec = NULL, ...) {
     title = NULL,
     text = tags$div(
       test,
-      ui_load_spiner(plotOutput(outputId = "plot", width = "100px", height = "100px"), proxy.height = "90px"),
-      attendantBar("progress-bar", hidden = TRUE, max=1000)
+      ui_load_spiner(plotOutput(outputId = "plot", width = "100px", height = "100px"), proxy.height = "90px")
+     # attendantBar("progress-bar", hidden = TRUE, max=1000)
     ),
     html = TRUE,
     type = NULL,
@@ -31,11 +31,11 @@ sweetAlert_spiner <- function(test, wait_time_sec = NULL, ...) {
     ...
   )
 
-  if(!is.null(wait_time_sec)){
-    att <- Attendant$new("progress-bar")
-    att$auto(ms= wait_time_sec)
-    att$set(1)
-  }
+  # if(!is.null(wait_time_sec)){
+  #   att <- Attendant$new("progress-bar")
+  #   att$auto(ms= wait_time_sec)
+  #   att$set(1)
+  # }
 
 
 }
