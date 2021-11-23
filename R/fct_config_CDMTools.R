@@ -1,24 +1,25 @@
 #' configCDMTools
 #'
-#' @description A fct function
+#' @description buils cdm_webapi_conn based on the info un golem yalm
 #'
-#' @return The return value, if any, from executing the function.
+#' @return returns a cdm_webapi_conn list with the info set in get_golem_config
 #'
-#' @noRd
-
-
+#' @importFrom bigrquery bq_auth
+#' @importFrom httr set_config config
+#' @importFrom DatabaseConnector createConnectionDetails
+#' @importFrom CDMTools createCDMWebAPIconn
+#'
 configCDMTools <- function() {
 
 
   # testing
   if (get_golem_config("enviroment") == "no_connection") {
     return(
-      list(conn_status_tibble = tibble(
+      list(conn_status_tibble = dplyr::tibble(
         step = "Connection to webAPI",
         error = TRUE,
         message = "This is procued by CohortOperations"
       ))
-
     )
   }
 
@@ -50,6 +51,6 @@ configCDMTools <- function() {
     connection_details = connection_details
   )
 
-  #print(cdm_webapi_conn)
+  # print(cdm_webapi_conn)
   return(cdm_webapi_conn)
 }

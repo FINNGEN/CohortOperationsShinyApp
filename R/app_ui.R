@@ -34,7 +34,6 @@ app_ui <- function(request) {
             includeMarkdown(app_sys("app/info_md/info_main_page.md")),
             tags$b("Connection status:"),
             mod_connection_to_db_ui("mod_connection_to_db")
-
           ),
           ## Import Cohorts
           shinydashboard::tabItem(
