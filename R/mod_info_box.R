@@ -8,7 +8,7 @@
 #'
 #' @importFrom shiny NS tagList
 mod_info_box_ui <- function(id, item) {
-  ns <- NS(id)
+  ns <- shiny::NS(id)
 
   infoTag <- tags$small(
     class = "badge pull-right action-button",
@@ -26,7 +26,7 @@ mod_info_box_ui <- function(id, item) {
 #'
 #' @noRd
 mod_info_box_server <- function(id, title, info_md_FileName) {
-  moduleServer(id, function(input, output, session) {
+  shiny::moduleServer(id, function(input, output, session) {
     ns <- session$ns
 
     info_md_FileName <- paste0("app/info_md/", info_md_FileName)
@@ -37,7 +37,7 @@ mod_info_box_server <- function(id, title, info_md_FileName) {
         easyClose = TRUE,
         footer = NULL,
         size = "l",
-        includeMarkdown(app_sys(info_md_FileName))
+        shiny::includeMarkdown(app_sys(info_md_FileName))
       ))
     })
   })

@@ -17,6 +17,7 @@ Imports:
     golem,
     htmltools,
     httr,
+    markdown,
     processx,
     reactable,
     readr,

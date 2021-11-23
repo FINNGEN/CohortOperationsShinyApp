@@ -29,6 +29,7 @@ usethis::use_package("httr")
 usethis::use_package("reactable")
 usethis::use_package("readr")
 usethis::use_package("DatabaseConnector")
+usethis::use_package("markdown")
 
 ## Add modules ----
 ## Create a module infrastructure in R/
