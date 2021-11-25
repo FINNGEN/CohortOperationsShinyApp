@@ -1,8 +1,7 @@
 FROM rocker/r-ver:4.1.2
-RUN apt-get update && apt-get install -y  default-jre-headless git-core libcurl4-openssl-dev libgit2-dev libicu-dev libssl-dev libxml2-dev make pandoc pandoc-citeproc && rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt-get install -y default-jdk default-jre git-core libcurl4-openssl-dev libgit2-dev libicu-dev libssl-dev libxml2-dev make pandoc pandoc-citeproc && rm -rf /var/lib/apt/lists/*
 RUN echo "options(repos = c(CRAN = 'https://cran.rstudio.com/'), download.file.method = 'libcurl', Ncpus = 4)" >> /usr/local/lib/R/etc/Rprofile.site
 # install dependecies using renv
-ENV GITHUB_PAT "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"
 ENV RENV_VERSION 0.14.0
 RUN R -e "install.packages('remotes', repos = c(CRAN = 'https://cloud.r-project.org'))"
 RUN R -e "remotes::install_github('rstudio/renv@${RENV_VERSION}')"
