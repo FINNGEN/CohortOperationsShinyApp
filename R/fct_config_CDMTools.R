@@ -18,19 +18,23 @@ configCDMTools <- function() {
       list(conn_status_tibble = dplyr::tibble(
         step = "Connection to webAPI",
         error = TRUE,
-        message = "This is procued by CohortOperations"
+        message = "This is procured by CohortOperations"
       ))
     )
   }
 
-
   # in development laptop
   if (get_golem_config("enviroment") == "atlas-development") {
+    # billing project from goem-config.yalm
+    bq_dbi_billing = get_golem_config("GCP_BILLING_PROJECT_ID")
     # authenticate
     bigrquery::bq_auth(path = get_golem_config("GCP_SERVICE_KEY"))
   }
+
   # in development sandbox
   if (get_golem_config("enviroment") == "sandbox") {
+    # billing project from envar
+    bq_dbi_billing = Sys.getenv("GCP_BILLING_PROJECT_ID")
     # authenticate
     bigrquery::bq_auth(scopes = "https://www.googleapis.com/auth/bigquery.readonly")
     # desactivate https
@@ -42,7 +46,7 @@ configCDMTools <- function() {
   connection_details <- DatabaseConnector::createConnectionDetails(
     dbms = get_golem_config("CDMTOOLS_dbms"),
     bq_dbi_project = get_golem_config("GCP_PROJECT_ID"),
-    bq_dbi_billing = get_golem_config("GCP_BILLING_PROJECT_ID")
+    bq_dbi_billing = bq_dbi_billing
   )
 
   cdm_webapi_conn <- CDMTools::createCDMWebAPIconn(

@@ -2,8 +2,11 @@ default:
   golem_name: CohortOperationsShinyApp
   golem_version: 0.0.0.9000
   app_prod: no
-production:
-  app_prod: yes
+dev_no_connection:
+  golem_name: CohortOperationsShinyApp
+  golem_version: 0.0.0.9000
+  enviroment: no_connection
+  app_prod: no
 dev_laptop_javier:
   enviroment: atlas-development
   app_prod: no
@@ -13,18 +16,19 @@ dev_laptop_javier:
   CDMTOOLS_webapi_url: http://localhost/WebAPI
   GCP_SERVICE_KEY: C:\Users\javier\.ssh\gq\computerenginedfault.json
   CDMTOOLS_CDM_source_key_test: dummy_df6v2_1k_13_finngen_omop_bq
-dev_no_connection:
-  golem_name: CohortOperationsShinyApp
-  golem_version: 0.0.0.9000
-  enviroment: no_connection
-  app_prod: no
 dev_sandbox_javier:
   enviroment: sandbox
   app_prod: no
   CDMTOOLS_dbms: bigquery-dbi
   GCP_PROJECT_ID: finngen-production-library
-  GCP_BILLING_PROJECT_ID: fg-production-sandbox-4
+  #GCP_BILLING_PROJECT_ID: fg-production-sandbox-4 has to be set in an envar
   CDMTOOLS_webapi_url: https://ohdsi-webapi.app.finngen.fi/WebAPI
   CDMTOOLS_CDM_source_key_test: FINNGEN_CDM_R7
-dev:
-  golem_wd: !expr here::here()
+production:
+  enviroment: sandbox
+  app_prod: yes
+  CDMTOOLS_dbms: bigquery-dbi
+  GCP_PROJECT_ID: finngen-production-library
+  #GCP_BILLING_PROJECT_ID: fg-production-sandbox-4 has to be set in an envar
+  CDMTOOLS_webapi_url: https://ohdsi-webapi.app.finngen.fi/WebAPI
+  CDMTOOLS_CDM_source_key_test: FINNGEN_CDM_R7
