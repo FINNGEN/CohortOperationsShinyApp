@@ -25,6 +25,7 @@ Imports:
     shinycssloaders,
     shinydashboard,
     shinyjqui,
+    shinyjs,
     shinyWidgets,
     toastui
 Encoding: UTF-8

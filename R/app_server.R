@@ -22,7 +22,10 @@ app_server <- function(input, output, session) {
   # INFO modules ---------------------------------------------
   mod_connection_to_db_server("mod_connection_to_db", r_connection)
 
-  mod_import_cohorts_server("mod_import_cohorts", r_connection, r_cohorts)
+  mod_cohorts_table_server("mod_cohorts_table_import", r_cohorts)
+  mod_import_cohort_file_server("mod_import_cohort_file", r_cohorts)
+  mod_import_cohort_atlas_server("mod_import_cohort_atlas", r_connection, r_cohorts)
 
+  mod_cohorts_table_server("mod_cohorts_table_operate", r_cohorts)
   mod_operate_cohorts_server("mod_operate_cohorts", r_cohorts)
 }

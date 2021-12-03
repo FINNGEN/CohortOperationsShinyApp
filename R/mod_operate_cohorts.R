@@ -12,8 +12,7 @@
 mod_operate_cohorts_ui <- function(id) {
   ns <- shiny::NS(id)
   htmltools::tagList(
-    reactable::reactableOutput(ns("cohorts_reactable")) %>% CohortOperationsShinyApp::ui_load_spiner(),
-    htmltools::hr(),
+    shinyjs::useShinyjs(),
     # TEMP FIX: shinyjqui::updateOrderInput does not update when shinyjqui::orderInput is in as_source = TRUE mode. Lets build the whole thing on server
     shiny::uiOutput(ns("operation_expresion")),
     shiny::hr(),
@@ -22,8 +21,9 @@ mod_operate_cohorts_ui <- function(id) {
     shiny::hr(),
     shiny::plotOutput(ns("upset_plot")) %>% CohortOperationsShinyApp::ui_load_spiner(),
     shiny::hr(),
+    shiny::tags$b("Result cohort: "),
     reactable::reactableOutput(ns("cohort_output_reactable")),
-    shiny::downloadButton(ns("save_db"), "Save cohorts")
+    shiny::actionButton(ns("copy_b"), "Copy result cohort to workbech")
   )
 }
 
@@ -44,16 +44,6 @@ mod_operate_cohorts_server <- function(id, r_cohorts) {
     r <- shiny::reactiveValues(
       result_cohortData = FinnGenTableTypes::empty_cohortData()
     )
-
-
-    #
-    # updates output$cohorts_reactable with given r_cohorts
-    #
-    output$cohorts_reactable <- reactable::renderReactable({
-      r_cohorts$summaryCohortData %>%
-        FinnGenTableTypes::table_summarycohortData()
-    })
-
 
     #
     # creates UI for defining operation expression (TEMP FIX)
@@ -171,17 +161,16 @@ mod_operate_cohorts_server <- function(id, r_cohorts) {
 
 
     #
-    # download save_db : download cohortData
+    # action button copy_db : download cohortData
     #
-    output$save_db <- shiny::downloadHandler(
-      filename = "cohorts_from_cohortOperations.tsv",
-      content = function(file) {
-        readr::write_tsv(
-          file = file,
-          x = dplyr::bind_rows(r_cohorts$cohortData, r$result_cohortData)
-        )
-      }
-    )
+    observe({
+      shinyjs::toggleState("copy_b", condition = {nrow(r$result_cohortData) != 0} )
+    })
+
+    observeEvent(input$copy_b, {
+
+    })
+
   })
 }
 

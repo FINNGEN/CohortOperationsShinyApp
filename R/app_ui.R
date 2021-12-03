@@ -20,8 +20,8 @@ app_ui <- function(request) {
         shinydashboard::sidebarMenu(
           shinydashboard::menuItem("Info", tabName = "info", icon = icon("info")),
           h4("Settings"),
-          shinydashboard::menuItem("Import Cohorts", tabName = "importcohorts", icon = icon("address-card-o")),
-          shinydashboard::menuItem("Operate Cohorts", tabName = "operatecohorts", icon = icon("sliders"))
+          shinydashboard::menuItem("Import Cohorts", tabName = "importcohorts", icon = icon("address-card")),
+          shinydashboard::menuItem("Operate Cohorts", tabName = "operatecohorts", icon = icon("sliders-h"))
         )
       ),
 
@@ -38,12 +38,48 @@ app_ui <- function(request) {
           ## Import Cohorts
           shinydashboard::tabItem(
             tabName = "importcohorts",
-            mod_import_cohorts_ui("mod_import_cohorts"),
+            ### Cohorts workbech
+            shinydashboard::box(
+              title = "Cohorts workbech", status = "primary", solidHeader = TRUE, width = 12,
+              mod_cohorts_table_ui("mod_cohorts_table_import")
+            ),
+            ### Import Cohorts
+            shinydashboard::tabBox(
+              title = tagList(shiny::icon("upload"), "Import Cohorts:"),
+              id = "import_files", width = 12, side="right",
+              selected = "from File",
+              #### panel ENDPOINT
+              shiny::tabPanel(
+                "from Endploint",
+                htmltools::h2("Possible if endpoint results in a BQ database in cohortTable format ")
+              ),
+              #### panel ATLAS
+              shiny::tabPanel(
+                "from Atlas",
+                CohortOperationsShinyApp::mod_import_cohort_atlas_ui("mod_import_cohort_atlas")
+              ),
+              #### panel FILE
+              shiny::tabPanel(
+                "from File",
+                #htmltools::h2("This is possible if file in cohortTable format"),
+                CohortOperationsShinyApp::mod_import_cohort_file_ui("mod_import_cohort_file")
+              )
+            )
           ),
           ## Operate Cohorts
           shinydashboard::tabItem(
             tabName = "operatecohorts",
-            mod_operate_cohorts_ui("mod_operate_cohorts")
+            ### Cohorts workbech
+            shinydashboard::box(
+              title = "Cohorts workbech", status = "primary", solidHeader = TRUE, width = 12,
+              mod_cohorts_table_ui("mod_cohorts_table_operate")
+            ),
+            ### Operate Cohorts
+            shinydashboard::box(
+              title = tagList(shiny::icon("clone"), "Operate Cohorts:"),
+              status = "primary", solidHeader = FALSE, width = 12,
+              mod_operate_cohorts_ui("mod_operate_cohorts")
+            )
           )
         )
       )

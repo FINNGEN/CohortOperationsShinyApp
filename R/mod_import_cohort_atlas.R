@@ -13,6 +13,7 @@ mod_import_cohort_atlas_ui <- function(id) {
   ns <- shiny::NS(id)
 
   shiny::tagList(
+    shinyjs::useShinyjs(),
     # uses :
     shinyWidgets::useSweetAlert(),
     #
@@ -22,8 +23,7 @@ mod_import_cohort_atlas_ui <- function(id) {
     # selectInput(ns("database_picker"), "Select CDM database:", choices = NULL),
     reactable::reactableOutput(ns("cohorts_reactable")),
     shiny::hr(),
-    shiny::actionButton(ns("import_b"), "Import Selected"),
-    shiny::actionButton(ns("cancel_b"), "Cancel")
+    shiny::actionButton(ns("import_b"), "Import Selected")
   )
 }
 
@@ -100,6 +100,10 @@ mod_import_cohort_atlas_server <- function(id, r_connection, r_cohorts) {
     #
     # button import selected: checks selected cohorts
     #
+    observe({
+      shinyjs::toggleState("import_b", condition = shiny::isTruthy(input$selected_index) )
+    })
+
     shiny::observeEvent(input$import_b, {
       shiny::req(input$selected_index)
 
@@ -221,20 +225,12 @@ mod_import_cohort_atlas_server <- function(id, r_connection, r_cohorts) {
       .close_and_reset()
     })
 
-    #
-    # button cancel selected: close modal
-    #
-    shiny::observeEvent(input$cancel_b, {
-      .close_and_reset()
-    })
-
 
     .close_and_reset <- function() {
       # r$imported_cohortData = NULL
       # r$atlas_cohorts_list <- NULL
       r$imported_cohortData <- NULL
       r$asked_intersect_names <- NULL
-      shiny::removeModal()
     }
   })
 }

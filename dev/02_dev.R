@@ -30,12 +30,16 @@ usethis::use_package("reactable")
 usethis::use_package("readr")
 usethis::use_package("DatabaseConnector")
 usethis::use_package("markdown")
+usethis::use_package("shinyjs")
+
 
 ## Add modules ----
 ## Create a module infrastructure in R/
 golem::add_module( name = "info_box" )
 #golem::add_module( name = "name_of_module2" ) # Name of the module
 golem::add_module( name = "connection_to_db" )
+#
+golem::add_module( name = "cohorts_table" )
 #
 golem::add_module( name = "import_cohorts" )
 golem::add_module( name = "import_cohort_file" )
