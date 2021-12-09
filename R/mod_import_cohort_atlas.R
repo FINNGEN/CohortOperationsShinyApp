@@ -42,9 +42,11 @@ mod_import_cohort_atlas_server <- function(id, r_connection, r_cohorts) {
     # reactive variables
     #
     r <- shiny::reactiveValues(
-      atlas_cohorts_list = NULL,
-      imported_cohortData = NULL,
-      asked_intersect_names = NULL
+      atlas_cohorts_list = NULL
+    )
+
+    r_to_append <- shiny::reactiveValues(
+      cohortData = NULL
     )
 
     #
@@ -92,22 +94,24 @@ mod_import_cohort_atlas_server <- function(id, r_connection, r_cohorts) {
       shiny::validate(shiny::need(r$atlas_cohorts_list, "Couldn't connect to webAPI. Check Info tab for details."))
       r$atlas_cohorts_list %>%
         reactable::reactable(
-          selectionId = ns("selected_index"), selection = "multiple", onClick = "select",
+          selection = "multiple", onClick = "select",
           searchable = TRUE
         )
     })
+    # reactive function to get selected values
+    r_selected_index <- reactive(reactable::getReactableState("cohorts_reactable", "selected", session))
 
     #
     # button import selected: checks selected cohorts
     #
     observe({
-      shinyjs::toggleState("import_b", condition = shiny::isTruthy(input$selected_index) )
+      shinyjs::toggleState("import_b", condition = !is.null(r_selected_index()) )
     })
 
     shiny::observeEvent(input$import_b, {
-      shiny::req(input$selected_index)
+      shiny::req(r_selected_index())
 
-      selected_cohorts <- r$atlas_cohorts_list %>% dplyr::slice(input$selected_index)
+      selected_cohorts <- r$atlas_cohorts_list %>% dplyr::slice(r_selected_index())
 
       ## Check status of selected cohorts
       CohortOperationsShinyApp::sweetAlert_spiner("Checking cohorts' status")
@@ -151,87 +155,25 @@ mod_import_cohort_atlas_server <- function(id, r_connection, r_cohorts) {
 
         # TEMPFIX
       }
-      r$imported_cohortData <- tmp_r_imported_cohortData
+      r_to_append$cohortData <- tmp_r_imported_cohortData
       # print(FinnGenTableTypes::is_cohortData(r$imported_cohortData, verbose = T))
       CohortOperationsShinyApp::remove_sweetAlert_spiner()
 
-      # ask if existing cohorts should be replaced
-      intersect_names <- dplyr::inner_join(
-        r_cohorts$cohortData %>% dplyr::distinct(COHORT_SOURCE, COHORT_NAME),
-        r$imported_cohortData %>% dplyr::distinct(COHORT_SOURCE, COHORT_NAME),
-        by = c("COHORT_SOURCE", "COHORT_NAME")
-      ) %>%
-        dplyr::mutate(name = stringr::str_c(COHORT_NAME, ", From: ", COHORT_SOURCE)) %>%
-        dplyr::pull(name)
-
-
-      if (length(intersect_names) > 0) {
-        shinyWidgets::confirmSweetAlert(
-          session = session,
-          inputId = "asked_intersect_names_alert",
-          type = "question",
-          title = "Some selected cohorts had been alredy imported:",
-          text = shiny::HTML(
-            "The following cohorts had been alredy imported: <ul>",
-            stringr::str_c(stringr::str_c("<li> ", intersect_names, "</li>"), collapse = ""),
-            "</ul> Should these be replaced or ignored."
-          ),
-          btn_labels = c("Not-import", "Replace"),
-          html = TRUE
-        )
-      } else {
-        r$asked_intersect_names <- TRUE
-      }
-    })
-
-    # just pass the info to make it writable
-    shiny::observe({
-      r$asked_intersect_names <- input$asked_intersect_names_alert
     })
 
     #
-    # confirmSweetAlert asked_intersect_names
+    # evaluate the cohorts to append; if accepted increase output to trigger closing acctions
     #
-    shiny::observeEvent(r$asked_intersect_names, {
-      # take names from main and imported
-      intersect_names <- dplyr::inner_join(
-        r_cohorts$cohortData %>% dplyr::distinct(COHORT_SOURCE, COHORT_NAME),
-        r$imported_cohortData %>% dplyr::distinct(COHORT_SOURCE, COHORT_NAME),
-        by = c("COHORT_SOURCE", "COHORT_NAME")
-      )
+    r_append_accepted_counter <- mod_append_cohort_server("impor_atlas", r_cohorts, r_to_append )
 
-      if (r$asked_intersect_names) {
-        # remove from main
-        r_cohorts$cohortData <- dplyr::anti_join(
-          r_cohorts$cohortData,
-          intersect_names,
-          by = c("COHORT_SOURCE", "COHORT_NAME")
-        )
-      } else {
-        r$imported_cohortData <- dplyr::anti_join(
-          r$imported_cohortData,
-          intersect_names,
-          by = c("COHORT_SOURCE", "COHORT_NAME")
-        )
-      }
-
-      r_cohorts$cohortData <- dplyr::bind_rows(
-        r_cohorts$cohortData,
-        r$imported_cohortData
-      )
-      # re calcualte all, to get the rigth years in dates
-      r_cohorts$summaryCohortData <- FinnGenTableTypes::summarise_cohortData(r_cohorts$cohortData)
-
-      .close_and_reset()
+    # close and reset
+    shiny::observeEvent(r_append_accepted_counter(), {
+      r_to_append$cohortData <- NULL
+      reactable::updateReactable("cohorts_reactable", selected = NA, session = session )
     })
 
 
-    .close_and_reset <- function() {
-      # r$imported_cohortData = NULL
-      # r$atlas_cohorts_list <- NULL
-      r$imported_cohortData <- NULL
-      r$asked_intersect_names <- NULL
-    }
+
   })
 }
 #

@@ -18,6 +18,7 @@ mod_import_cohort_file_ui <- function(id) {
       multiple = FALSE,
       accept = c("text/tsv", "text/tabular-separated-values,text/plain", ".tsv")
     ),
+    htmltools::hr(),
     reactable::reactableOutput(ns("cohorts_reactable")), # %>% ui_load_spiner(),
     htmltools::hr(),
     shiny::actionButton(ns("import_b"), "Import Selected")
@@ -39,30 +40,32 @@ mod_import_cohort_file_server <- function(id, r_cohorts) {
     #
     # reactive variables
     #
-    r <- shiny::reactiveValues(
+    r_file <- shiny::reactiveValues(
       tmp_file = NULL,
-      imported_cohortData = NULL,
-      selected_cohortData = NULL,
-      asked_intersect_names = NULL
+      imported_cohortData = NULL
+    )
+
+    r_to_append <- shiny::reactiveValues(
+      cohortData = NULL
     )
 
     #
     # just pass the info to make it writable
     #
     shiny::observe({
-      r$tmp_file <- input$file_fi
+      r_file$tmp_file <- input$file_fi
     })
 
     #
-    # updates output$cohorts_reactable with uploaded file
+    # updates output$cohorts_reactable with uploaded file, or with error
     #
     output$cohorts_reactable <- reactable::renderReactable({
-      shiny::req(r$tmp_file)
-      ext <- tools::file_ext(r$tmp_file$datapath)
+      shiny::req(r_file$tmp_file)
+      ext <- tools::file_ext(r_file$tmp_file$datapath)
 
       shiny::validate(shiny::need(ext == "tsv", "Uploaded file is not a tabular-separated-values (.tsv) file. Please upload a tsv file."))
 
-      tmp_imported_file <- readr::read_tsv(r$tmp_file$datapath, show_col_types = FALSE)
+      tmp_imported_file <- readr::read_tsv(r_file$tmp_file$datapath, show_col_types = FALSE)
 
       # TEMP HACK
       # if it has columns variant and gt
@@ -92,115 +95,52 @@ mod_import_cohort_file_server <- function(id, r_cohorts) {
         )
       )
 
-      r$imported_cohortData <- FinnGenTableTypes::as_cohortData(tmp_imported_file)
+      r_file$imported_cohortData <- FinnGenTableTypes::as_cohortData(tmp_imported_file)
 
+      shiny::req(r_file$imported_cohortData)
       # output reactable
-      r$imported_cohortData %>%
+      r_file$imported_cohortData %>%
         dplyr::distinct(COHORT_NAME, COHORT_SOURCE) %>%
-        select(COHORT_NAME, COHORT_SOURCE) %>%
         reactable::reactable(
-          selectionId = ns("selected_index"), selection = "multiple", onClick = "select",
+          selection = "multiple", onClick = "select", defaultSelected = NULL,
           searchable = TRUE
         )
     })
+    # reactive function to get selected values
+    r_selected_index <- reactive(reactable::getReactableState("cohorts_reactable", "selected", session))
 
     #
     # button import selected: checks selected cohorts
     #
     observe({
-      shinyjs::toggleState("import_b", condition = shiny::isTruthy(input$selected_index) )
+      shinyjs::toggleState("import_b", condition = !is.null(r_selected_index()) )
     })
 
     shiny::observeEvent(input$import_b, {
-      shiny::req(input$selected_index)
-
-      r$selected_cohortData <- dplyr::semi_join(
-        r$imported_cohortData,
-        r$imported_cohortData %>%
+      shiny::req(selected_cohorts())
+      ## copy selected to
+      r_to_append$cohortData <- dplyr::semi_join(
+        r_file$imported_cohortData,
+        r_file$imported_cohortData %>%
           dplyr::distinct(COHORT_NAME, COHORT_SOURCE) %>%
-          dplyr::slice(input$selected_index),
+          dplyr::slice(selected_cohorts()),
         by = c("COHORT_SOURCE", "COHORT_NAME")
       )
-
-      # ask if existing cohorts should be replaced
-      intersect_names <- dplyr::inner_join(
-        r_cohorts$cohortData %>% dplyr::distinct(COHORT_SOURCE, COHORT_NAME),
-        r$selected_cohortData %>% dplyr::distinct(COHORT_SOURCE, COHORT_NAME),
-        by = c("COHORT_SOURCE", "COHORT_NAME")
-      ) %>%
-        dplyr::mutate(name = stringr::str_c(COHORT_SOURCE, COHORT_NAME, sep = " ")) %>%
-        dplyr::pull(name)
-
-
-      if (length(intersect_names) > 0) {
-        shinyWidgets::confirmSweetAlert(
-          session = session,
-          inputId = "asked_intersect_names_alert",
-          type = "question",
-          title = "Some selected cohorts had been alredy imported:",
-          text = htmltools::HTML(
-            "The following cohorts had been alredy imported: <ul>",
-            stringr::str_c(stringr::str_c("<li> ", intersect_names, "</li>"), collapse = ""),
-            "</ul> Should these be replaced or ignored."
-          ),
-          btn_labels = c("Not-import", "Replace"),
-          html = TRUE
-        )
-      } else {
-        r$asked_intersect_names <- TRUE
-      }
-    })
-
-    # just pass the info to make it writable
-    shiny::observe({
-      r$asked_intersect_names <- input$asked_intersect_names_alert
     })
 
     #
-    # confirmSweetAlert asked_intersect_names
+    # evaluate the cohorts to append; if accepted increase output to trigger closing acctions
     #
-    shiny::observeEvent(r$asked_intersect_names, {
-      # take names from main and imported
-      intersect_names <- dplyr::inner_join(
-        r_cohorts$cohortData %>% dplyr::distinct(COHORT_SOURCE, COHORT_NAME),
-        r$selected_cohortData %>% dplyr::distinct(COHORT_SOURCE, COHORT_NAME),
-        by = c("COHORT_SOURCE", "COHORT_NAME")
-      )
+    r_append_accepted_counter <- mod_append_cohort_server("impor_file", r_cohorts, r_to_append )
 
-      if (r$asked_intersect_names) {
-        # remove from main
-        r_cohorts$cohortData <- dplyr::anti_join(
-          r_cohorts$cohortData,
-          intersect_names,
-          by = c("COHORT_SOURCE", "COHORT_NAME")
-        )
-      } else {
-        r$selected_cohortData <- dplyr::anti_join(
-          r$selected_cohortData,
-          intersect_names,
-          by = c("COHORT_SOURCE", "COHORT_NAME")
-        )
-      }
-
-      r_cohorts$cohortData <- dplyr::bind_rows(
-        r_cohorts$cohortData,
-        r$selected_cohortData
-      )
-      # re calcualte all, to get the rigth years in dates
-      r_cohorts$summaryCohortData <- FinnGenTableTypes::summarise_cohortData(r_cohorts$cohortData)
-
-      .close_and_reset()
-    })
-
-
-    .close_and_reset <- function() {
+    # close and reset
+    shiny::observeEvent(r_append_accepted_counter(), {
       shinyjs::reset("file_fi")
-      r$tmp_file <- NULL
-      r$imported_cohortData <- NULL
-      r$selected_cohortData <- NULL
-      r$asked_intersect_names <- NULL
-      #shiny::removeModal()
-    }
+      r_file$tmp_file <- NULL
+      r_file$imported_cohortData <- NULL
+      reactable::updateReactable("cohorts_reactable", selected = NA, session = session )
+    })
+
   })
 }
 
@@ -213,3 +153,4 @@ mod_import_cohort_file_server <- function(id, r_cohorts) {
 #   fluidPage(mod_import_cohort_file_ui("test")),
 #   function(input,output,session){mod_import_cohort_file_server("test", r_cohorts)}
 # )
+
