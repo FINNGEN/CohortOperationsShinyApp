@@ -4,11 +4,12 @@
 #'
 #' @return returns a cdm_webapi_conn list with the info set in get_golem_config
 #'
+#'
+#' @importFrom dplyr tibble
 #' @importFrom bigrquery bq_auth
 #' @importFrom httr set_config config
 #' @importFrom DatabaseConnector createConnectionDetails
 #' @importFrom CDMTools createCDMWebAPIconn
-#'
 configCDMTools <- function() {
 
 
@@ -36,6 +37,7 @@ configCDMTools <- function() {
     # billing project from envar
     bq_dbi_billing = Sys.getenv("GCP_BILLING_PROJECT_ID")
     # authenticate
+    options(gargle_oauth_cache=FALSE) #to avoid the question that freezes the app
     bigrquery::bq_auth(scopes = "https://www.googleapis.com/auth/bigquery.readonly")
     # desactivate https
     httr::set_config(httr::config(ssl_verifypeer = FALSE))

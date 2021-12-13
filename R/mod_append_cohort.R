@@ -16,6 +16,12 @@ use_mod_append_cohort_ui <- function() {
 #' server_append_cohort Server Functions
 #'
 #' @noRd
+#' @importFrom shiny reactiveValues observe observeEvent
+#' @importFrom dplyr inner_join distinct mutate pull anti_join bind_rows
+#' @importFrom stringr str_c
+#' @importFrom shinyWidgets confirmSweetAlert
+#' @importFrom htmltools HTML
+#' @importFrom FinnGenTableTypes summarise_cohortData
 mod_append_cohort_server <- function(id, r_cohorts, r_append_cohort){
   moduleServer( id, function(input, output, session){
     ns <- session$ns

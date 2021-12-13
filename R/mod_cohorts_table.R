@@ -6,14 +6,17 @@
 #'
 #' @noRd
 #'
-#' @importFrom shiny NS tagList
+#' @importFrom shiny NS actionButton downloadButton
+#' @importFrom htmltools tagList hr
+#' @importFrom shinyjs useShinyjs
+#' @importFrom reactable reactableOutput
 mod_cohorts_table_ui <- function(id){
   ns <- shiny::NS(id)
   htmltools::tagList(
     shinyjs::useShinyjs(),
     #
     reactable::reactableOutput(ns("summaryCohortsData_reactable")) %>%
-      CohortOperationsShinyApp::ui_load_spiner(),
+      CohortOperationsShinyApp::ui_load_spinner(),
     htmltools::hr(),
     #
     shiny::actionButton(ns("delete_b"), "Delete selected cohorts"),
@@ -24,6 +27,15 @@ mod_cohorts_table_ui <- function(id){
 #' cohorts_table Server Functions
 #'
 #' @noRd
+#' @importFrom reactable renderReactable getReactableState
+#' @importFrom FinnGenTableTypes table_summarycohortData
+#' @importFrom shinyjs toggleState
+#' @importFrom shiny observeEvent req downloadHandler
+#' @importFrom dplyr slice pull filter
+#' @importFrom shinyWidgets confirmSweetAlert
+#' @importFrom htmltools HTML
+#' @importFrom stringr str_c
+#' @importFrom readr write_tsv
 mod_cohorts_table_server <- function(id, r_cohorts){
   moduleServer( id, function(input, output, session){
     ns <- session$ns

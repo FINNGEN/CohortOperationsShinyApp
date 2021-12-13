@@ -6,14 +6,13 @@
 #'
 #' @noRd
 #'
-#' @importFrom shiny NS tagList
+#' @importFrom shiny NS tagList actionButton
 #' @importFrom reactable reactableOutput
-#' @importFrom shiny actionButton
-#'
 mod_connection_to_db_ui <- function(id) {
   ns <- shiny::NS(id)
   shiny::tagList(
-    reactable::reactableOutput(ns("connection_status_reactable")) %>% CohortOperationsShinyApp::ui_load_spiner(),
+    reactable::reactableOutput(ns("connection_status_reactable")) %>%
+      CohortOperationsShinyApp::ui_load_spinner(),
     shiny::actionButton(ns("connection_status_b"), "Reconnect")
   )
 }

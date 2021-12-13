@@ -6,9 +6,11 @@
 #'
 #' @noRd
 #'
-#' @importFrom shiny NS tagList
+#' @importFrom shiny NS uiOutput hr tags htmlOutput plotOutput actionButton
+#' @importFrom htmltools tagList
+#' @importFrom shinyWidgets useSweetAlert
+#' @importFrom shinyjs useShinyjs
 #' @importFrom reactable reactableOutput
-#' @importFrom shiny uiOutput hr tags htmlOutput plotOutput downloadButton
 mod_operate_cohorts_ui <- function(id) {
   ns <- shiny::NS(id)
   htmltools::tagList(
@@ -21,7 +23,8 @@ mod_operate_cohorts_ui <- function(id) {
     shiny::tags$b("Operation Expresion: "),
     shiny::htmlOutput(ns("entry_cohort_names_text")),
     shiny::hr(),
-    shiny::plotOutput(ns("upset_plot")) %>% CohortOperationsShinyApp::ui_load_spiner(),
+    shiny::plotOutput(ns("upset_plot")) %>%
+      CohortOperationsShinyApp::ui_load_spinner(),
     shiny::hr(),
     shiny::tags$b("Result cohort: "),
     reactable::reactableOutput(ns("cohort_output_reactable")),
@@ -32,10 +35,15 @@ mod_operate_cohorts_ui <- function(id) {
 #' operate_cohorts Server Functions
 #'
 #' @noRd
-#' @importFrom FinnGenTableTypes empty_cohortData table_summarycohortData cohortData_union plot_upset_cohortData summarise_cohortData
-#' @importFrom reactable renderReactable
-#' @importFrom shinyWidgets pickerInput
+#' @importFrom shiny moduleServer reactiveValues observe renderUI fluidRow column req renderText reactive renderPlot validate need observeEvent
+#' @importFrom FinnGenTableTypes empty_cohortData summarise_cohortData cohortData_union plot_upset_cohortsOverlap table_summarycohortData
+#' @importFrom dplyr filter distinct pull mutate
+#' @importFrom htmltools tagList
+#' @importFrom shinyWidgets pickerInput radioGroupButtons updatePickerInput
 #' @importFrom shinyjqui orderInput
+#' @importFrom stringr str_c str_replace str_replace_all
+#' @importFrom reactable renderReactable
+#' @importFrom shinyjs toggleState
 mod_operate_cohorts_server <- function(id, r_cohorts) {
   shiny::moduleServer(id, function(input, output, session) {
     ns <- session$ns

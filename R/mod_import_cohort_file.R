@@ -6,8 +6,9 @@
 #'
 #' @noRd
 #'
-#' @importFrom shiny NS tagList
-#' @import readr
+#' @importFrom shiny NS fileInput actionButton
+#' @importFrom htmltools tagList hr
+#' @importFrom shinyjs useShinyjs
 #' @importFrom reactable reactableOutput
 mod_import_cohort_file_ui <- function(id) {
   ns <- shiny::NS(id)
@@ -29,11 +30,15 @@ mod_import_cohort_file_ui <- function(id) {
 #' import_cohort_file Server Functions
 #'
 #' @noRd
-#' @importFrom reactable renderReactable reactable
+#' @importFrom shiny moduleServer reactiveValues observe req validate need observeEvent
+#' @importFrom reactable renderReactable reactable getReactableState updateReactable
 #' @importFrom tools file_ext
-#' @importFrom dplyr mutate
-#' @importFrom FinnGenTableTypes is_cohortData as_cohortData summarise_cohortData
-#' @importFrom shinyWidgets confirmSweetAlert
+#' @importFrom readr read_tsv
+#' @importFrom utils hasName
+#' @importFrom dplyr mutate distinct semi_join slice
+#' @importFrom FinnGenTableTypes is_cohortData as_cohortData
+#' @importFrom stringr str_c
+#' @importFrom shinyjs toggleState reset
 mod_import_cohort_file_server <- function(id, r_cohorts) {
   shiny::moduleServer(id, function(input, output, session) {
     ns <- session$ns

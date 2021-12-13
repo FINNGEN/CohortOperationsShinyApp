@@ -36,6 +36,15 @@ For programming use cases check these:
 This project follows [Golem](https://engineering-shiny.org/golem.html) philosophy for the development of Shiny Apps, including modularisation, unit testing, shiny server testing, yalm configuration, and dockerisation. Moreover, this projects uses [renv](https://rstudio.github.io/renv/articles/renv.html) for pakage dependency management. 
 
 ## Development 
+Before any of the following steps you need a github token to access the code in the private repositories. Set the environmental variable `GITHUB_PAT` with a token generated in [github.com/settings/tokens](https://github.com/settings/tokens). Token shuld include following permissions: "gist, repo, user, workflow". Following code helps you to do that: 
+
+```{r, eval=FALSE}
+# generate tocken 
+usethis::create_github_token()
+
+# copy and paste in 
+Sys.setenv(GITHUB_PAT="<paste_token>")
+```
 
 ### Install in laptop 
 For development you can clone this repository and use `renv::` to install all the dependent packages. 
@@ -43,14 +52,17 @@ For development you can clone this repository and use `renv::` to install all th
 `renv::` automatically installs its self at the opening of the project. Then, run `renv::restore()` to install the dependent packages. 
 
 ### Install in Sandbox 
-Github's zip can be uploaded to sandbox. 
+Github's zip can be uploaded to sandbox. However, dependencies cant be installed from the airgapped sandbox IVM. 
 
-To restore the dependencies you need to first collect and compile them in a machine with the same chareacteristies than Sandbox. 
+The dependencies can be collected before in an machine with internet connection and the same characteristics than Sandbox. Then ziped and uploaded to sandbox. Follow `renv::` instruction for such situation: 
 
 >First open the R package using RStudio on a computer with internet (note: this should have the same operating system and R version). Specify the folder where your packages are stored by setting the RENV_PATHS_CACHE location (run `Sys.setenv("RENV_PATHS_CACHE"=paste0(getwd(),"/renv/cache")))`. Then run `renv::restore()` in the console. Manually move the study package to the environment without internet (this now includes all required R packages), activate the current project with renv::activate() and again run `Sys.setenv("RENV_PATHS_CACHE"=paste0(getwd(),"/renv/cache"))` followed by `renv::restore()` in the console.
 
+
+
 ### Configure 
-Configuration for your environment can be set in `inst/golem-config.yml`. Currently this file includes three environments: 
+Configuration for your deveopment environment can be set in `inst/golem-config.yml`. 
+Currently this file includes three environments: 
 
 - `no_connection`: To work with no connection to an Atlas instance. 
 - `atlas-development`: To work with Atlas install in an ivm in the atlas-development project in GCP.  

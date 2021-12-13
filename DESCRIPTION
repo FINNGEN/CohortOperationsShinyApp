@@ -22,11 +22,12 @@ Imports:
     reactable,
     readr,
     shiny,
-    shinycssloaders,
+    shinycustomloader,
     shinydashboard,
     shinyjqui,
     shinyjs,
     shinyWidgets,
+    stringr,
     toastui
 Encoding: UTF-8
 LazyData: true

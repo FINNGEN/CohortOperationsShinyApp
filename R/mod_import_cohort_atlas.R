@@ -6,7 +6,8 @@
 #'
 #' @noRd
 #'
-#' @importFrom shiny NS tagList
+#' @importFrom shiny NS tagList br uiOutput hr actionButton
+#' @importFrom shinyjs useShinyjs
 #' @importFrom shinyWidgets useSweetAlert
 #' @importFrom reactable reactableOutput
 mod_import_cohort_atlas_ui <- function(id) {
@@ -29,11 +30,13 @@ mod_import_cohort_atlas_ui <- function(id) {
 
 #' import_cohort_atlas Server Functions
 #'
-#' @noRd
+#' @importFrom shiny moduleServer reactiveValues renderUI req selectInput observeEvent validate need HTML
+#' @importFrom dplyr filter pull arrange desc slice mutate
 #' @importFrom CDMTools changeDatabase getListCohortNamesIds getCohortStatus getCohortData
-#' @importFrom reactable renderReactable reactable
-#' @importFrom shinyWidgets sendSweetAlert confirmSweetAlert
-#' @importFrom FinnGenTableTypes summarise_cohortData
+#' @importFrom reactable renderReactable reactable getReactableState updateReactable
+#' @importFrom shinyjs toggleState
+#' @importFrom shinyWidgets sendSweetAlert
+#' @importFrom stringr str_c
 mod_import_cohort_atlas_server <- function(id, r_connection, r_cohorts) {
   shiny::moduleServer(id, function(input, output, session) {
     ns <- session$ns
@@ -114,13 +117,13 @@ mod_import_cohort_atlas_server <- function(id, r_connection, r_cohorts) {
       selected_cohorts <- r$atlas_cohorts_list %>% dplyr::slice(r_selected_index())
 
       ## Check status of selected cohorts
-      CohortOperationsShinyApp::sweetAlert_spiner("Checking cohorts' status")
+      CohortOperationsShinyApp::sweetAlert_spinner("Checking cohorts' status")
 
       n_selected <- nrow(selected_cohorts)
       for (i in 1:n_selected) {
         selected_cohorts[i, "status"] <- CDMTools::getCohortStatus(r_connection$cdm_webapi_conn, selected_cohorts[[i, "cohort_id"]])
       }
-      CohortOperationsShinyApp::remove_sweetAlert_spiner()
+      CohortOperationsShinyApp::remove_sweetAlert_spinner()
 
       # if any of the status is not COMPLETED error user
       not_compleated_cohorts <- selected_cohorts %>%
@@ -142,10 +145,10 @@ mod_import_cohort_atlas_server <- function(id, r_connection, r_cohorts) {
       }
 
       ## Import cohorts
-      CohortOperationsShinyApp::sweetAlert_spiner("Importing cohorts")
+      CohortOperationsShinyApp::sweetAlert_spinner("Importing cohorts")
 
       tmp_r_imported_cohortData <- CDMTools::getCohortData(r_connection$cdm_webapi_conn, selected_cohorts %>% dplyr::pull(cohort_id))
-      if (CohortOperationsShinyApp::get_golem_config("enviroment") == "atlas-development") {
+      if (get_golem_config("enviroment") == "atlas-development") {
         tmp_r_imported_cohortData <- tmp_r_imported_cohortData %>%
           # TEMPFIX
           dplyr::mutate(
@@ -157,7 +160,7 @@ mod_import_cohort_atlas_server <- function(id, r_connection, r_cohorts) {
       }
       r_to_append$cohortData <- tmp_r_imported_cohortData
       # print(FinnGenTableTypes::is_cohortData(r$imported_cohortData, verbose = T))
-      CohortOperationsShinyApp::remove_sweetAlert_spiner()
+      CohortOperationsShinyApp::remove_sweetAlert_spinner()
 
     })
 

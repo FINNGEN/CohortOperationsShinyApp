@@ -23,7 +23,6 @@ usethis::use_package( "bigrquery" )
 usethis::use_package( "FinnGenTableTypes" )
 usethis::use_package("shinyWidgets")
 usethis::use_package("shinyjqui")
-usethis::use_package("shinycssloaders")
 usethis::use_package("dplyr")
 usethis::use_package("httr")
 usethis::use_package("reactable")
@@ -31,6 +30,8 @@ usethis::use_package("readr")
 usethis::use_package("DatabaseConnector")
 usethis::use_package("markdown")
 usethis::use_package("shinyjs")
+usethis::use_package("shinycustomloader")
+usethis::use_package("stringr")
 
 
 ## Add modules ----
