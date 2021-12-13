@@ -27,7 +27,7 @@
       "RemoteHost": "api.github.com",
       "RemoteRepo": "CohortOperationsShinyApp",
       "RemoteUsername": "FINNGEN",
-      "RemoteRef": "master"
+      "RemoteRef": "v0.1.0"
     },
     "DatabaseConnector": {
       "Package": "DatabaseConnector",
@@ -47,7 +47,7 @@
       "RemoteHost": "api.github.com",
       "RemoteRepo": "FinnGenTableTypes",
       "RemoteUsername": "FINNGEN",
-      "RemoteRef": "master"
+      "RemoteRef": "v0.1.0"
     },
     "ROhdsiWebApi": {
       "Package": "ROhdsiWebApi",
