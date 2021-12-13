@@ -12,6 +12,7 @@
 mod_import_cohort_file_ui <- function(id) {
   ns <- shiny::NS(id)
   htmltools::tagList(
+   use_mod_append_cohort_ui(),
     shinyjs::useShinyjs(),
     #
     shiny::fileInput(ns("file_fi"), "Choose tsv file using cohortData format:",
@@ -117,13 +118,13 @@ mod_import_cohort_file_server <- function(id, r_cohorts) {
     })
 
     shiny::observeEvent(input$import_b, {
-      shiny::req(selected_cohorts())
+      shiny::req(r_selected_index())
       ## copy selected to
       r_to_append$cohortData <- dplyr::semi_join(
         r_file$imported_cohortData,
         r_file$imported_cohortData %>%
           dplyr::distinct(COHORT_NAME, COHORT_SOURCE) %>%
-          dplyr::slice(selected_cohorts()),
+          dplyr::slice(r_selected_index()),
         by = c("COHORT_SOURCE", "COHORT_NAME")
       )
     })
@@ -138,6 +139,7 @@ mod_import_cohort_file_server <- function(id, r_cohorts) {
       shinyjs::reset("file_fi")
       r_file$tmp_file <- NULL
       r_file$imported_cohortData <- NULL
+      r_to_append$cohortData <- NULL
       reactable::updateReactable("cohorts_reactable", selected = NA, session = session )
     })
 

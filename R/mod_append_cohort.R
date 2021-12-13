@@ -1,3 +1,18 @@
+#' mod_append_cohort_ui UI Function
+#'
+#' @description A shiny Module.
+#'
+#' @param id,input,output,session Internal parameters for {shiny}.
+#'
+#' @noRd
+#'
+#' @importFrom shiny NS tagList
+#' @importFrom shinyWidgets useSweetAlert
+use_mod_append_cohort_ui <- function() {
+  shinyWidgets::useSweetAlert()
+}
+
+
 #' server_append_cohort Server Functions
 #'
 #' @noRd

@@ -75,6 +75,8 @@ usethis::use_test( "mod_append_cohort" )
 usethis::use_test("mod_import_cohorts")
 usethis::use_test( "mod_import_cohort_file" )
 usethis::use_test( "mod_import_cohort_atlas" )
+#
+usethis::use_test( "mod_operate_cohorts")
 
 # Documentation
 

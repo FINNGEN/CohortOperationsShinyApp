@@ -12,6 +12,8 @@
 mod_operate_cohorts_ui <- function(id) {
   ns <- shiny::NS(id)
   htmltools::tagList(
+    use_mod_append_cohort_ui(),
+    shinyWidgets::useSweetAlert(),
     shinyjs::useShinyjs(),
     # TEMP FIX: shinyjqui::updateOrderInput does not update when shinyjqui::orderInput is in as_source = TRUE mode. Lets build the whole thing on server
     shiny::uiOutput(ns("operation_expresion")),
@@ -41,53 +43,99 @@ mod_operate_cohorts_server <- function(id, r_cohorts) {
     #
     # reactive variables
     #
-    r <- shiny::reactiveValues(
-      result_cohortData = FinnGenTableTypes::empty_cohortData()
+    r_to_operate <- shiny::reactiveValues(
+      cohortData = FinnGenTableTypes::empty_cohortData(),
+      summaryCohortData = FinnGenTableTypes::empty_cohortData() %>% FinnGenTableTypes::summarise_cohortData()
     )
+
+    r_to_append <- shiny::reactiveValues(
+      cohortData = FinnGenTableTypes::empty_cohortData()
+    )
+
+    #
+    # r_to_operate only the cohorts that are not from cohortOperations
+    #
+    shiny::observe({
+      r_to_operate$cohortData <- r_cohorts$cohortData %>% dplyr::filter(COHORT_SOURCE!="CohortOperation")
+      r_to_operate$summaryCohortData <- r_cohorts$summaryCohortData %>% dplyr::filter(COHORT_SOURCE!="CohortOperation")
+    })
 
     #
     # creates UI for defining operation expression (TEMP FIX)
     #
     output$operation_expresion <- shiny::renderUI({
-      # req(r_cohorts$cohortData)
-
-      cohort_names <- r_cohorts$cohortData %>%
+      cohort_names <- r_to_operate$cohortData %>%
         dplyr::distinct(COHORT_NAME) %>%
         dplyr::pull(COHORT_NAME)
 
       htmltools::tagList(
-        shinyWidgets::pickerInput(
-          ns("entry_cohort_names_picker"),
-          "Select one or more entry cohorts",
-          choices = cohort_names,
-          multiple = TRUE
+
+        shiny::fluidRow(
+          shiny::column(
+            4,
+            shinyWidgets::pickerInput(
+              inputId = ns("entry_cohort_names_picker"),
+              label = "Select one or more entry cohorts",
+              choices = cohort_names,
+              multiple = TRUE
+            )
+          ),
+          shiny::column(
+            4,
+            shinyWidgets::radioGroupButtons(
+              inputId = ns("entry_cohort_start_rb"),
+              label = "New cohorts starts with:",
+              choices = c("first", "last"),
+              selected = "first",
+              status = "primary",
+              checkIcon = list(
+                yes = icon("ok", lib = "glyphicon"),
+                no = icon("remove", lib = "glyphicon")
+              )
+            )
+          ),
+          shiny::column(
+            4,
+            shinyWidgets::radioGroupButtons(
+              inputId = ns("entry_cohort_end_rb"),
+              label = "New cohorts ends with: ",
+              choices = c("first", "last"),
+              selected = "last",
+              status = "primary",
+              checkIcon = list(
+                yes = icon("ok", lib = "glyphicon"),
+                no = icon("remove", lib = "glyphicon")
+              )
+            )
+          )
         ),
         shinyjqui::orderInput(
-          ns("source_boxes"),
-          "Operation Elements",
+          inputId = ns("source_boxes"),
+          label = "Operation Elements",
           items = c("(", ")", "AND-IN", "OR-IN", "NOT-IN", cohort_names),
           as_source = TRUE, connect = ns("dest_boxes")
         ),
         shinyjqui::orderInput(
-          ns("dest_boxes"),
-          "Operate entry cohorts",
+          inputId = ns("dest_boxes"),
+          label = "Operate entry cohorts",
           items = NULL, placeholder = "Drag operation elements here..."
         )
       )
     })
 
-
     #
     # calculates total expresion
     #
-    output$entry_cohort_names_text <- shiny::renderText({
+    r_result_expresion <- reactive({
+      shiny::req(input$entry_cohort_start_rb)
+
       result_expresion <- ""
       if (!is.null(input$entry_cohort_names_picker)) {
-        result_expresion <- stringr::str_c("[", stringr::str_c(input$entry_cohort_names_picker, collapse = " | "), "]")
+        result_expresion <- stringr::str_c("[", stringr::str_c(input$entry_cohort_names_picker, collapse = " OR-IN "), "]")
       }
       if (!is.null(input$dest_boxes)) {
         if (nchar(result_expresion) != 0) {
-          result_expresion <- stringr::str_c(result_expresion, "&")
+          result_expresion <- stringr::str_c(result_expresion, " AND-IN ")
         }
         result_expresion <- stringr::str_c(result_expresion, "(", stringr::str_c(input$dest_boxes, collapse = " "), ")")
       }
@@ -98,12 +146,17 @@ mod_operate_cohorts_server <- function(id, r_cohorts) {
       result_expresion
     })
 
+    output$entry_cohort_names_text <- shiny::renderText({
+      r_result_expresion()
+    })
+
 
     #
-    # plots overlap
+    # Runs cohortData_union
     #
-    output$upset_plot <- shiny::renderPlot({
-      shiny::req(nrow(r_cohorts$cohortData) != 0)
+    r_result_operation <- shiny::reactive({
+      shiny::req(input$entry_cohort_start_rb)
+      shiny::req(nrow(r_to_operate$cohortData) != 0)
 
       op_exp <- NULL
       if (!is.null(input$dest_boxes)) {
@@ -120,60 +173,128 @@ mod_operate_cohorts_server <- function(id, r_cohorts) {
       result_operation <- tryCatch(
         {
           FinnGenTableTypes::cohortData_union(
-            r_cohorts$cohortData,
+            r_to_operate$cohortData,
             entry_cohorts = input$entry_cohort_names_picker,
-            operation_expresion = op_exp
+            operation_expresion = op_exp,
+            entry_cohorts_start_date = input$entry_cohort_start_rb,
+            entry_cohorts_end_date = input$entry_cohort_end_rb
           )
         },
         error = function(e) e$message
       )
 
-      # if operation failed, error
-      if (!tibble::is_tibble(result_operation)) {
-        r$result_cohortData <- FinnGenTableTypes::empty_cohortData()
-        shiny::validate(shiny::need(FALSE, "Operation expresion is malformed"))
-      }
+      result_operation$new_cohortData <- result_operation$new_cohortData %>%
+        dplyr::mutate(COHORT_NAME = r_result_expresion() %>% stringr::str_replace_all("[:blank:]","_"))
 
-      # if correct update result_cohortData and upset plot
-      r$result_cohortData <- result_operation
-      result_cohort_name <- result_operation %>%
-        dplyr::distinct(COHORT_NAME) %>%
-        dplyr::pull(COHORT_NAME)
-      if (length(result_cohort_name) == 0) {
-        result_cohort_name <- ""
-      }
-
-      FinnGenTableTypes::plot_upset_cohortData(
-        dplyr::bind_rows(r_cohorts$cohortData, result_operation),
-        output_cohort = result_cohort_name
-      )
+      result_operation
     })
 
 
     #
-    # updates output$cohorts_reactable with given r_cohorts
+    # plots upset overlap
+    #
+    output$upset_plot <- shiny::renderPlot({
+      result_operation <- r_result_operation()
+      # if operation failed, show error
+      shiny::validate(shiny::need(!is.character(result_operation), "Operation expresion is malformed"))
+
+      FinnGenTableTypes::plot_upset_cohortsOverlap(result_operation$cohortsOverlap)
+    })
+
+    #
+    # plots new cohort table
     #
     output$cohort_output_reactable <- reactable::renderReactable({
-      r$result_cohortData %>%
-        FinnGenTableTypes::summarise_cohortData() %>%
-        FinnGenTableTypes::table_summarycohortData()
+      result_operation <- r_result_operation()
+
+      if(is.character(result_operation)){
+        FinnGenTableTypes::empty_cohortData() %>%
+          FinnGenTableTypes::summarise_cohortData() %>%
+          FinnGenTableTypes::table_summarycohortData()
+      }else{
+        result_operation$new_cohortData %>%
+          FinnGenTableTypes::summarise_cohortData() %>%
+          FinnGenTableTypes::table_summarycohortData()
+      }
     })
 
 
     #
-    # action button copy_db : download cohortData
+    # action button copy_b : append cohort
     #
     observe({
-      shinyjs::toggleState("copy_b", condition = {nrow(r$result_cohortData) != 0} )
+      result_operation <- r_result_operation()
+      condition <- !is.character(result_operation)
+      if(condition) condition <- (nrow(result_operation$new_cohortData) != 0)
+      shinyjs::toggleState("copy_b", condition = condition )
     })
 
     observeEvent(input$copy_b, {
-
+      result_operation <- r_result_operation()
+      r_to_append$cohortData <- result_operation$new_cohortData
     })
+
+    #
+    # evaluate the cohorts to append; if accepted increase output to trigger closing actions
+    #
+    r_append_accepted_counter <- mod_append_cohort_server("operated_cohort", r_cohorts, r_to_append )
+
+    # close and reset
+    shiny::observeEvent(r_append_accepted_counter(), {
+      shiny::req(r_append_accepted_counter()!=0)
+      r_to_append$cohortData <- NULL
+
+      shinyWidgets::updatePickerInput(
+        session = session,
+        inputId = "entry_cohort_names_picker",
+        selected =  TRUE
+      )
+
+      .updateOrderInput(
+        session = session,
+        inputId = "dest_boxes",
+        items = NULL
+      )
+
+      # shinyjs::reset("file_fi")
+      # r_file$tmp_file <- NULL
+      # r_file$imported_cohortData <- NULL
+      # reactable::updateReactable("cohorts_reactable", selected = NA, session = session )
+    })
+
 
   })
 }
 
+
+#FIX: this is a fix for shinyjqui::updateOrderInput
+# as stated in the docummentation shinyjqui::updateOrderInput does not update itmes to NULL
+# this is necesary to empty the operation expresion
+.updateOrderInput <- function (session, inputId, label = NULL,
+                              items = NULL, connect = NULL,
+                              item_class = NULL) {
+  item_class = match.arg(item_class,
+                         c("default", "primary", "success",
+                           "info", "warning", "danger"))
+ # if(!is.null(items)) {
+    items <- shinyjqui:::digestItems(items)
+    #}
+  if(!is.null(connect)){
+    if(connect == FALSE) {
+      connect <- "false"
+    } else {
+      connect <- paste0("#", connect, collapse = ", ")
+    }
+  }
+  message <- list(label      = label,
+                  items      = items,
+                  connect    = connect,
+                  item_class = item_class)
+  message <- Filter(Negate(is.null), message)
+  session$sendInputMessage(inputId, message)
+}
+
+#
 # r_cohorts <- reactiveValues(
 #   cohortData = test_cohortData,
 #   summaryCohortData = FinnGenTableTypes::summarise_cohortData(test_cohortData)

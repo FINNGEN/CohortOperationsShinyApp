@@ -19,9 +19,11 @@ app_ui <- function(request) {
       shinydashboard::dashboardSidebar(
         shinydashboard::sidebarMenu(
           shinydashboard::menuItem("Info", tabName = "info", icon = icon("info")),
-          h4("Settings"),
+          h5(" Cohort Creation"),
           shinydashboard::menuItem("Import Cohorts", tabName = "importcohorts", icon = icon("address-card")),
-          shinydashboard::menuItem("Operate Cohorts", tabName = "operatecohorts", icon = icon("sliders-h"))
+          shinydashboard::menuItem("Operate Cohorts", tabName = "operatecohorts", icon = icon("sliders-h")),
+          h5(" Cohort Charaterisation"),
+          shinydashboard::menuItem("PheWAS", tabName = "phewas", icon = icon("briefcase-medical"))
         )
       ),
 

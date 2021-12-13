@@ -11,8 +11,8 @@
 #' @importFrom reactable reactableOutput
 mod_import_cohort_atlas_ui <- function(id) {
   ns <- shiny::NS(id)
-
   shiny::tagList(
+    use_mod_append_cohort_ui(),
     shinyjs::useShinyjs(),
     # uses :
     shinyWidgets::useSweetAlert(),
