@@ -82,6 +82,31 @@ app_ui <- function(request) {
               status = "primary", solidHeader = FALSE, width = 12,
               mod_operate_cohorts_ui("mod_operate_cohorts")
             )
+          ),
+          ## PheWAS
+          shinydashboard::tabItem(
+            tabName = "phewas",
+            ### Cohorts workbech
+            shinydashboard::box(
+              title = "Cohorts workbech", status = "primary", solidHeader = TRUE, width = 12,
+              mod_cohorts_table_ui("mod_cohorts_table_phewas")
+            ),
+            ### phewas config
+            shinydashboard::box(
+              title = tagList(shiny::icon("clone"), "PheWAS settings:"),
+              status = "primary", solidHeader = FALSE, width = 12,
+              h6("select cases from workbench"),
+              h6("select controls from workbench"),
+              h6("aditional config"),
+              shiny::actionButton("runphewas", "Run PheWAS")
+            ),
+            shinydashboard::box(
+              title = tagList(shiny::icon("clone"), "PheWAS results:"),
+              status = "primary", solidHeader = FALSE, width = 12,
+              shiny::radioButtons("runphewas", "Show",
+                                  choices = c("Table", "Manhatan Plot", "Case vs Controls Plot"),
+                                  inline = TRUE)
+            )
           )
         )
       )
