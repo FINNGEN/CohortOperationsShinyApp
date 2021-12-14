@@ -80,10 +80,7 @@ Sys.setenv(GOLEM_CONFIG_ACTIVE="<config_tag_in_golem-config.yml>")
 #Sys.setenv(GCP_BILLING_PROJECT_ID="fg-production-sandbox-<your sandbox number>" ) # necesary if in sandbox
 
 # run shiny app
-run_app(
-  options = list(
-    shiny.maxRequestSize=300*1024^2 #increases upload limit size, 
-  )
+run_app()
 )
 ```
 
