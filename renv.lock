@@ -9,7 +9,7 @@
     ]
   },
   "Packages": {
-     "CDMTools": {
+  "CDMTools": {
       "Package": "CDMTools",
       "Version": "0.0.0.9004",
       "Source": "GitHub",
@@ -51,7 +51,7 @@
     },
     "ROhdsiWebApi": {
       "Package": "ROhdsiWebApi",
-      "Version": "1.1.0",
+      "Version": "1.2.0",
       "Source": "GitHub",
       "RemoteType": "github",
       "RemoteHost": "api.github.com",
@@ -1073,6 +1073,13 @@
       "Source": "Repository",
       "Repository": "CRAN",
       "Hash": "c7b33904fbc377562122f38862d17841"
+    },
+    "shinyjs": {
+      "Package": "shinyjs",
+      "Version": "2.0.0",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "9ddfc91d4280eaa34c2103951538976f"
     },
     "snakecase": {
       "Package": "snakecase",
