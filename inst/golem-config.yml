@@ -30,5 +30,6 @@ production:
   GCP_PROJECT_ID: finngen-production-library
   CDMTOOLS_webapi_url: https://ohdsi-webapi.app.finngen.fi/WebAPI
   CDMTOOLS_CDM_source_key_test: FINNGEN_CDM_R7
+  gc_shiny.maxRequestSize: 314572800 #300Mb
 dev:
   golem_wd: !expr here::here()

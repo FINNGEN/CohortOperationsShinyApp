@@ -14,6 +14,11 @@ run_app <- function(onStart = NULL,
                     ...) {
   library(tidyverse)
 
+  maxsize <- get_golem_config("gc_shiny.maxRequestSize")
+  if(!is.null(maxsize)){
+    options(shiny.maxRequestSize = maxsize)
+  }
+
   with_golem_options(
     app = shinyApp(
       ui = app_ui,
