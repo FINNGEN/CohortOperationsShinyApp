@@ -5,11 +5,12 @@ LABEL maintainer="javier.graciatabuenca@tuni.fi"
 
 # ENV variables,
 # used during building
-ENV GITHUB_PAT GITHUB_PAT
+ARG GITHUB_PAT
+ENV GITHUB_PAT $GITHUB_PAT
 # used during runtime
 ENV port="8888"
 ENV host="0.0.0.0"
-ENV GOLEM_CONFIG_ACTIVE="dev_sandbox_javier"
+ENV GOLEM_CONFIG_ACTIVE="production"
 ENV GCP_BILLING_PROJECT_ID="fg-production-sandbox-4"
 
 # install devian dependecies
@@ -29,5 +30,5 @@ RUN R -e 'renv::restore()'
 
 # Run time
 EXPOSE $port
-CMD R -e "options('shiny.port'=$port,shiny.host='$host',shiny.maxRequestSize=300*1024^2);CohortOperationsShinyApp::run_app()"
+CMD R -e "options('shiny.port'=$port,shiny.host='$host');CohortOperationsShinyApp::run_app()"
 

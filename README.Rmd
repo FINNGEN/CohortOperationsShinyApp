@@ -89,11 +89,23 @@ run_app()
 
 ### Configure
 
-Get a token from github ([instructions](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token)). Is recommended to set the live of the token to one day.  
+Get a token from github [github.com/settings/tokens](https://github.com/settings/tokens).
+Is recommended to set the live of the token to one day.  
 
+Set the token in the environmental variable `GITHUB_PAT`
+
+```{bash, eval=FALSE}
+export GITHUB_PAT="<paste_token>")
+```
       
 ### Build
+Clone repository, cd into main file and Build:
 
+```{bash, eval=FALSE}
+git clone <CohortOperationsShinyApp>
+cd <CohortOperationsShinyApp>
+sudo docker build .
+```
 
 
 ### Run 

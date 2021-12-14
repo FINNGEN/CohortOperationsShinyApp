@@ -9,27 +9,7 @@
     ]
   },
   "Packages": {
-  "CDMTools": {
-      "Package": "CDMTools",
-      "Version": "0.0.0.9004",
-      "Source": "GitHub",
-      "RemoteType": "github",
-      "RemoteHost": "api.github.com",
-      "RemoteRepo": "CDMTools",
-      "RemoteUsername": "FINNGEN",
-      "RemoteRef": "changes_shiny_apps"
-    },
-    "CohortOperationsShinyApp": {
-      "Package": "CohortOperationsShinyApp",
-      "Version": "0.0.0.9000",
-      "Source": "GitHub",
-      "RemoteType": "github",
-      "RemoteHost": "api.github.com",
-      "RemoteRepo": "CohortOperationsShinyApp",
-      "RemoteUsername": "FINNGEN",
-      "RemoteRef": "master"
-    },
-    "DatabaseConnector": {
+  "DatabaseConnector": {
       "Package": "DatabaseConnector",
       "Version": "4.0.2",
       "Source": "GitHub",
@@ -38,6 +18,26 @@
       "RemoteRepo": "DatabaseConnector",
       "RemoteUsername": "FINNGEN",
       "RemoteRef": "bigrquery"
+    },
+    "ROhdsiWebApi": {
+      "Package": "ROhdsiWebApi",
+      "Version": "1.2.0",
+      "Source": "GitHub",
+      "RemoteType": "github",
+      "RemoteHost": "api.github.com",
+      "RemoteRepo": "ROhdsiWebApi",
+      "RemoteUsername": "FINNGEN",
+      "RemoteRef": "fg-sandbox"
+    },
+    "CDMTools": {
+      "Package": "CDMTools",
+      "Version": "0.0.0.9004",
+      "Source": "GitHub",
+      "RemoteType": "github",
+      "RemoteHost": "api.github.com",
+      "RemoteRepo": "CDMTools",
+      "RemoteUsername": "FINNGEN",
+      "RemoteRef": "changes_shiny_apps"
     },
     "FinnGenTableTypes": {
       "Package": "FinnGenTableTypes",
@@ -49,15 +49,15 @@
       "RemoteUsername": "FINNGEN",
       "RemoteRef": "master"
     },
-    "ROhdsiWebApi": {
-      "Package": "ROhdsiWebApi",
-      "Version": "1.2.0",
+    "CohortOperationsShinyApp": {
+      "Package": "CohortOperationsShinyApp",
+      "Version": "0.0.0.9000",
       "Source": "GitHub",
       "RemoteType": "github",
       "RemoteHost": "api.github.com",
-      "RemoteRepo": "ROhdsiWebApi",
+      "RemoteRepo": "CohortOperationsShinyApp",
       "RemoteUsername": "FINNGEN",
-      "RemoteRef": "fg-sandbox"
+      "RemoteRef": "master"
     },
     "DBI": {
       "Package": "DBI",
