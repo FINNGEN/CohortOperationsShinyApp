@@ -59,7 +59,6 @@ Then zipped and uploaded to sandbox. Follow `renv::` instruction for a such situ
 
 >First open the R package using RStudio on a computer with internet (note: this should have the same operating system and R version). Specify the folder where your packages are stored by setting the RENV_PATHS_CACHE location (run `Sys.setenv("RENV_PATHS_CACHE"=paste0(getwd(),"/renv/cache"))`). Then run `renv::restore()` in the console. Manually move the study package to the environment without internet (this now includes all required R packages), activate the current project with renv::activate() and again run `Sys.setenv("RENV_PATHS_CACHE"=paste0(getwd(),"/renv/cache"))` followed by `renv::restore()` in the console.
 
-Alternatively, you can find a pre-build zip for sandbox for some releases in the github repository. 
 
 ### Configure 
 Configuration for your development environment can be set in `inst/golem-config.yml`. 
@@ -91,6 +90,8 @@ devtools::load_all(".")
 # set configuration 
 Sys.setenv(GOLEM_CONFIG_ACTIVE="<config_tag_in_golem-config.yml>")
 # if this is not set, default configuration is no_connection environment
+# Rstudio in sandbox is not reading the system environmental variables, force the envar as 
+# Sys.setenv(BUCKET_SANDBOX_IVM="fg-production-sandbox-<n sandbox>_ivm")
 
 # run shiny app
 run_app()

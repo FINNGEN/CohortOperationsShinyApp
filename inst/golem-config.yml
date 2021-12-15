@@ -12,6 +12,7 @@ dev_laptop_javier:
   CDMTOOLS_webapi_url: http://localhost/WebAPI
   GCP_SERVICE_KEY: C:\Users\javier\.ssh\gq\computerenginedfault.json
   CDMTOOLS_CDM_source_key_test: dummy_df6v2_1k_13_finngen_omop_bq
+  gc_shiny.maxRequestSize: 314572800 #300Mb #overwrites shiny.maxRequestSize
 dev_sandbox_javier:
   enviroment: sandbox
   app_prod: no
@@ -19,6 +20,7 @@ dev_sandbox_javier:
   GCP_PROJECT_ID: finngen-production-library
   CDMTOOLS_webapi_url: https://ohdsi-webapi.app.finngen.fi/WebAPI
   CDMTOOLS_CDM_source_key_test: FINNGEN_CDM_R7
+  gc_shiny.maxRequestSize: 314572800 #300Mb #overwrites shiny.maxRequestSize
 production:
   enviroment: sandbox
   app_prod: yes
