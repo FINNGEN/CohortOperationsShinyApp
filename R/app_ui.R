@@ -35,7 +35,8 @@ app_ui <- function(request) {
             tabName = "info",
             shiny::includeMarkdown(app_sys("app/info_md/info_main_page.md")),
             tags$b("Connection status:"),
-            mod_connection_to_db_ui("mod_connection_to_db")
+            mod_connection_to_db_ui("mod_connection_to_db"),
+            h6("Runing in enviroment: ", get_golem_config("enviroment"))
           ),
           ## Import Cohorts
           shinydashboard::tabItem(
