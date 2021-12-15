@@ -89,22 +89,17 @@ run_app()
 
 ### Configure
 
+Before any of the following steps you need a github token to access the code in the private repositories.
 Get a token from github [github.com/settings/tokens](https://github.com/settings/tokens).
 Is recommended to set the live of the token to one day.  
 
-Set the token in the environmental variable `GITHUB_PAT`
-
-```{bash, eval=FALSE}
-export GITHUB_PAT="<paste_token>")
-```
-      
 ### Build
-Clone repository, cd into main file and Build:
+Clone repository, cd into main file and build giving as argument the github token:
 
 ```{bash, eval=FALSE}
-git clone <CohortOperationsShinyApp>
+git clone <CohortOperationsShinyApp_url>
 cd <CohortOperationsShinyApp>
-sudo docker build .
+sudo docker build -t <docker_name> --build-arg GITHUB_PAT=<paste_token> .
 ```
 
 

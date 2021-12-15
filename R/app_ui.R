@@ -33,7 +33,7 @@ app_ui <- function(request) {
           ## info
           shinydashboard::tabItem(
             tabName = "info",
-            includeMarkdown(app_sys("app/info_md/info_main_page.md")),
+            shiny::includeMarkdown(app_sys("app/info_md/info_main_page.md")),
             tags$b("Connection status:"),
             mod_connection_to_db_ui("mod_connection_to_db")
           ),
@@ -58,13 +58,13 @@ app_ui <- function(request) {
               #### panel ATLAS
               shiny::tabPanel(
                 "from Atlas",
-                CohortOperationsShinyApp::mod_import_cohort_atlas_ui("mod_import_cohort_atlas")
+                mod_import_cohort_atlas_ui("mod_import_cohort_atlas")
               ),
               #### panel FILE
               shiny::tabPanel(
                 "from File",
                 #htmltools::h2("This is possible if file in cohortTable format"),
-                CohortOperationsShinyApp::mod_import_cohort_file_ui("mod_import_cohort_file")
+                mod_import_cohort_file_ui("mod_import_cohort_file")
               )
             )
           ),

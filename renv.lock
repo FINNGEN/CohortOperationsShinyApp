@@ -9,26 +9,6 @@
     ]
   },
   "Packages": {
-  "DatabaseConnector": {
-      "Package": "DatabaseConnector",
-      "Version": "4.0.2",
-      "Source": "GitHub",
-      "RemoteType": "github",
-      "RemoteHost": "api.github.com",
-      "RemoteRepo": "DatabaseConnector",
-      "RemoteUsername": "FINNGEN",
-      "RemoteRef": "bigrquery"
-    },
-    "ROhdsiWebApi": {
-      "Package": "ROhdsiWebApi",
-      "Version": "1.2.0",
-      "Source": "GitHub",
-      "RemoteType": "github",
-      "RemoteHost": "api.github.com",
-      "RemoteRepo": "ROhdsiWebApi",
-      "RemoteUsername": "FINNGEN",
-      "RemoteRef": "fg-sandbox"
-    },
     "CDMTools": {
       "Package": "CDMTools",
       "Version": "0.0.0.9004",
@@ -37,27 +17,8 @@
       "RemoteHost": "api.github.com",
       "RemoteRepo": "CDMTools",
       "RemoteUsername": "FINNGEN",
-      "RemoteRef": "changes_shiny_apps"
-    },
-    "FinnGenTableTypes": {
-      "Package": "FinnGenTableTypes",
-      "Version": "0.0.0.9000",
-      "Source": "GitHub",
-      "RemoteType": "github",
-      "RemoteHost": "api.github.com",
-      "RemoteRepo": "FinnGenTableTypes",
-      "RemoteUsername": "FINNGEN",
-      "RemoteRef": "master"
-    },
-    "CohortOperationsShinyApp": {
-      "Package": "CohortOperationsShinyApp",
-      "Version": "0.0.0.9000",
-      "Source": "GitHub",
-      "RemoteType": "github",
-      "RemoteHost": "api.github.com",
-      "RemoteRepo": "CohortOperationsShinyApp",
-      "RemoteUsername": "FINNGEN",
-      "RemoteRef": "master"
+      "RemoteRef": "changes_shiny_apps",
+      "Hash": "9d5b8c174dece643fe2f562983583493"
     },
     "DBI": {
       "Package": "DBI",
@@ -73,6 +34,28 @@
       "Repository": "CRAN",
       "Hash": "6df7d86466f183ab0edcd8e6050b38e1"
     },
+    "DatabaseConnector": {
+      "Package": "DatabaseConnector",
+      "Version": "4.0.2",
+      "Source": "GitHub",
+      "RemoteType": "github",
+      "RemoteHost": "api.github.com",
+      "RemoteRepo": "DatabaseConnector",
+      "RemoteUsername": "FINNGEN",
+      "RemoteRef": "bigrquery",
+      "Hash": "994e0df9f596b1fa8db96a2257af28ab"
+    },
+    "FinnGenTableTypes": {
+      "Package": "FinnGenTableTypes",
+      "Version": "0.0.0.9000",
+      "Source": "GitHub",
+      "RemoteType": "github",
+      "RemoteHost": "api.github.com",
+      "RemoteRepo": "FinnGenTableTypes",
+      "RemoteUsername": "FINNGEN",
+      "RemoteRef": "master",
+      "Hash": "074d1becc96457f4bcbfdcaefad8212a"
+    },
     "MASS": {
       "Package": "MASS",
       "Version": "7.3-54",
@@ -86,13 +69,6 @@
       "Source": "Repository",
       "Repository": "CRAN",
       "Hash": "4ed05e9c9726267e4a5872e09c04587c"
-    },
-    "ParallelLogger": {
-      "Package": "ParallelLogger",
-      "Version": "2.0.2",
-      "Source": "Repository",
-      "Repository": "CRAN",
-      "Hash": "0074bd599ec7ac7abd9ee471adc1ad95"
     },
     "R6": {
       "Package": "R6",
@@ -114,6 +90,17 @@
       "Source": "Repository",
       "Repository": "CRAN",
       "Hash": "0c7658433758cea5bcae50edd02b55b7"
+    },
+    "ROhdsiWebApi": {
+      "Package": "ROhdsiWebApi",
+      "Version": "1.2.0",
+      "Source": "GitHub",
+      "RemoteType": "github",
+      "RemoteHost": "api.github.com",
+      "RemoteRepo": "ROhdsiWebApi",
+      "RemoteUsername": "FINNGEN",
+      "RemoteRef": "fg-sandbox",
+      "Hash": "6c1a987efd47ebdb9fe10f7a90be452b"
     },
     "Rcpp": {
       "Package": "Rcpp",
@@ -922,10 +909,10 @@
     },
     "remotes": {
       "Package": "remotes",
-      "Version": "2.4.1",
+      "Version": "2.4.2",
       "Source": "Repository",
       "Repository": "CRAN",
-      "Hash": "feaca31e417db79fd1832e25b51a7717"
+      "Hash": "227045be9aee47e6dda9bb38ac870d67"
     },
     "renv": {
       "Package": "renv",
@@ -1046,13 +1033,6 @@
       "Repository": "CRAN",
       "Hash": "9bdabea3a78fd6a0768c2a319d36264e"
     },
-    "shinycssloaders": {
-      "Package": "shinycssloaders",
-      "Version": "1.0.0",
-      "Source": "Repository",
-      "Repository": "CRAN",
-      "Hash": "f39bb3c44a9b496723ec7e86f9a771d8"
-    },
     "shinycustomloader": {
       "Package": "shinycustomloader",
       "Version": "0.9.0",
@@ -1087,13 +1067,6 @@
       "Source": "Repository",
       "Repository": "CRAN",
       "Hash": "4079070fc210c7901c0832a3aeab894f"
-    },
-    "snow": {
-      "Package": "snow",
-      "Version": "0.4-4",
-      "Source": "Repository",
-      "Repository": "CRAN",
-      "Hash": "40b74690debd20c57d93d8c246b305d4"
     },
     "sourcetools": {
       "Package": "sourcetools",

@@ -152,6 +152,7 @@ mod_operate_cohorts_server <- function(id, r_cohorts) {
         result_expresion <- "<font color=\"#AFAFAF\"> Select entry cohorts or operation elements </font>"
       }
       result_expresion
+
     })
 
     output$entry_cohort_names_text <- shiny::renderText({
@@ -191,8 +192,10 @@ mod_operate_cohorts_server <- function(id, r_cohorts) {
         error = function(e) e$message
       )
 
-      result_operation$new_cohortData <- result_operation$new_cohortData %>%
-        dplyr::mutate(COHORT_NAME = r_result_expresion() %>% stringr::str_replace_all("[:blank:]","_"))
+      if(!is.character(result_operation)){
+        result_operation$new_cohortData <- result_operation$new_cohortData %>%
+          dplyr::mutate(COHORT_NAME = r_result_expresion() %>% stringr::str_replace_all("[:blank:]","_"))
+      }
 
       result_operation
     })
@@ -276,17 +279,17 @@ mod_operate_cohorts_server <- function(id, r_cohorts) {
 
 
 #FIX: this is a fix for shinyjqui::updateOrderInput
-# as stated in the docummentation shinyjqui::updateOrderInput does not update itmes to NULL
-# this is necesary to empty the operation expresion
+# as stated in the docummentation shinyjqui::updateOrderInput does not update items to NULL
+# this is necessary to empty the operation expresion
 .updateOrderInput <- function (session, inputId, label = NULL,
-                              items = NULL, connect = NULL,
-                              item_class = NULL) {
+                               items = NULL, connect = NULL,
+                               item_class = NULL) {
   item_class = match.arg(item_class,
                          c("default", "primary", "success",
                            "info", "warning", "danger"))
- # if(!is.null(items)) {
-    items <- shinyjqui:::digestItems(items)
-    #}
+  # if(!is.null(items)) {
+  items <- shinyjqui:::digestItems(items)
+  #}
   if(!is.null(connect)){
     if(connect == FALSE) {
       connect <- "false"
