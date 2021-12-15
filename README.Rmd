@@ -66,8 +66,21 @@ Configuration for your development environment can be set in `inst/golem-config.
 Currently this file includes three environments: 
 
 - `no_connection`: To work with no connection to an Atlas instance. 
-- `atlas-development`: To work with Atlas install in an ivm in the atlas-development project in GCP.  
-- `sandbox`: To work in sandbox. This environment needs of an additional environmental variable `GCP_BILLING_PROJECT_ID` with bigquery's billing project name (eg. "fg-production-sandbox-4") 
+- `atlas-development`: To work with Atlas installed in an ivm in the atlas-development project in GCP. 
+This environment needs the following additional yalm variables to configure [FINNGEN/CDMTools](https://github.com/FINNGEN/CDMTools).   - `CDMTOOLS_dbms` = "bigquery-dbi"
+  - `GCP_PROJECT_ID` = "atlas-development-270609" 
+  - `GCP_BILLING_PROJECT_ID` = "atlas-development-270609"
+  - `CDMTOOLS_webapi_url` = "http://localhost/WebAPI"
+  - `CDMTOOLS_CDM_source_key_test` = "dummy_df6v2_1k_13_finngen_omop_bq"
+  - `GCP_SERVICE_KEY`: path to the GCP key to access the BQ in atlas-development
+  
+- `sandbox`: To work in sandbox.
+Sandbox must have set the following environmental variable `BUCKET_SANDBOX_IVM` with bigquery's billing project name ending in "_ivm" (eg. "fg-production-sandbox-4_ivm"). 
+This environment  also needs the following yalm variables: 
+  - `CDMTOOLS_dbms` = "bigquery-dbi"
+  - `GCP_PROJECT_ID` = "finngen-production-library"
+  - `CDMTOOLS_webapi_url` = "https://ohdsi-webapi.app.finngen.fi/WebAPI"
+  - `CDMTOOLS_CDM_source_key_test` = "FINNGEN_CDM_R7"
 
 ### Run 
 
@@ -77,7 +90,6 @@ devtools::load_all(".")
 
 # set configuration 
 Sys.setenv(GOLEM_CONFIG_ACTIVE="<config_tag_in_golem-config.yml>")
-#Sys.setenv(GCP_BILLING_PROJECT_ID="fg-production-sandbox-<your sandbox number>" ) # necesary if in sandbox
 
 # run shiny app
 run_app()

@@ -11,7 +11,6 @@ ENV GITHUB_PAT $GITHUB_PAT
 ENV port="8888"
 ENV host="0.0.0.0"
 ENV GOLEM_CONFIG_ACTIVE="production"
-ENV GCP_BILLING_PROJECT_ID="fg-production-sandbox-4"
 
 # install devian dependecies
 RUN apt-get update && apt-get install -y git-core libcurl4-openssl-dev libgit2-dev libicu-dev libssl-dev libxml2-dev \
