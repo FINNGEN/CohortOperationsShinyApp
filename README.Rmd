@@ -90,6 +90,7 @@ devtools::load_all(".")
 
 # set configuration 
 Sys.setenv(GOLEM_CONFIG_ACTIVE="<config_tag_in_golem-config.yml>")
+# if this is not set, default configuration is no_connection environment
 
 # run shiny app
 run_app()
