@@ -4,14 +4,15 @@ Javier Gracia-Tabuenca
 
 -   [Intro](#intro)
 -   [Development](#development)
-    -   [Install in laptop](#install-in-laptop)
-    -   [Install in Sandbox](#install-in-sandbox)
-    -   [Configure](#configure)
-    -   [Run](#run)
+    -   [Development in laptop](#development-in-laptop)
+    -   [Development in Sandbox](#development-in-sandbox)
+    -   [Configure development
+        enviroment](#configure-development-enviroment)
+    -   [Run in development](#run-in-development)
 -   [Deployment](#deployment)
-    -   [Configure](#configure-1)
-    -   [Build](#build)
-    -   [Run](#run-1)
+    -   [Build docker image](#build-docker-image)
+    -   [Move to sandbox](#move-to-sandbox)
+    -   [Run](#run)
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 <!-- badges: start -->
@@ -43,7 +44,7 @@ This project follows [Golem](https://engineering-shiny.org/golem.html)
 philosophy for the development of Shiny Apps, including modularisation,
 unit testing, shiny server testing, yalm configuration, and
 dockerisation. Moreover, this projects uses
-[renv](https://rstudio.github.io/renv/articles/renv.html) for pakage
+[renv](https://rstudio.github.io/renv/articles/renv.html) for package
 dependency management.
 
 ## Development
@@ -53,7 +54,7 @@ code in the private repositories. Set the environmental variable
 `GITHUB_PAT` with a token generated in
 [github.com/settings/tokens](https://github.com/settings/tokens). Token
 should include following permissions: “gist, repo, user, workflow”.
-Following code helps you to do that:
+Following code helps you to do that from R:
 
 ``` r
 # generate tocken 
@@ -63,7 +64,7 @@ usethis::create_github_token()
 Sys.setenv(GITHUB_PAT="<paste_token>")
 ```
 
-### Install in laptop
+### Development in laptop
 
 For development you can clone this repository and use `renv::` to
 install all the dependent packages.
@@ -71,35 +72,34 @@ install all the dependent packages.
 `renv::` automatically installs its self at the opening of the project.
 Then, run `renv::restore()` to install the dependent packages.
 
-### Install in Sandbox
+### Development in Sandbox
 
-Github’s zip can be uploaded to sandbox. However, dependencies cant be
-installed into the internetless sandbox IVM.
+Sandbox has not connection to the internet. However, dependencies cant
+be build in a temporal IVM with connection to the internet, zipped, and
+copy into Sandbox IVM. (note: the temporal IVM should have the same
+operating system and R version)
 
-The dependencies can be collected before in an machine with internet
-connection. Then zipped and uploaded to sandbox. Follow `renv::`
-instruction for a such situation:
+Follow `renv::` instruction for a such situation:
 
-> First open the R package using RStudio on a computer with internet
-> (note: this should have the same operating system and R version).
-> Specify the folder where your packages are stored by setting the
+> Clone the package on a computer with internet connection. Specify the
+> folder where your packages are stored by setting the
 > RENV\_PATHS\_CACHE location (run
 > `Sys.setenv("RENV_PATHS_CACHE"=paste0(getwd(),"/renv/cache"))`). Then
 > run `renv::restore()` in the console. Manually move the study package
 > to the environment without internet (this now includes all required R
-> packages), activate the current project with renv::activate() and
+> packages), activate the current project with `renv::activate()` and
 > again run
 > `Sys.setenv("RENV_PATHS_CACHE"=paste0(getwd(),"/renv/cache"))`
 > followed by `renv::restore()` in the console.
 
-Alternatively, you can find a pre-build zip for sandbox for some
-releases in the github repository.
-
-### Configure
+### Configure development enviroment
 
 Configuration for your development environment can be set in
-`inst/golem-config.yml`. Currently this file includes three
-environments:
+`inst/golem-config.yml`. And selected on run time seting the envar
+`GOLEM_CONFIG_ACTIVE` (see:
+[golem-config](https://engineering-shiny.org/golem.html?q=GOLEM_CONFIG_ACTIVE#golem-config))
+
+Currently this file includes three environments:
 
 -   `no_connection`: To work with no connection to an Atlas instance.
 -   `atlas-development`: To work with Atlas installed in an ivm in the
@@ -124,7 +124,9 @@ environments:
         “<https://ohdsi-webapi.app.finngen.fi/WebAPI>”
     -   `CDMTOOLS_CDM_source_key_test` = “FINNGEN\_CDM\_R7”
 
-### Run
+### Run in development
+
+Open R in the package folder, or open project in Rstudio.
 
 ``` r
 # load package
@@ -132,7 +134,9 @@ devtools::load_all(".")
 
 # set configuration 
 Sys.setenv(GOLEM_CONFIG_ACTIVE="<config_tag_in_golem-config.yml>")
-#Sys.setenv(GCP_BILLING_PROJECT_ID="fg-production-sandbox-<your sandbox number>" ) # necesary if in sandbox
+# if this is not set, default configuration is no_connection environment
+# Rstudio in sandbox is not reading the system environmental variables, force the envar as 
+# Sys.setenv(BUCKET_SANDBOX_IVM="fg-production-sandbox-<n sandbox>_ivm")
 
 # run shiny app
 run_app()
@@ -141,22 +145,56 @@ run_app()
 
 ## Deployment
 
-### Configure
+### Build docker image
 
-Before any of the following steps you need a github token to access the
-code in the private repositories. Get a token from github
-[github.com/settings/tokens](https://github.com/settings/tokens). Is
-recommended to set the live of the token to one day.
+Docker image can be build from scratch or, to save time, it can be built
+using the pre-compiled dependencies built in above section “Development
+in Sandbox”.
 
-### Build
-
-Clone repository, cd into main file and build giving as argument the
-github token:
+Both methods use the same command:
 
 ``` bash
-git clone <CohortOperationsShinyApp_url>
 cd <CohortOperationsShinyApp>
-sudo docker build -t <docker_name> --build-arg GITHUB_PAT=<paste_token> .
+sudo docker build -t <docker_image_name> --build-arg GITHUB_PAT=<paste_PAT_token> .
+```
+
+If `renv::restore()` was run with option
+`Sys.setenv("RENV_PATHS_CACHE"=paste0(getwd(),"/renv/cache"))`. The
+cache is copied into the docker image during building. If so, you mush
+keep updated the cache if it changes during development.
+
+Alternatively, you can never `renv::restore()` or erase “./renv/cache”
+folder. In this case, all packages will be donloaded and install during
+the buiilding process.
+
+### Move to sandbox
+
+Docker image can be save with:
+
+``` bash
+docker save --output <docker_image_name.tar> <docker_image_name>
+```
+
+Downloaded. For example using :
+
+``` bash
+python3 -m http.server 8888
+```
+
+Uploaded and loaded into sanxbox:
+
+``` bash
+docker load --input <docker_image_name.tar>
 ```
 
 ### Run
+
+Running image needs to tunnel the port and set envar
+`BUCKET_SANDBOX_IVM`
+
+TEMP: at the moment BUCKET\_SANDBOX\_IVM needs to be passed, bcs the
+docker is not getting the envars from the main.
+
+``` bash
+docker run -p 8888:8888 -e BUCKET_SANDBOX_IVM=$BUCKET_SANDBOX_IVM <docker_image_name>
+```
