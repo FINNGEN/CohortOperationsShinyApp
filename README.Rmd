@@ -33,10 +33,10 @@ For programming use cases check these:
 - [FINNGEN/FinnGenTableTypes](https://github.com/FINNGEN/FinnGenTableTypes): Provides tools to create and operate cohortData tables. 
 - [FINNGEN/CDMTools](https://github.com/FINNGEN/CDMTools): Provides connection to Atlas and Atlas' CDM databases. 
 
-This project follows [Golem](https://engineering-shiny.org/golem.html) philosophy for the development of Shiny Apps, including modularisation, unit testing, shiny server testing, yalm configuration, and dockerisation. Moreover, this projects uses [renv](https://rstudio.github.io/renv/articles/renv.html) for pakage dependency management. 
+This project follows [Golem](https://engineering-shiny.org/golem.html) philosophy for the development of Shiny Apps, including modularisation, unit testing, shiny server testing, yalm configuration, and dockerisation. Moreover, this projects uses [renv](https://rstudio.github.io/renv/articles/renv.html) for package dependency management. 
 
 ## Development 
-Before any of the following steps you need a github token to access the code in the private repositories. Set the environmental variable `GITHUB_PAT` with a token generated in [github.com/settings/tokens](https://github.com/settings/tokens). Token should include following permissions: "gist, repo, user, workflow". Following code helps you to do that: 
+Before any of the following steps you need a github token to access the code in the private repositories. Set the environmental variable `GITHUB_PAT` with a token generated in [github.com/settings/tokens](https://github.com/settings/tokens). Token should include following permissions: "gist, repo, user, workflow". Following code helps you to do that from R: 
 
 ```{r, eval=FALSE}
 # generate tocken 
@@ -46,22 +46,28 @@ usethis::create_github_token()
 Sys.setenv(GITHUB_PAT="<paste_token>")
 ```
 
-### Install in laptop 
+### Development in laptop 
 For development you can clone this repository and use `renv::` to install all the dependent packages. 
 
 `renv::` automatically installs its self at the opening of the project. Then, run `renv::restore()` to install the dependent packages. 
 
-### Install in Sandbox 
-Github's zip can be uploaded to sandbox. However, dependencies cant be installed into the internetless sandbox IVM. 
+### Development in Sandbox 
+Sandbox has not connection to the internet. 
+However, dependencies cant be build in a temporal IVM with connection to the internet, zipped, and copy into Sandbox IVM. 
+(note: the temporal IVM should have the same operating system and R version)
 
-The dependencies can be collected before in an machine with internet connection. 
-Then zipped and uploaded to sandbox. Follow `renv::` instruction for a such situation: 
+Follow `renv::` instruction for a such situation: 
 
->First open the R package using RStudio on a computer with internet (note: this should have the same operating system and R version). Specify the folder where your packages are stored by setting the RENV_PATHS_CACHE location (run `Sys.setenv("RENV_PATHS_CACHE"=paste0(getwd(),"/renv/cache"))`). Then run `renv::restore()` in the console. Manually move the study package to the environment without internet (this now includes all required R packages), activate the current project with renv::activate() and again run `Sys.setenv("RENV_PATHS_CACHE"=paste0(getwd(),"/renv/cache"))` followed by `renv::restore()` in the console.
+> Clone the package on a computer with internet connection. 
+> Specify the folder where your packages are stored by setting the RENV_PATHS_CACHE location (run `Sys.setenv("RENV_PATHS_CACHE"=paste0(getwd(),"/renv/cache"))`).
+> Then run `renv::restore()` in the console. 
+> Manually move the study package to the environment without internet (this now includes all required R packages), activate the current project with `renv::activate()` and again run `Sys.setenv("RENV_PATHS_CACHE"=paste0(getwd(),"/renv/cache"))` followed by `renv::restore()` in the console.
 
 
-### Configure 
+### Configure development enviroment
 Configuration for your development environment can be set in `inst/golem-config.yml`. 
+And selected on run time seting the envar `GOLEM_CONFIG_ACTIVE` (see: [golem-config](https://engineering-shiny.org/golem.html?q=GOLEM_CONFIG_ACTIVE#golem-config))
+
 Currently this file includes three environments: 
 
 - `no_connection`: To work with no connection to an Atlas instance. 
@@ -81,7 +87,8 @@ This environment  also needs the following yalm variables:
   - `CDMTOOLS_webapi_url` = "https://ohdsi-webapi.app.finngen.fi/WebAPI"
   - `CDMTOOLS_CDM_source_key_test` = "FINNGEN_CDM_R7"
 
-### Run 
+### Run in development
+Open R in the package folder, or open project in Rstudio. 
 
 ```{r, eval=FALSE}
 # load package
@@ -100,12 +107,6 @@ run_app()
 
 
 ## Deployment 
-
-### Configure
-
-Before any of the following steps you need a github token to access the code in the private repositories.
-Get a token from github [github.com/settings/tokens](https://github.com/settings/tokens).
-Is recommended to set the live of the token to one day.  
 
 ### Build
 Clone repository, cd into main file and build giving as argument the github token:
