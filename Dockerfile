@@ -22,16 +22,15 @@ RUN mkdir /build_zone
 ADD . /build_zone
 WORKDIR /build_zone
 
-# seting deoendecies using renv
+# seting dependencies using renv
 RUN echo "options(repos = c(CRAN = 'https://cran.rstudio.com/'), download.file.method = 'libcurl', Ncpus = 4)" >> /usr/local/lib/R/etc/Rprofile.site
 ENV RENV_PATHS_CACHE /build_zone/renv/cache
-ENV RENV_PATHS_LIBRARY /R/library
 RUN R -e 'renv::restore()'
 
 # install project
 RUN R -e 'remotes::install_local(upgrade="never")'
-RUN rm -rf /build_zone
+#RUN rm -rf /build_zone
 
 # Run time
 EXPOSE $port
-CMD R #-e "options(shiny.port=$port,shiny.host='$host');CohortOperationsShinyApp::run_app()"
+CMD R -e "options(shiny.port=$port,shiny.host='$host');CohortOperationsShinyApp::run_app()"
