@@ -108,21 +108,48 @@ run_app()
 
 ## Deployment 
 
-### Build
-Clone repository, cd into main file and build giving as argument the github token:
+### Build docker image
+Docker image can be build from scratch or, to save time, it can be built using the pre-compiled dependencies built in  above section "Development in Sandbox". 
+
+Both methods use the same command:
 
 ```{bash, eval=FALSE}
-git clone <CohortOperationsShinyApp_url>
 cd <CohortOperationsShinyApp>
-sudo docker build -t <docker_name> --build-arg GITHUB_PAT=<paste_token> .
+sudo docker build -t <docker_image_name> --build-arg GITHUB_PAT=<paste_PAT_token> .
 ```
 
+If `renv::restore()` was run with option `Sys.setenv("RENV_PATHS_CACHE"=paste0(getwd(),"/renv/cache"))`. The cache is copied into the docker image during building. If so, you mush keep updated the cache if it changes during development. 
+
+Alternatively, you can never `renv::restore()` or erase "./renv/cache" folder. In this case, all packages will be donloaded and install during the buiilding process.  
+
+### Move to sandbox 
+Docker image can be save with: 
+
+```{bash, eval=FALSE}
+docker save --output <docker_image_name.tar> <docker_image_name>
+```
+
+Downloaded. For example using :
+
+```{bash, eval=FALSE}
+python3 -m http.server 8888
+```
+
+Uploaded and loaded into sanxbox:
+
+```{bash, eval=FALSE}
+docker load --input <docker_image_name.tar>
+```
 
 ### Run 
+Running image needs to tunnel the port and set envar `BUCKET_SANDBOX_IVM`
+
+TEMP: at the moment BUCKET_SANDBOX_IVM needs to be passed, bcs the docker is not getting the envars from the main. 
 
 
-
-
+```{bash, eval=FALSE}
+docker run -p 8888:8888 -e BUCKET_SANDBOX_IVM=$BUCKET_SANDBOX_IVM <docker_image_name>
+```
 
 
 
