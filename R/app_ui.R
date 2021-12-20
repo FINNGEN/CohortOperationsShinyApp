@@ -21,9 +21,9 @@ app_ui <- function(request) {
           shinydashboard::menuItem("Info", tabName = "info", icon = icon("info")),
           h5(" Cohort Creation"),
           shinydashboard::menuItem("Import Cohorts", tabName = "importcohorts", icon = icon("address-card")),
-          shinydashboard::menuItem("Operate Cohorts", tabName = "operatecohorts", icon = icon("sliders-h")),
-          h5(" Cohort Charaterisation"),
-          shinydashboard::menuItem("PheWAS", tabName = "phewas", icon = icon("briefcase-medical"))
+          shinydashboard::menuItem("Operate Cohorts", tabName = "operatecohorts", icon = icon("sliders-h"))#,
+          #h5(" Cohort Charaterisation"),
+          #shinydashboard::menuItem("PheWAS", tabName = "phewas", icon = icon("briefcase-medical"))
         )
       ),
 
@@ -51,11 +51,11 @@ app_ui <- function(request) {
               title = tagList(shiny::icon("upload"), "Import Cohorts:"),
               id = "import_files", width = 12, side="right",
               selected = "from File",
-              #### panel ENDPOINT
-              shiny::tabPanel(
-                "from Endploint",
-                htmltools::h2("Possible if endpoint results in a BQ database in cohortTable format ")
-              ),
+              # #### panel ENDPOINT
+              # shiny::tabPanel(
+              #   "from Endploint",
+              #   htmltools::h2("Possible if endpoint results in a BQ database in cohortTable format ")
+              # ),
               #### panel ATLAS
               shiny::tabPanel(
                 "from Atlas",
@@ -83,32 +83,32 @@ app_ui <- function(request) {
               status = "primary", solidHeader = FALSE, width = 12,
               mod_operate_cohorts_ui("mod_operate_cohorts")
             )
-          ),
-          ## PheWAS
-          shinydashboard::tabItem(
-            tabName = "phewas",
-            ### Cohorts workbech
-            shinydashboard::box(
-              title = "Cohorts workbech", status = "primary", solidHeader = TRUE, width = 12,
-              mod_cohorts_table_ui("mod_cohorts_table_phewas")
-            ),
-            ### phewas config
-            shinydashboard::box(
-              title = tagList(shiny::icon("clone"), "PheWAS settings:"),
-              status = "primary", solidHeader = FALSE, width = 12,
-              h6("select cases from workbench"),
-              h6("select controls from workbench"),
-              h6("aditional config"),
-              shiny::actionButton("runphewas", "Run PheWAS")
-            ),
-            shinydashboard::box(
-              title = tagList(shiny::icon("clone"), "PheWAS results:"),
-              status = "primary", solidHeader = FALSE, width = 12,
-              shiny::radioButtons("runphewas", "Show",
-                                  choices = c("Table", "Manhatan Plot", "Case vs Controls Plot"),
-                                  inline = TRUE)
-            )
-          )
+          )#,
+          # ## PheWAS
+          # shinydashboard::tabItem(
+          #   tabName = "phewas",
+          #   ### Cohorts workbech
+          #   shinydashboard::box(
+          #     title = "Cohorts workbech", status = "primary", solidHeader = TRUE, width = 12,
+          #     mod_cohorts_table_ui("mod_cohorts_table_phewas")
+          #   ),
+          #   ### phewas config
+          #   shinydashboard::box(
+          #     title = tagList(shiny::icon("clone"), "PheWAS settings:"),
+          #     status = "primary", solidHeader = FALSE, width = 12,
+          #     h6("select cases from workbench"),
+          #     h6("select controls from workbench"),
+          #     h6("aditional config"),
+          #     shiny::actionButton("runphewas", "Run PheWAS")
+          #   ),
+          #   shinydashboard::box(
+          #     title = tagList(shiny::icon("clone"), "PheWAS results:"),
+          #     status = "primary", solidHeader = FALSE, width = 12,
+          #     shiny::radioButtons("runphewas", "Show",
+          #                         choices = c("Table", "Manhatan Plot", "Case vs Controls Plot"),
+          #                         inline = TRUE)
+          #   )
+          # )
         )
       )
     )
