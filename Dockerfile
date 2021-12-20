@@ -27,11 +27,11 @@ WORKDIR /build_zone
 ### seting dependencies using renv
 RUN echo "options(repos = c(CRAN = 'https://cran.rstudio.com/'), download.file.method = 'libcurl', Ncpus = 4)" >> /usr/local/lib/R/etc/Rprofile.site
 ENV RENV_PATHS_CACHE /build_zone/renv/cache
-RUN R -e 'renv::restore()'
+RUN R -e 'renv::restore(); renv::isolate()'
 ### install this project
 RUN R -e 'remotes::install_local(upgrade="never")'
-### copy library to local
-RUN cp -r /build_zone/renv/library /usr/local/lib/R/site-library
+### move library to container
+RUN R -e 'renv::deactivate(); file.copy(list.files(renv::paths$library(), full.names = TRUE), .libPaths()[1], recursive=TRUE)'
 
 ## Clean up built
 ENV GITHUB_PAT 0
