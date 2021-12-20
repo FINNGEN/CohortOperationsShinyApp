@@ -28,8 +28,8 @@ WORKDIR /build_zone
 RUN echo "options(repos = c(CRAN = 'https://cran.rstudio.com/'), download.file.method = 'libcurl', Ncpus = 4)" >> /usr/local/lib/R/etc/Rprofile.site
 ENV RENV_PATHS_CACHE /build_zone/renv/cache
 RUN R -e 'renv::restore(); renv::isolate()'
-### install this project
-RUN R -e 'remotes::install_local(upgrade="never")'
+### install this project (TMP for some reason stringr has to be re installed)
+RUN R -e 'renv::rebuild("stringi", recursive=FALSE);renv::install(".")'
 ### move library to container
 RUN R -e 'renv::deactivate(); file.copy(list.files(renv::paths$library(), full.names = TRUE), .libPaths()[1], recursive=TRUE)'
 

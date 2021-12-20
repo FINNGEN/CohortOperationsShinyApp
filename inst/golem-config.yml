@@ -1,6 +1,6 @@
 default:
   golem_name: CohortOperationsShinyApp
-  golem_version: 0.0.0.9000
+  golem_version: 1.0.0
   enviroment: no_connection
   app_prod: no
 dev_laptop_javier:
@@ -12,7 +12,7 @@ dev_laptop_javier:
   CDMTOOLS_webapi_url: http://localhost/WebAPI
   GCP_SERVICE_KEY: C:\Users\javier\.ssh\gq\computerenginedfault.json
   CDMTOOLS_CDM_source_key_test: dummy_df6v2_1k_13_finngen_omop_bq
-  gc_shiny.maxRequestSize: 314572800 #300Mb #overwrites shiny.maxRequestSize
+  gc_shiny.maxRequestSize: 314572800
 dev_sandbox_javier:
   enviroment: sandbox
   app_prod: no
@@ -20,7 +20,7 @@ dev_sandbox_javier:
   GCP_PROJECT_ID: finngen-production-library
   CDMTOOLS_webapi_url: https://ohdsi-webapi.app.finngen.fi/WebAPI
   CDMTOOLS_CDM_source_key_test: FINNGEN_CDM_R7
-  gc_shiny.maxRequestSize: 314572800 #300Mb #overwrites shiny.maxRequestSize
+  gc_shiny.maxRequestSize: 314572800
 production:
   enviroment: sandbox
   app_prod: yes
@@ -28,6 +28,6 @@ production:
   GCP_PROJECT_ID: finngen-production-library
   CDMTOOLS_webapi_url: https://ohdsi-webapi.app.finngen.fi/WebAPI
   CDMTOOLS_CDM_source_key_test: FINNGEN_CDM_R7
-  gc_shiny.maxRequestSize: 314572800 #300Mb #overwrites shiny.maxRequestSize
+  gc_shiny.maxRequestSize: 314572800
 dev:
-  golem_wd: !expr here::here()
+  golem_wd: C:/Users/javier/OneDrive - TUNI.fi/Documents/TAYS/PROJECTS/4_SANDBOX_TOOLS/REPOS/CohortOperationsShinyApp
