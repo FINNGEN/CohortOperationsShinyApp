@@ -120,7 +120,7 @@ sudo docker build -t <docker_image_name> --build-arg GITHUB_PAT=<paste_PAT_token
 
 If `renv::restore()` was run with option `Sys.setenv("RENV_PATHS_CACHE"=paste0(getwd(),"/renv/cache"))`. The cache is copied into the docker image during building. If so, you mush keep updated the cache if it changes during development. 
 
-Alternatively, you can never `renv::restore()` or erase "./renv/cache" folder. In this case, all packages will be donloaded and install during the buiilding process.  
+Alternatively, you can run `renv::restore()` or erase "./renv/cache" folder. In this case, all packages will be downloaded and install during the building process.  
 
 ### Move to sandbox 
 Docker image can be save with: 
@@ -140,6 +140,35 @@ Uploaded and loaded into sanxbox:
 ```{bash, eval=FALSE}
 docker load --input <docker_image_name.tar>
 ```
+
+### Push to GCP Container Register
+Make sure you are [running docker without sudo](https://github.com/sindresorhus/guides/blob/main/docker-without-sudo.md). 
+
+Authenticate with application-default login and configure docker. Use your Finngen account
+```{bash, eval=FALSE}
+gcloud auth login
+#gcloud auth application-default login #QUESTION: this was not working, is it ok the above way ??
+gcloud auth configure-docker
+# you can heck that credentials exist.
+#cat ~/.config/gcloud/application_default_credentials.json
+```
+
+Tag the image.
+```{bash, eval=FALSE}
+docker tag <docker_image_name> eu.gcr.io/atlas-development-270609/<docker_image_name>:<version_tag>
+```
+
+Push newly tagged image to destination.
+```{bash, eval=FALSE}
+docker push eu.gcr.io/atlas-development-270609/<docker_image_name>:<version_tag>
+```
+
+Revoke credentials.
+```{bash, eval=FALSE}
+gcloud auth revoke
+```
+
+([other help link](https://cloud.google.com/container-registry/docs/advanced-authentication))
 
 ### Run 
 Running image needs to tunnel the port and set envar `BUCKET_SANDBOX_IVM`
