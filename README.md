@@ -5,16 +5,14 @@ Javier Gracia-Tabuenca
 -   [Intro](#intro)
 -   [Development](#development)
     -   [Development in laptop](#development-in-laptop)
-    -   [Development in Sandbox](#development-in-sandbox)
+    -   [Development in SandBox](#development-in-sandbox)
     -   [Configure development
         enviroment](#configure-development-enviroment)
     -   [Run in development](#run-in-development)
 -   [Deployment](#deployment)
     -   [Build docker image](#build-docker-image)
-    -   [Move to sandbox](#move-to-sandbox)
-    -   [Push to GCP Container
-        Register](#push-to-gcp-container-register)
-    -   [Run](#run)
+    -   [Load image into SandBox](#load-image-into-sandbox)
+-   [Running in SandBox](#running-in-sandbox)
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 <!-- badges: start -->
@@ -22,6 +20,9 @@ Javier Gracia-Tabuenca
 [![Lifecycle:
 experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
 <!-- badges: end -->
+
+If you are only interested into running the app already installed inside
+SandBox, you can jump to [Running in Sandbox](#running-in-sandbox)
 
 ## Intro
 
@@ -37,9 +38,9 @@ duration of time”
 This web app is a graphical interface to other R-packages which provide
 the underlying functionality. For programming use cases check these:
 
--   [FINNGEN/FinnGenTableTypes](https://github.com/FINNGEN/FinnGenTableTypes):
+-   [FinnGen/FinnGenTableTypes](https://github.com/FinnGen/FinnGenTableTypes):
     Provides tools to create and operate cohortData tables.
--   [FINNGEN/CDMTools](https://github.com/FINNGEN/CDMTools): Provides
+-   [FinnGen/CDMTools](https://github.com/FinnGen/CDMTools): Provides
     connection to Atlas and Atlas’ CDM databases.
 
 This project follows [Golem](https://engineering-shiny.org/golem.html)
@@ -74,11 +75,11 @@ install all the dependent packages.
 `renv::` automatically installs its self at the opening of the project.
 Then, run `renv::restore()` to install the dependent packages.
 
-### Development in Sandbox
+### Development in SandBox
 
-Sandbox has not connection to the internet. However, dependencies cant
+SandBox has not connection to the internet. However, dependencies cant
 be build in a temporal IVM with connection to the internet, zipped, and
-copy into Sandbox IVM. (note: the temporal IVM should have the same
+copy into SandBox IVM. (note: the temporal IVM should have the same
 operating system and R version)
 
 Follow `renv::` instruction for a such situation:
@@ -107,24 +108,24 @@ Currently this file includes three environments:
 -   `atlas-development`: To work with Atlas installed in an ivm in the
     atlas-development project in GCP. This environment needs the
     following additional yalm variables to configure
-    [FINNGEN/CDMTools](https://github.com/FINNGEN/CDMTools). -
+    [FinnGen/CDMTools](https://github.com/FinnGen/CDMTools). -
     `CDMTOOLS_dbms` = “bigquery-dbi”
     -   `GCP_PROJECT_ID` = “atlas-development-270609”
     -   `GCP_BILLING_PROJECT_ID` = “atlas-development-270609”
     -   `CDMTOOLS_webapi_url` = “<http://localhost/WebAPI>”
     -   `CDMTOOLS_CDM_source_key_test` =
-        “dummy\_df6v2\_1k\_13\_finngen\_omop\_bq”
+        “dummy\_df6v2\_1k\_13\_FinnGen\_omop\_bq”
     -   `GCP_SERVICE_KEY`: path to the GCP key to access the BQ in
         atlas-development
--   `sandbox`: To work in sandbox. Sandbox must have set the following
-    environmental variable `BUCKET_SANDBOX_IVM` with bigquery’s billing
-    project name ending in "\_ivm" (eg. “fg-production-sandbox-4\_ivm”).
+-   `SandBox`: To work in SandBox. SandBox must have set the following
+    environmental variable `BUCKET_SandBox_IVM` with bigquery’s billing
+    project name ending in "\_ivm" (eg. “fg-production-SandBox-4\_ivm”).
     This environment also needs the following yalm variables:
     -   `CDMTOOLS_dbms` = “bigquery-dbi”
-    -   `GCP_PROJECT_ID` = “finngen-production-library”
+    -   `GCP_PROJECT_ID` = “FinnGen-production-library”
     -   `CDMTOOLS_webapi_url` =
-        “<https://ohdsi-webapi.app.finngen.fi/WebAPI>”
-    -   `CDMTOOLS_CDM_source_key_test` = “FINNGEN\_CDM\_R7”
+        “<https://ohdsi-webapi.app.FinnGen.fi/WebAPI>”
+    -   `CDMTOOLS_CDM_source_key_test` = “FinnGen\_CDM\_R7”
 
 ### Run in development
 
@@ -137,8 +138,8 @@ devtools::load_all(".")
 # set configuration 
 Sys.setenv(GOLEM_CONFIG_ACTIVE="<config_tag_in_golem-config.yml>")
 # if this is not set, default configuration is no_connection environment
-# Rstudio in sandbox is not reading the system environmental variables, force the envar as 
-# Sys.setenv(BUCKET_SANDBOX_IVM="fg-production-sandbox-<n sandbox>_ivm")
+# Rstudio in SandBox is not reading the system environmental variables, force the envar as 
+# Sys.setenv(BUCKET_SandBox_IVM="fg-production-SandBox-<n SandBox>_ivm")
 
 # run shiny app
 run_app()
@@ -151,13 +152,13 @@ run_app()
 
 Docker image can be build from scratch or, to save time, it can be built
 using the pre-compiled dependencies built in above section “Development
-in Sandbox”.
+in SandBox”.
 
 Both methods use the same command:
 
 ``` bash
 cd <CohortOperationsShinyApp>
-sudo docker build -t <docker_image_name> --build-arg GITHUB_PAT=<paste_PAT_token> .
+sudo docker build -t cohort_operations_shiny_app --build-arg GITHUB_PAT=<paste_PAT_token> .
 ```
 
 If `renv::restore()` was run with option
@@ -169,12 +170,17 @@ Alternatively, you can run `renv::restore()` or erase “./renv/cache”
 folder. In this case, all packages will be downloaded and install during
 the building process.
 
-### Move to sandbox
+### Load image into SandBox
+
+Built image can be moved into SandBox in two ways: (A) zipped and
+upload, or (B) through GCP Container Register.
+
+#### (A) Download and upload
 
 Docker image can be save with:
 
 ``` bash
-docker save --output <docker_image_name.tar> <docker_image_name>
+docker save --output cohort_operations_shiny_app.tar cohort_operations_shiny_app
 ```
 
 Downloaded. For example using :
@@ -186,16 +192,16 @@ python3 -m http.server 8888
 Uploaded and loaded into sanxbox:
 
 ``` bash
-docker load --input <docker_image_name.tar>
+docker load --input cohort_operations_shiny_app.tar
 ```
 
-### Push to GCP Container Register
+#### (B) Push and pull from GCP Container Register
 
 Make sure you are [running docker without
 sudo](https://github.com/sindresorhus/guides/blob/main/docker-without-sudo.md).
 
 Authenticate with application-default login and configure docker. Use
-your Finngen account
+your FinnGen account
 
 ``` bash
 gcloud auth login
@@ -208,13 +214,13 @@ gcloud auth configure-docker
 Tag the image.
 
 ``` bash
-docker tag <docker_image_name> eu.gcr.io/atlas-development-270609/<docker_image_name>:<version_tag>
+docker tag cohort_operations_shiny_app eu.gcr.io/atlas-development-270609/cohort_operations_shiny_app:<version_tag>
 ```
 
 Push newly tagged image to destination.
 
 ``` bash
-docker push eu.gcr.io/atlas-development-270609/<docker_image_name>:<version_tag>
+docker push eu.gcr.io/atlas-development-270609/cohort_operations_shiny_app:<version_tag>
 ```
 
 Revoke credentials.
@@ -226,14 +232,39 @@ gcloud auth revoke
 ([other help
 link](https://cloud.google.com/container-registry/docs/advanced-authentication))
 
-### Run
+Request to humgen service desk to copy the image into SandBox container
+registry.
 
-Running image needs to tunnel the port and set envar
-`BUCKET_SANDBOX_IVM`
-
-TEMP: at the moment BUCKET\_SANDBOX\_IVM needs to be passed, bcs the
-docker is not getting the envars from the main.
+Open a terminal inside SandBox. Pull the image :
 
 ``` bash
-docker run -p 8888:8888 -e BUCKET_SANDBOX_IVM=$BUCKET_SANDBOX_IVM <docker_image_name>
+docker pull eu.gcr.io/finngen-sandbox-v3-containers/cohort_operations_shiny_app:<version_tag>
 ```
+
+## Running in SandBox
+
+Assuming the docker image is already deployed in your system.
+
+Find the image id:
+
+``` bash
+docker images
+```
+
+Run:
+
+``` bash
+docker run -p 8888:8888 -e BUCKET_SandBox_IVM=$BUCKET_SandBox_IVM <docker_image_id>
+```
+
+> Running image needs to tunnel the port (-p) and set envar
+> `BUCKET_SandBox_IVM` (-e)
+>
+> TEMP: at the moment BUCKET\_SandBox\_IVM needs to be passed, bcs the
+> docker is not getting the envars from the main.
+>
+> By default, the docker image uses “production” configuration (see
+> [inst/golem-config.yml](inst/golem-config.yml)). This can be over
+> written by setting the envar `GOLEM_CONFIG_ACTIVE`. For example,
+> `GOLEM_CONFIG_ACTIVE=default` runs the app without connection to
+> Atlas.
