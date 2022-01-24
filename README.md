@@ -268,3 +268,8 @@ docker run -p 8888:8888 -e BUCKET_SandBox_IVM=$BUCKET_SandBox_IVM <docker_image_
 > written by setting the envar `GOLEM_CONFIG_ACTIVE`. For example,
 > `GOLEM_CONFIG_ACTIVE=default` runs the app without connection to
 > Atlas.
+
+Browse to shiny server:
+
+Now, shiny server should be up and running. Connect to it with a web
+browser on `http://0.0.0.0:8888`.
