@@ -18,10 +18,10 @@ app_ui <- function(request) {
       ## SIDEBAR
       shinydashboard::dashboardSidebar(
         shinydashboard::sidebarMenu(
-          shinydashboard::menuItem("Info", tabName = "info", icon = icon("info")),
+          shinydashboard::menuItem("Status", tabName = "info", icon = icon("info")),
           h5(" Cohort Creation"),
-          shinydashboard::menuItem("Import Cohorts", tabName = "importcohorts", icon = icon("address-card")),
-          shinydashboard::menuItem("Operate Cohorts", tabName = "operatecohorts", icon = icon("sliders-h"))#,
+          mod_info_box_ui("info_importcohorts", shinydashboard::menuItem("Import Cohorts", tabName = "importcohorts", icon = icon("address-card"))),
+          mod_info_box_ui("info_operatecohorts",shinydashboard::menuItem("Operate Cohorts", tabName = "operatecohorts", icon = icon("sliders-h")))#,
           #h5(" Cohort Charaterisation"),
           #shinydashboard::menuItem("PheWAS", tabName = "phewas", icon = icon("briefcase-medical"))
         )
@@ -43,7 +43,8 @@ app_ui <- function(request) {
             tabName = "importcohorts",
             ### Cohorts workbench
             shinydashboard::box(
-              title = "Cohorts workbench", status = "primary", solidHeader = TRUE, width = 12,
+              title = mod_info_box_ui("info_workbench", tagList("Cohorts workbench ")),
+              status = "primary", solidHeader = TRUE, width = 12,
               mod_cohorts_table_ui("mod_cohorts_table_import")
             ),
             ### Import Cohorts
@@ -74,7 +75,8 @@ app_ui <- function(request) {
             tabName = "operatecohorts",
             ### Cohorts workbench
             shinydashboard::box(
-              title = "Cohorts workbench", status = "primary", solidHeader = TRUE, width = 12,
+              title = mod_info_box_ui("info_workbench", tagList("Cohorts workbench ")),
+              status = "primary", solidHeader = TRUE, width = 12,
               mod_cohorts_table_ui("mod_cohorts_table_operate")
             ),
             ### Operate Cohorts

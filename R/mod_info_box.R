@@ -7,7 +7,7 @@
 #' @noRd
 #'
 #' @importFrom shiny NS tagList
-mod_info_box_ui <- function(id, item) {
+mod_info_box_ui <- function(id, item=NULL) {
   ns <- shiny::NS(id)
 
   infoTag <- tags$small(
@@ -17,6 +17,9 @@ mod_info_box_ui <- function(id, item) {
     id = ns("info_icon_link"),
     "i"
   )
+
+  if(is.null(item)){return(infoTag)}
+
   item$children[[1]]$children <-
     append(item$children[[1]]$children, list(infoTag))
   return(item)
