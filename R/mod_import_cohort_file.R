@@ -73,17 +73,17 @@ mod_import_cohort_file_server <- function(id, r_cohorts) {
 
       tmp_imported_file <- readr::read_tsv(r_file$tmp_file$datapath, show_col_types = FALSE)
 
-      # TEMP HACK
-      # if it has columns variant and gt
-      if (tmp_imported_file %>% utils::hasName(c("variant", "gt")) %>% sum() == 2) {
-        tmp_imported_file <- tmp_imported_file %>%
-          dplyr::mutate(
-            COHORT_SOURCE = "Genobrowser[DF6]",
-            COHORT_NAME = paste0(variant, "-", gt)
-          )
-        message("TEMP HACK: genobrowser table converter to cohortData")
-      }
-      # END TEMP HACK
+      # # TEMP HACK
+      # # if it has columns variant and gt
+      # if (tmp_imported_file %>% utils::hasName(c("variant", "gt")) %>% sum() == 2) {
+      #   tmp_imported_file <- tmp_imported_file %>%
+      #     dplyr::mutate(
+      #       COHORT_SOURCE = "Genobrowser[DF6]",
+      #       COHORT_NAME = paste0(variant, "-", gt)
+      #     )
+      #   message("TEMP HACK: genobrowser table converter to cohortData")
+      # }
+      # # END TEMP HACK
 
       is_cohortData_message <- tryCatch(
         {

@@ -41,9 +41,9 @@ app_ui <- function(request) {
           ## Import Cohorts
           shinydashboard::tabItem(
             tabName = "importcohorts",
-            ### Cohorts workbech
+            ### Cohorts workbench
             shinydashboard::box(
-              title = "Cohorts workbech", status = "primary", solidHeader = TRUE, width = 12,
+              title = "Cohorts workbench", status = "primary", solidHeader = TRUE, width = 12,
               mod_cohorts_table_ui("mod_cohorts_table_import")
             ),
             ### Import Cohorts
@@ -72,9 +72,9 @@ app_ui <- function(request) {
           ## Operate Cohorts
           shinydashboard::tabItem(
             tabName = "operatecohorts",
-            ### Cohorts workbech
+            ### Cohorts workbench
             shinydashboard::box(
-              title = "Cohorts workbech", status = "primary", solidHeader = TRUE, width = 12,
+              title = "Cohorts workbench", status = "primary", solidHeader = TRUE, width = 12,
               mod_cohorts_table_ui("mod_cohorts_table_operate")
             ),
             ### Operate Cohorts
@@ -87,9 +87,9 @@ app_ui <- function(request) {
           # ## PheWAS
           # shinydashboard::tabItem(
           #   tabName = "phewas",
-          #   ### Cohorts workbech
+          #   ### Cohorts workbench
           #   shinydashboard::box(
-          #     title = "Cohorts workbech", status = "primary", solidHeader = TRUE, width = 12,
+          #     title = "Cohorts workbench", status = "primary", solidHeader = TRUE, width = 12,
           #     mod_cohorts_table_ui("mod_cohorts_table_phewas")
           #   ),
           #   ### phewas config

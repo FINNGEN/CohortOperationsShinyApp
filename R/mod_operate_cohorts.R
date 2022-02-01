@@ -189,7 +189,7 @@ mod_operate_cohorts_server <- function(id, r_cohorts) {
             entry_cohorts_end_date = input$entry_cohort_end_rb
           )
         },
-        error = function(e) e$message
+        error = function(e){warning("mod_operate_cohorts: r_result_operation: trycatch: ",e$message);e$message}
       )
 
       if(!is.character(result_operation)){
