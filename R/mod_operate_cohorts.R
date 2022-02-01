@@ -76,6 +76,11 @@ mod_operate_cohorts_server <- function(id, r_cohorts) {
         dplyr::distinct(COHORT_NAME) %>%
         dplyr::pull(COHORT_NAME)
 
+      cohort_names_time <- r_to_operate$cohortData %>%
+        dplyr::filter(!is.na(COHORT_START_DATE)) %>%
+        dplyr::distinct(COHORT_NAME) %>%
+        dplyr::pull(COHORT_NAME)
+
       htmltools::tagList(
 
         shiny::fluidRow(
@@ -84,7 +89,7 @@ mod_operate_cohorts_server <- function(id, r_cohorts) {
             shinyWidgets::pickerInput(
               inputId = ns("entry_cohort_names_picker"),
               label = "Select one or more entry cohorts",
-              choices = cohort_names,
+              choices = cohort_names_time,
               multiple = TRUE
             )
           ),
