@@ -53,8 +53,9 @@
       "RemoteHost": "api.github.com",
       "RemoteRepo": "FinnGenTableTypes",
       "RemoteUsername": "FINNGEN",
-      "RemoteRef": "master",
-      "Hash": "074d1becc96457f4bcbfdcaefad8212a"
+      "RemoteRef": "HEAD",
+      "RemoteSha": "1a65948f00e3e9d05edb337e7390249b84bb08ab",
+      "Hash": "bc4dc6223cbf17a407c79765663f9114"
     },
     "MASS": {
       "Package": "MASS",

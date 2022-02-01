@@ -39,7 +39,7 @@ test_that("mod_import_cohort_file_server updates output$cohorts_reactable", {
   })
 })
 
-test_that("mod_import_cohort_file_server TRMPORL HACK convert genobrowser works", {
+test_that("mod_import_cohort_file_server importing genobrowser file works", {
   r_cohorts <- reactiveValues(
     cohortData = FinnGenTableTypes::empty_cohortData(),
     summaryCohortData = FinnGenTableTypes::empty_cohortData() %>% FinnGenTableTypes::summarise_cohortData()
@@ -50,22 +50,22 @@ test_that("mod_import_cohort_file_server TRMPORL HACK convert genobrowser works"
     r_file$tmp_file <- input$file_fi ; session$flushReact()
     # loaded is same as in test data
     tmp <- test_cohortData %>%
-      transmute(
+      mutate(
         FINNGENID = FINNGENID,
         variant = "16r3839507os",
         gt = case_when(
           COHORT_NAME == "A" ~ "1|1",
           COHORT_NAME == "B" ~ "0|1",
           COHORT_NAME == "C" ~ "0|0"
-        )
-      ) %>%
-      dplyr::mutate(
+        ),
+        COHORT_START_DATE = as.Date(NA),
+        COHORT_END_DATE = as.Date(NA),
         COHORT_SOURCE = "Genobrowser[DF6]",
         COHORT_NAME = paste0(variant, "-", gt)
       ) %>%
       FinnGenTableTypes::as_cohortData()
 
-    r_file$imported_cohortData %>% expect_equal(tmp)
+    r_file$imported_cohortData  %>% expect_equal(tmp)
 
     output$cohorts_reactable
   })

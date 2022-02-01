@@ -20,17 +20,22 @@ test_cohortData %>%
 
 test_cohortData %>% write_tsv("data-raw/test_cohortData_no_tsv.csv")
 
-# temporal hack
+# geno browser like file
 test_cohortData %>%
-  transmute(
+  mutate(
     FINNGENID = FINNGENID,
     variant = "16r3839507os",
     gt = case_when(
       COHORT_NAME == "A" ~ "1|1",
       COHORT_NAME == "B" ~ "0|1",
       COHORT_NAME == "C" ~ "0|0"
-    )
+    ),
+    COHORT_START_DATE = as.Date(NA),
+    COHORT_END_DATE = as.Date(NA),
+    COHORT_SOURCE = "Genobrowser[DF6]",
+    COHORT_NAME = paste0(variant, "-", gt)
   ) %>%
   write_tsv("data-raw/test_genobrowser_output.tsv")
 
 usethis::use_data(test_cohortData, overwrite = TRUE)
+
