@@ -19,7 +19,7 @@ app_server <- function(input, output, session) {
 
 
 
-  # INFO modules ---------------------------------------------
+  # modules ---------------------------------------------
   mod_connection_to_db_server("mod_connection_to_db", r_connection)
 
   mod_cohorts_table_server("mod_cohorts_table_import", r_cohorts)
@@ -30,4 +30,13 @@ app_server <- function(input, output, session) {
   mod_operate_cohorts_server("mod_operate_cohorts", r_cohorts)
 
   mod_cohorts_table_server("mod_cohorts_table_phewas", r_cohorts)
+
+
+  # info bubbles ---------------------------------------------
+  mod_info_box_server("info_importcohorts", "Import Cohorts", "info_importcohorts.md")
+  mod_info_box_server("info_operatecohorts", "Operate Cohorts", "info_operatecohorts.md")
+  mod_info_box_server("info_workbench", "Cohorts Workbench", "info_workbench.md")
+
+
+
 }

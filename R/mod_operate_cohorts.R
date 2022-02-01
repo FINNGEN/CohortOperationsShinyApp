@@ -82,13 +82,13 @@ mod_operate_cohorts_server <- function(id, r_cohorts) {
         dplyr::pull(COHORT_NAME)
 
       htmltools::tagList(
-
+        shiny::h5("Entry Cohorts:"),
         shiny::fluidRow(
           shiny::column(
             4,
             shinyWidgets::pickerInput(
               inputId = ns("entry_cohort_names_picker"),
-              label = "Select one or more entry cohorts",
+              label = "Select entry cohorts",
               choices = cohort_names_time,
               multiple = TRUE
             )
@@ -122,6 +122,7 @@ mod_operate_cohorts_server <- function(id, r_cohorts) {
             )
           )
         ),
+        shiny::h5("Operation Cohorts:"),
         shinyjqui::orderInput(
           inputId = ns("source_boxes"),
           label = "Operation Elements",
