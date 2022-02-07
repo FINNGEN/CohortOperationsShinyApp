@@ -3,15 +3,6 @@ CohortOperationsShinyApp
 Javier Gracia-Tabuenca
 
 -   [Intro](#intro)
--   [Development](#development)
-    -   [Development in laptop](#development-in-laptop)
-    -   [Development in SandBox](#development-in-sandbox)
-    -   [Configure development
-        enviroment](#configure-development-enviroment)
-    -   [Run in development](#run-in-development)
--   [Deployment](#deployment)
-    -   [Build docker image](#build-docker-image)
-    -   [Load image into SandBox](#load-image-into-sandbox)
 -   [Running in SandBox](#running-in-sandbox)
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
@@ -50,211 +41,25 @@ dockerisation. Moreover, this projects uses
 [renv](https://rstudio.github.io/renv/articles/renv.html) for package
 dependency management.
 
-## Development
+For details on the develompment, testing, and running of the app see
+detailed documents in [dev/](dev/).
 
-Before any of the following steps you need a github token to access the
-code in the private repositories. Set the environmental variable
-`GITHUB_PAT` with a token generated in
-[github.com/settings/tokens](https://github.com/settings/tokens). Token
-should include following permissions: “gist, repo, user, workflow”.
-Following code helps you to do that from R:
+## Running in SandBox
 
-``` r
-# generate tocken 
-usethis::create_github_token()
-
-# copy and paste in 
-Sys.setenv(GITHUB_PAT="<paste_token>")
-```
-
-### Development in laptop
-
-For development you can clone this repository and use `renv::` to
-install all the dependent packages.
-
-`renv::` automatically installs its self at the opening of the project.
-Then, run `renv::restore()` to install the dependent packages.
-
-### Development in SandBox
-
-SandBox has not connection to the internet. However, dependencies cant
-be build in a temporal IVM with connection to the internet, zipped, and
-copy into SandBox IVM. (note: the temporal IVM should have the same
-operating system and R version)
-
-Follow `renv::` instruction for a such situation:
-
-> Clone the package on a computer with internet connection. Specify the
-> folder where your packages are stored by setting the
-> RENV\_PATHS\_CACHE location (run
-> `Sys.setenv("RENV_PATHS_CACHE"=paste0(getwd(),"/renv/cache"))`). Then
-> run `renv::restore()` in the console. Manually move the study package
-> to the environment without internet (this now includes all required R
-> packages), activate the current project with `renv::activate()` and
-> again run
-> `Sys.setenv("RENV_PATHS_CACHE"=paste0(getwd(),"/renv/cache"))`
-> followed by `renv::restore()` in the console.
-
-### Configure development enviroment
-
-Configuration for your development environment can be set in
-`inst/golem-config.yml`. And selected on run time seting the envar
-`GOLEM_CONFIG_ACTIVE` (see:
-[golem-config](https://engineering-shiny.org/golem.html?q=GOLEM_CONFIG_ACTIVE#golem-config))
-
-Currently this file includes three environments:
-
--   `no_connection`: To work with no connection to an Atlas instance.
--   `atlas-development`: To work with Atlas installed in an ivm in the
-    atlas-development project in GCP. This environment needs the
-    following additional yalm variables to configure
-    [FinnGen/CDMTools](https://github.com/FinnGen/CDMTools). -
-    `CDMTOOLS_dbms` = “bigquery-dbi”
-    -   `GCP_PROJECT_ID` = “atlas-development-270609”
-    -   `GCP_BILLING_PROJECT_ID` = “atlas-development-270609”
-    -   `CDMTOOLS_webapi_url` = “<http://localhost/WebAPI>”
-    -   `CDMTOOLS_CDM_source_key_test` =
-        “dummy\_df6v2\_1k\_13\_FinnGen\_omop\_bq”
-    -   `GCP_SERVICE_KEY`: path to the GCP key to access the BQ in
-        atlas-development
--   `SandBox`: To work in SandBox. SandBox must have set the following
-    environmental variable `BUCKET_SandBox_IVM` with bigquery’s billing
-    project name ending in "\_ivm" (eg. “fg-production-SandBox-4\_ivm”).
-    This environment also needs the following yalm variables:
-    -   `CDMTOOLS_dbms` = “bigquery-dbi”
-    -   `GCP_PROJECT_ID` = “FinnGen-production-library”
-    -   `CDMTOOLS_webapi_url` =
-        “<https://ohdsi-webapi.app.FinnGen.fi/WebAPI>”
-    -   `CDMTOOLS_CDM_source_key_test` = “FinnGen\_CDM\_R7”
-
-### Run in development
-
-Open R in the package folder, or open project in Rstudio.
-
-``` r
-# load package
-devtools::load_all(".")
-
-# set configuration 
-Sys.setenv(GOLEM_CONFIG_ACTIVE="<config_tag_in_golem-config.yml>")
-# if this is not set, default configuration is no_connection environment
-# Rstudio in SandBox is not reading the system environmental variables, force the envar as 
-# Sys.setenv(BUCKET_SandBox_IVM="fg-production-SandBox-<n SandBox>_ivm")
-
-# run shiny app
-run_app()
-)
-```
-
-## Deployment
-
-### Build docker image
-
-Docker image can be build from scratch or, to save time, it can be built
-using the pre-compiled dependencies built in above section “Development
-in SandBox”.
-
-Both methods use the same command:
-
-``` bash
-cd <CohortOperationsShinyApp>
-sudo docker build -t cohort_operations_shiny_app --build-arg GITHUB_PAT=<paste_PAT_token> .
-```
-
-If `renv::restore()` was run with option
-`Sys.setenv("RENV_PATHS_CACHE"=paste0(getwd(),"/renv/cache"))`. The
-cache is copied into the docker image during building. If so, you mush
-keep updated the cache if it changes during development.
-
-Alternatively, you can run `renv::restore()` or erase “./renv/cache”
-folder. In this case, all packages will be downloaded and install during
-the building process.
-
-### Load image into SandBox
-
-Built image can be moved into SandBox in two ways: (A) zipped and
-upload, or (B) through GCP Container Register.
-
-#### (A) Download and upload
-
-Docker image can be save with:
-
-``` bash
-docker save --output cohort_operations_shiny_app.tar cohort_operations_shiny_app
-```
-
-Downloaded. For example using :
-
-``` bash
-python3 -m http.server 8888
-```
-
-Uploaded and loaded into sanxbox:
-
-``` bash
-docker load --input cohort_operations_shiny_app.tar
-```
-
-#### (B) Push and pull from GCP Container Register
-
-Make sure you are [running docker without
-sudo](https://github.com/sindresorhus/guides/blob/main/docker-without-sudo.md).
-
-Authenticate with application-default login and configure docker. Use
-your FinnGen account
-
-``` bash
-gcloud auth login
-#gcloud auth application-default login #QUESTION: this was not working, is it ok the above way ??
-gcloud auth configure-docker
-# you can heck that credentials exist.
-#cat ~/.config/gcloud/application_default_credentials.json
-```
-
-Tag the image.
-
-``` bash
-docker tag cohort_operations_shiny_app eu.gcr.io/atlas-development-270609/cohort_operations_shiny_app:<version_tag>
-```
-
-Push newly tagged image to destination.
-
-``` bash
-docker push eu.gcr.io/atlas-development-270609/cohort_operations_shiny_app:<version_tag>
-```
-
-Revoke credentials.
-
-``` bash
-gcloud auth revoke
-```
-
-([other help
-link](https://cloud.google.com/container-registry/docs/advanced-authentication))
-
-Request to humgen service desk to copy the image into SandBox container
-registry.
+If it is the first time you run the app you need firts to download it
+into SandBox.
 
 Open a terminal inside SandBox. Pull the image :
 
 ``` bash
-docker pull eu.gcr.io/finngen-sandbox-v3-containers/cohort_operations_shiny_app:<version_tag>
+docker pull eu.gcr.io/finngen-sandbox-v3-containers/cohort_operations_shiny_app:latest
 ```
 
-## Running in SandBox
-
-Assuming the docker image is already deployed in your system.
-
-Find the image id:
+Once the image is avaoilable in SandBox you can run the following
+command Run:
 
 ``` bash
-docker images
-```
-
-Run:
-
-``` bash
-docker run -p 8888:8888 -e BUCKET_SandBox_IVM=$BUCKET_SandBox_IVM <docker_image_id>
+docker run -p 8888:8888 -e BUCKET_SANDBOX_IVM=$BUCKET_SANDBOX_IVM eu.gcr.io/finngen-sandbox-v3-containers/cohort_operations_shiny_app:latest > /home/ivm/cohort_operations_shiny_app & sleep 5 && firefox localhost:8888
 ```
 
 > Running image needs to tunnel the port (-p) and set envar
