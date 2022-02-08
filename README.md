@@ -56,3 +56,11 @@ command Run:
 docker run -p 8888:8888 -e BUCKET_SANDBOX_IVM=$BUCKET_SANDBOX_IVM eu.gcr.io/finngen-sandbox-v3-containers/cohort_operations_shiny_app:latest > /home/ivm/cohort_operations_shiny_app.log & sleep 5 && firefox localhost:8888
 ```
 This should also open Firefox browser. If not, open it and browse to `http://0.0.0.0:8888`.
+
+## Report an Issue 
+
+Go to the tab `Issues` in the GitHub repository. 
+
+Click `New issue`. 
+
+Select if you want to file a problem you found "Bug Report", or if you have an idea that will improve the app "Feature request". 
