@@ -99,20 +99,5 @@ usethis::use_test( "mod_operate_cohorts")
 ## (You'll need GitHub there)
 usethis::use_github(organisation = "FINNGEN", private = TRUE)
 
-# GitHub Actions
-#usethis::use_github_action()
-# Chose one of the three
-# See https://usethis.r-lib.org/reference/use_github_action.html
-#usethis::use_github_action_check_release()
-#usethis::use_github_action_check_standard()
-#usethis::use_github_action_check_full()
-# Add action for PR
-#usethis::use_github_action_pr_commands()
-# Compute the code coverage of your application
- covr::package_coverage()
 
-
-# You're now set! ----
-# go to dev/03_deploy.R
-rstudioapi::navigateToFile("dev/03_deploy.R")
 
