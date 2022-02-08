@@ -53,6 +53,6 @@ Once the image is available in SandBox you can run the following
 command Run:
 
 ``` bash
-docker run -p 8888:8888 -e BUCKET_SANDBOX_IVM=$BUCKET_SANDBOX_IVM eu.gcr.io/finngen-sandbox-v3-containers/cohort_operations_shiny_app:latest > /home/ivm/cohort_operations_shiny_app & sleep 5 && firefox localhost:8888
+docker run -p 8888:8888 -e BUCKET_SANDBOX_IVM=$BUCKET_SANDBOX_IVM eu.gcr.io/finngen-sandbox-v3-containers/cohort_operations_shiny_app:latest > /home/ivm/cohort_operations_shiny_app.log & sleep 5 && firefox localhost:8888
 ```
 This should also open Firefox browser. If not, open it and browse to `http://0.0.0.0:8888`.
