@@ -63,4 +63,4 @@ Go to the tab `Issues` in the GitHub repository.
 
 Click `New issue`. 
 
-Select if you want to file a problem you found "Bug Report", or if you have an idea that will improve the app "Feature request". 
+Select if you want to file a problem you found "Bug Report", or if you have an idea that will improve the app "Feature request".
