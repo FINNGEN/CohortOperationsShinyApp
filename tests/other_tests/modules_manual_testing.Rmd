@@ -1,0 +1,30 @@
+---
+title: "Modules Hand testing"
+author: "Javier Gracia-Tabuenca"
+date: "2/15/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+
+## mod_operate_cohorts
+
+```{r}
+devtools::load_all(".")
+
+r_cohorts <- reactiveValues(
+  cohortData = test_cohortData,
+  summaryCohortData = FinnGenTableTypes::summarise_cohortData(test_cohortData)
+)
+
+shinyApp(
+  fluidPage(mod_operate_cohorts_ui("test")),
+  function(input,output,session){mod_operate_cohorts_server("test", r_cohorts)}
+)
+
+```
+
