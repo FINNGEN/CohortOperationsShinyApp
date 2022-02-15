@@ -310,14 +310,3 @@ mod_operate_cohorts_server <- function(id, r_cohorts) {
   message <- Filter(Negate(is.null), message)
   session$sendInputMessage(inputId, message)
 }
-
-#
-# r_cohorts <- reactiveValues(
-#   cohortData = test_cohortData,
-#   summaryCohortData = FinnGenTableTypes::summarise_cohortData(test_cohortData)
-# )
-#
-# shinyApp(
-#   fluidPage(mod_operate_cohorts_ui("test")),
-#   function(input,output,session){mod_operate_cohorts_server("test", r_cohorts)}
-# )
