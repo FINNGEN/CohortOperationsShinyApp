@@ -43,7 +43,8 @@ app_ui <- function(request) {
             tabName = "importcohorts",
             ### Cohorts workbench
             shinydashboard::box(
-              title = mod_info_box_ui("info_workbench", tagList("Cohorts workbench ")),
+              #title = mod_info_box_ui("info_workbench", tagList("Cohorts workbench ")),
+              title = "Cohorts workbench ",
               status = "primary", solidHeader = TRUE, width = 12,
               mod_cohorts_table_ui("mod_cohorts_table_import")
             ),
