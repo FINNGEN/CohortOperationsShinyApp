@@ -30,3 +30,30 @@ shinyApp(
 
 test that: 
 - 
+
+
+## mod_append_cohort
+
+```{r}
+devtools::load_all(".")
+
+Sys.setenv(GOLEM_CONFIG_ACTIVE="dev_laptop_javier")
+r_connection <- reactiveValues(cdm_webapi_conn = configCDMTools())
+
+
+r_cohorts <- reactiveValues(
+  cohortData = test_cohortData,
+  summaryCohortData = FinnGenTableTypes::summarise_cohortData(test_cohortData)
+)
+
+shinyApp(
+  fluidPage(mod_import_cohort_atlas_ui("test")),
+  function(input,output,session){mod_import_cohort_atlas_server("test",r_connection, r_cohorts)}
+)
+
+```
+
+
+# test on main 
+
+- import a cohort from Atlas with 0 patients (#26 CohortOperationsShinyApp_COMPLETE_0patients) show a warning alert and does nothing 

@@ -43,7 +43,8 @@ app_ui <- function(request) {
             tabName = "importcohorts",
             ### Cohorts workbench
             shinydashboard::box(
-              title = mod_info_box_ui("info_workbench", tagList("Cohorts workbench ")),
+              #title = mod_info_box_ui("info_workbench", tagList("Cohorts workbench ")),
+              title = "Cohorts workbench ",
               status = "primary", solidHeader = TRUE, width = 12,
               mod_cohorts_table_ui("mod_cohorts_table_import")
             ),
@@ -51,22 +52,22 @@ app_ui <- function(request) {
             shinydashboard::tabBox(
               title = tagList(shiny::icon("upload"), "Import Cohorts:"),
               id = "import_files", width = 12, side="right",
-              selected = "from File",
+              selected = "from Atlas",
               # #### panel ENDPOINT
               # shiny::tabPanel(
               #   "from Endploint",
               #   htmltools::h2("Possible if endpoint results in a BQ database in cohortTable format ")
               # ),
-              #### panel ATLAS
-              shiny::tabPanel(
-                "from Atlas",
-                mod_import_cohort_atlas_ui("mod_import_cohort_atlas")
-              ),
               #### panel FILE
               shiny::tabPanel(
                 "from File",
                 #htmltools::h2("This is possible if file in cohortTable format"),
                 mod_import_cohort_file_ui("mod_import_cohort_file")
+              ),
+              #### panel ATLAS
+              shiny::tabPanel(
+                "from Atlas",
+                mod_import_cohort_atlas_ui("mod_import_cohort_atlas")
               )
             )
           ),

@@ -1,25 +1,25 @@
 
 This tab allows to create a new cohort by operating the cohorts in the *CohortOperations*'s Workbench. 
 
-In the middle section an *UpSet-plot* shows the overlap of patients in all the cohorts currently in the Workbench. 
 
-Changing the operations form will output a **Result cohort** on the lower part. 
-Provenance of the patients in the  **Result cohort** will be indicated in the *UpSet-plot* in black. 
+#### New cohort's entry and exit
+
+The first step is to select the cohorts that will define the COHORT_START_DATE and COHORT_END_DATE in the **Result cohort**.
+However, if the **Result cohort** do not need this information, this step can be omitted.
+
+By default the new cohort's COHORT_START_DATE will be the earliest COHORT_START_DATE in all the cohorts selected in this section. 
+However, this can be change to "latest" or to "all the events".  "all the events" includes allows multiple the same patient to enter multiple times at different points in time.  
 
 
-#### Entry cohorts 
-Here we select the cohorts that define the COHORT_START_DATE and COHORT_END_DATE in the **Result cohort**.
-However, if the **Result cohort** do not need this information, this step can be omited.  
+####  New cohort's patients 
+Patients in the cohorts selected on the previous step can be further filtered by 
+dragging cohorts or operations that complete the sentence started in this section. 
 
-All the patients belonging to the cohorts selected in "Select entry cohorts" are union in the new cohort. 
-For overlapping patients, we must decide whether the "new cohort starts with" the "first" or "last" COHORT_START_DATE; and 
-whether the "new cohort ends with" the "first" or "last" COHORT_END_DATE. 
-
-#### Operation cohorts
-An operation expression can be build by dragging elements from **Operations Elements** into **Operate entry cohorts**. 
-
-If an entry cohort has been created, this will be the first element on the **Operation Expression**. 
-
+**New cohorts's name** descrives how the new cohort will be build. 
+Whey you are satisfied with the built, click "Create new cohort"
 
 #### Result cohort
+If the bulding sentece is correct, a new cohort will appear under **Result cohort**. 
+Moreover an upset-plot helps you to visually validate the operation. 
+
 Once we have the desired **Result cohort**, it can be copied to the *CohortOperations*'s Workbench. 
