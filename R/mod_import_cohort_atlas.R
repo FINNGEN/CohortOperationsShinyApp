@@ -155,12 +155,35 @@ mod_import_cohort_atlas_server <- function(id, r_connection, r_cohorts) {
             BIRTH_DATE = pmin(BIRTH_DATE, COHORT_START_DATE),
             DEATH_DATE = pmax(DEATH_DATE, COHORT_END_DATE)
           )
-
-        # TEMPFIX
+        # END TEMPFIX
       }
-      r_to_append$cohortData <- tmp_r_imported_cohortData
       # print(FinnGenTableTypes::is_cohortData(r$imported_cohortData, verbose = T))
       CohortOperationsShinyApp::remove_sweetAlert_spinner()
+
+      ## Check if any cohort has 0 patients
+      no_patients_cohorts <- dplyr::setdiff(
+        selected_cohorts %>% dplyr::pull(cohort_name),
+        tmp_r_imported_cohortData %>% dplyr::count(COHORT_NAME) %>% dplyr::pull(COHORT_NAME)
+      )
+      if (length(no_patients_cohorts) != 0) {
+        shinyWidgets::sendSweetAlert(
+          session = session,
+          type = "error",
+          title = "Cohorts have 0 patients",
+          text = shiny::HTML(
+            "The following cohorts are COMPLETE, but have 0 patiets:  <ul>",
+            stringr::str_c(stringr::str_c("<li> ", no_patients_cohorts, "</li>"), collapse = ""),
+            "</ul> They will not be imported."
+          ),
+          html = TRUE
+        )
+      }
+
+      # copy to reactible will trigger next step
+      if(nrow(tmp_r_imported_cohortData)==0){
+        shiny::req(FALSE) # break reactivity
+      }
+      r_to_append$cohortData <- tmp_r_imported_cohortData
 
     })
 
@@ -179,19 +202,3 @@ mod_import_cohort_atlas_server <- function(id, r_connection, r_cohorts) {
 
   })
 }
-#
-# #
-# # # # # # no connection
-# Sys.setenv(GOLEM_CONFIG_ACTIVE="dev_laptop_javier")
-# r_connection <- reactiveValues(cdm_webapi_conn = configCDMTools())
-#
-#
-# r_cohorts <- reactiveValues(
-#   cohortData = test_cohortData,
-#   summaryCohortData = FinnGenTableTypes::summarise_cohortData(test_cohortData)
-# )
-#
-# shinyApp(
-#   fluidPage(mod_import_cohort_atlas_ui("test")),
-#   function(input,output,session){mod_import_cohort_atlas_server("test",r_connection, r_cohorts)}
-# )

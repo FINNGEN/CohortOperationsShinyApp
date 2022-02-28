@@ -39,3 +39,11 @@ test_cohortData %>%
 
 usethis::use_data(test_cohortData, overwrite = TRUE)
 
+
+
+test_cohortData <- bind_rows(
+  FinnGenTableTypes::test_1k_dummy_cohortData %>% slice(1:500) %>%
+    mutate(COHORT_NAME = "A", SEX="male")
+)
+
+test_cohortData %>% write_tsv("data-raw/test_cohortData_1cohorts_males.tsv")
