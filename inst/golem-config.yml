@@ -29,5 +29,21 @@ production:
   CDMTOOLS_webapi_url: https://ohdsi-webapi.app.finngen.fi/WebAPI
   CDMTOOLS_CDM_source_key_test: FINNGEN_CDM_R7
   gc_shiny.maxRequestSize: 314572800
+staging:
+  enviroment: sandbox
+  app_prod: no
+  CDMTOOLS_dbms: bigquery-dbi
+  GCP_PROJECT_ID: finngen-staging-library
+  CDMTOOLS_webapi_url: https://ohdsi-webapi.app.finngen.fi/WebAPI
+  CDMTOOLS_CDM_source_key_test: FINNGEN_CDM_R7
+  gc_shiny.maxRequestSize: 314572800
+training:
+  enviroment: sandbox
+  app_prod: no
+  CDMTOOLS_dbms: bigquery-dbi
+  GCP_PROJECT_ID: finngen-training-library
+  CDMTOOLS_webapi_url: https://ohdsi-webapi.app.finngen.fi/WebAPI
+  CDMTOOLS_CDM_source_key_test: FINNGEN_CDM_R7
+  gc_shiny.maxRequestSize: 314572800
 dev:
   golem_wd: C:/Users/javier/OneDrive - TUNI.fi/Documents/TAYS/PROJECTS/4_SANDBOX_TOOLS/REPOS/CohortOperationsShinyApp
