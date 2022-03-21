@@ -45,6 +45,18 @@
       "RemoteRef": "bigrquery",
       "Hash": "994e0df9f596b1fa8db96a2257af28ab"
     },
+    "FGpheWAS": {
+      "Package": "FGpheWAS",
+      "Version": "0.0.0.9000",
+      "Source": "GitHub",
+      "RemoteType": "github",
+      "RemoteUsername": "FINNGEN",
+      "RemoteRepo": "FGpheWAS",
+      "RemoteRef": "master",
+      "RemoteSha": "9b03bec7c361ae20cdc69a5bc36e7923f3aa275f",
+      "RemoteHost": "api.github.com",
+      "Hash": "ad0b92c71637c6c87da980fd033ffaca"
+    },
     "FinnGenTableTypes": {
       "Package": "FinnGenTableTypes",
       "Version": "0.0.0.9000",
@@ -411,6 +423,13 @@
       "Repository": "CRAN",
       "Hash": "77bd60a6157420d4ffa93b27cf6a58b8"
     },
+    "flexdashboard": {
+      "Package": "flexdashboard",
+      "Version": "0.5.2",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "a0534e167498732ac0137e7ba46364dc"
+    },
     "fontawesome": {
       "Package": "fontawesome",
       "Version": "0.2.2",
@@ -768,6 +787,13 @@
       "Repository": "CRAN",
       "Hash": "302276471121c41f47380243b82d5882"
     },
+    "plotly": {
+      "Package": "plotly",
+      "Version": "4.10.0",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "fbb11e44d057996ca5fe40d959cacfb0"
+    },
     "praise": {
       "Package": "praise",
       "Version": "1.0.0",
@@ -1089,6 +1115,13 @@
       "Source": "Repository",
       "Repository": "CRAN",
       "Hash": "8a8f02d1934dfd6431c671361510dd0b"
+    },
+    "tictoc": {
+      "Package": "tictoc",
+      "Version": "1.0.1",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "5acb66b0266ad1f0ebf7ffe1aa36ff4c"
     },
     "tidyr": {
       "Package": "tidyr",

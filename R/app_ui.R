@@ -21,9 +21,9 @@ app_ui <- function(request) {
           shinydashboard::menuItem("Status", tabName = "info", icon = icon("info")),
           h5(" Cohort Creation"),
           mod_info_box_ui("info_importcohorts", shinydashboard::menuItem("Import Cohorts", tabName = "importcohorts", icon = icon("address-card"))),
-          mod_info_box_ui("info_operatecohorts",shinydashboard::menuItem("Operate Cohorts", tabName = "operatecohorts", icon = icon("sliders-h")))#,
-          #h5(" Cohort Charaterisation"),
-          #shinydashboard::menuItem("PheWAS", tabName = "phewas", icon = icon("briefcase-medical"))
+          mod_info_box_ui("info_operatecohorts",shinydashboard::menuItem("Operate Cohorts", tabName = "operatecohorts", icon = icon("sliders-h"))),
+          h5(" Cohort Charaterisation"),
+          shinydashboard::menuItem("PheWAS", tabName = "phewas", icon = icon("briefcase-medical"))
         )
       ),
 
@@ -86,32 +86,23 @@ app_ui <- function(request) {
               status = "primary", solidHeader = FALSE, width = 12,
               mod_operate_cohorts_ui("mod_operate_cohorts")
             )
-          )#,
-          # ## PheWAS
-          # shinydashboard::tabItem(
-          #   tabName = "phewas",
-          #   ### Cohorts workbench
-          #   shinydashboard::box(
-          #     title = "Cohorts workbench", status = "primary", solidHeader = TRUE, width = 12,
-          #     mod_cohorts_table_ui("mod_cohorts_table_phewas")
-          #   ),
-          #   ### phewas config
-          #   shinydashboard::box(
-          #     title = tagList(shiny::icon("clone"), "PheWAS settings:"),
-          #     status = "primary", solidHeader = FALSE, width = 12,
-          #     h6("select cases from workbench"),
-          #     h6("select controls from workbench"),
-          #     h6("aditional config"),
-          #     shiny::actionButton("runphewas", "Run PheWAS")
-          #   ),
-          #   shinydashboard::box(
-          #     title = tagList(shiny::icon("clone"), "PheWAS results:"),
-          #     status = "primary", solidHeader = FALSE, width = 12,
-          #     shiny::radioButtons("runphewas", "Show",
-          #                         choices = c("Table", "Manhatan Plot", "Case vs Controls Plot"),
-          #                         inline = TRUE)
-          #   )
-          # )
+          ),
+          ## PheWAS
+          shinydashboard::tabItem(
+            tabName = "phewas",
+            ### Cohorts workbench
+            shinydashboard::box(
+              title = mod_info_box_ui("info_workbench", tagList("Cohorts workbench ")),
+              status = "primary", solidHeader = TRUE, width = 12,
+              mod_cohorts_table_ui("mod_cohorts_table_phewas")
+            ),
+            ### phewas config
+            shinydashboard::box(
+              title = tagList(shiny::icon("clone"), "PheWAS settings:"),
+              status = "primary", solidHeader = FALSE, width = 12,
+              mod_phewas_ui("mod_phewas")
+            )
+          )
         )
       )
     )

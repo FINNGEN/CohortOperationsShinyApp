@@ -16,6 +16,7 @@ golem::get_golem_things()
 
 ## Dependencies ----
 ## Add one line by package you want to add as dependency
+usethis::use_package( "FGpheWAS " )
 usethis::use_package( "CDMTools" )
 usethis::use_package( "shinydashboard" )
 usethis::use_package( "toastui" )
@@ -48,6 +49,8 @@ golem::add_module( name = "import_cohort_file" )
 golem::add_module( name = "import_cohort_atlas" )
 #
 golem::add_module( name = "operate_cohorts" )
+#
+golem::add_module( name = "phewas" )
 
 
 

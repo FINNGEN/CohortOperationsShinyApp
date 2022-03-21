@@ -12,6 +12,7 @@ Imports:
     DatabaseConnector,
     dplyr,
     DT,
+    FGpheWAS ,
     FinnGenTableTypes,
     glue,
     golem,
