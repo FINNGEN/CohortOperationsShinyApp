@@ -35,10 +35,10 @@ configCDMTools <- function() {
   # in development sandbox
   if (get_golem_config("enviroment") == "sandbox") {
     # billing project from envar
-    bq_dbi_billing = Sys.getenv("BUCKET_SANDBOX_IVM") %>% stringr::str_remove("_ivm$")
+    bq_dbi_billing = Sys.getenv("BUCKET_SANDBOX_IVM") %>% stringr::str_remove("_red$")
     # authenticate
     options(gargle_oauth_cache=FALSE) #to avoid the question that freezes the app
-    bigrquery::bq_auth(scopes = "https://www.googleapis.com/auth/bigquery.readonly")
+    bigrquery::bq_auth(scopes = "https://www.googleapis.com/auth/bigquery")
     # desactivate https
     httr::set_config(httr::config(ssl_verifypeer = FALSE))
   }
