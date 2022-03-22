@@ -35,7 +35,7 @@ configFGpheWAS <- function() {
   # in development sandbox
   if (get_golem_config("enviroment") == "sandbox") {
     # billing project from envar
-    bq_dbi_billing = Sys.getenv("BUCKET_SANDBOX_IVM") %>% stringr::str_remove("_red$")
+    bq_dbi_billing = Sys.getenv("BUCKET_SANDBOX_IVM") %>% stringr::str_remove("-red$")
     # authenticate
     options(gargle_oauth_cache=FALSE) #to avoid the question that freezes the app
     bigrquery::bq_auth(scopes = "https://www.googleapis.com/auth/bigquery")
