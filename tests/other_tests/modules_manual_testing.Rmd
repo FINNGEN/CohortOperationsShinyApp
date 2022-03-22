@@ -57,3 +57,53 @@ shinyApp(
 # test on main 
 
 - import a cohort from Atlas with 0 patients (#26 CohortOperationsShinyApp_COMPLETE_0patients) show a warning alert and does nothing 
+
+
+
+## mod_phewas
+
+```{r}
+devtools::load_all(".")
+
+r_connection <- reactiveValues(cdm_webapi_conn = configCDMTools(), phewas_conn = configFGpheWAS())
+
+r_cohorts <- reactiveValues(
+  cohortData = test_cohortData,
+  summaryCohortData = FinnGenTableTypes::summarise_cohortData(test_cohortData)
+)
+```
+
+
+```{r}
+devtools::load_all(".")
+
+shinyApp(
+  fluidPage(mod_phewas_ui("test")),
+  function(input,output,session){mod_phewas_server("test", r_connection, r_cohorts)}
+)
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

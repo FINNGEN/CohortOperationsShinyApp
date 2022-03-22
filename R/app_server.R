@@ -8,7 +8,7 @@ app_server <- function(input, output, session) {
   # Your application server logic
 
   # INFO connection tab ---------------------------------------------
-  r_connection <- reactiveValues(cdm_webapi_conn = configCDMTools())
+  r_connection <- reactiveValues(cdm_webapi_conn = configCDMTools(), phewas_conn = configFGpheWAS())
   r_cohorts <- reactiveValues(
     cohortData = FinnGenTableTypes::empty_cohortData(),
     summaryCohortData = FinnGenTableTypes::empty_cohortData() %>% FinnGenTableTypes::summarise_cohortData()
@@ -30,6 +30,7 @@ app_server <- function(input, output, session) {
   mod_operate_cohorts_server("mod_operate_cohorts", r_cohorts)
 
   mod_cohorts_table_server("mod_cohorts_table_phewas", r_cohorts)
+  mod_phewas_server("mod_phewas", r_connection, r_cohorts)
 
 
   # info bubbles ---------------------------------------------
