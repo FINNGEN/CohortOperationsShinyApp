@@ -22,13 +22,19 @@ mod_connection_to_db_ui <- function(id) {
 #' @noRd
 #' @importFrom reactable renderReactable reactable colDef
 #' @importFrom shiny observeEvent
+#' @importFrom dplyr bind_rows
 #'
 mod_connection_to_db_server <- function(id, r_connection) {
   shiny::moduleServer(id, function(input, output, session) {
     ns <- session$ns
 
+    con_table <- dplyr::bind_rows(
+      r_connection$cdm_webapi_conn$conn_status_tibble,
+      r_connection$phewas_conn$conn_status_tibble
+    )
+
     output$connection_status_reactable <- reactable::renderReactable({
-      r_connection$cdm_webapi_conn$conn_status_tibble %>%
+      con_table %>%
         dplyr::mutate(step = stringr::str_replace(step, "Test c", "C")) %>%
         dplyr::transmute(Status = error, Connection = step, `Error message` = message) %>%
         reactable::reactable(

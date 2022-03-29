@@ -3,10 +3,11 @@ library(dplyr)
 library(tibble)
 library(stringr)
 library(purrr)
+library(testthat)
 
 # no connection
 Sys.setenv(GOLEM_CONFIG_ACTIVE = "dev_no_connection")
-r_connection <- reactiveValues(cdm_webapi_conn = configCDMTools())
+r_connection <- reactiveValues(cdm_webapi_conn = configCDMTools(), phewas_conn = configFGpheWAS())
 
 
 test_that("mod_connection_to_db dont error", {
