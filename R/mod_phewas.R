@@ -148,7 +148,7 @@ mod_phewas_server <- function(id, r_connection, r_cohorts){
       cases_cohort <- r_cohorts$cohortData %>% dplyr::filter(COHORT_NAME == input$cases_pi)
       controls_cohort <- r_cohorts$cohortData %>% dplyr::filter(COHORT_NAME == input$controls_pi)
 
-      r_phewas$cohorts_settings <- FGpheWAS::createCohortsSettings(
+            r_phewas$cohorts_settings <- FGpheWAS::createCohortsSettings(
         connection_settings = r_connection$phewas_conn,
         cases_cohort_source = cases_cohort %>% dplyr::distinct(COHORT_SOURCE) %>% dplyr::pull(COHORT_SOURCE),
         cases_cohort_name = cases_cohort %>% dplyr::distinct(COHORT_NAME) %>% dplyr::pull(COHORT_NAME),
