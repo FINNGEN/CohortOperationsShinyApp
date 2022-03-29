@@ -30,6 +30,8 @@ configFGpheWAS <- function() {
     bq_dbi_billing = get_golem_config("GCP_BILLING_PROJECT_ID")
     # authenticate
     bigrquery::bq_auth(path = get_golem_config("GCP_SERVICE_KEY"))
+
+    testing_phewas_schema <- "phewas_dummy_1k"
   }
 
   # in development sandbox
@@ -41,6 +43,8 @@ configFGpheWAS <- function() {
     bigrquery::bq_auth(scopes = "https://www.googleapis.com/auth/bigquery")
     # desactivate https
     httr::set_config(httr::config(ssl_verifypeer = FALSE))
+
+    testing_phewas_schema <- "sandbox_tools_r9"
   }
 
 
@@ -51,7 +55,7 @@ configFGpheWAS <- function() {
     bq_dbi_billing = bq_dbi_billing
   )
 
-  testing_phewas_schema <- "phewas_dummy_1k"
+
 
   connection_settings <- FGpheWAS::createConnectionSettings(
     connection_details = connection_details,
