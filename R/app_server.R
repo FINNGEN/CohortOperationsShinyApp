@@ -29,7 +29,7 @@ app_server <- function(input, output, session) {
   mod_cohorts_table_server("mod_cohorts_table_operate", r_cohorts)
   mod_operate_cohorts_server("mod_operate_cohorts", r_cohorts)
 
-  mod_cohorts_table_server("mod_cohorts_table_phewas", r_cohorts)
+  mod_cohorts_table_server("mod_cohorts_table_phewas", r_cohorts, table_editing = FALSE)
   mod_phewas_server("mod_phewas", r_connection, r_cohorts)
 
 

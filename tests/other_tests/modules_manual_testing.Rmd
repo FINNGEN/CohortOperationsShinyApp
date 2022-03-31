@@ -32,7 +32,7 @@ test that:
 - 
 
 
-## mod_append_cohort
+## mod_import_cohort_atlas
 
 ```{r}
 devtools::load_all(".")
@@ -52,6 +52,7 @@ shinyApp(
 )
 
 ```
+
 
 
 # test on main 
@@ -91,7 +92,22 @@ shinyApp(
 
 
 
+# mod_cohorts_table 
 
+```{r}
+devtools::load_all(".")
+
+ table_editing=F
+
+r_cohorts <- reactiveValues(
+  cohortData = test_cohortData,
+  summaryCohortData = FinnGenTableTypes::summarise_cohortData(test_cohortData)
+)
+shinyApp(
+  fluidPage(mod_cohorts_table_ui("test")),
+  function(input,output,session){mod_cohorts_table_server("test", r_cohorts, table_editing)}
+)
+```
 
 
 
