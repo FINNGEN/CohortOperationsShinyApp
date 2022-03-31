@@ -230,9 +230,9 @@ mod_phewas_server <- function(id, r_connection, r_cohorts){
     output$runphewas <- downloadHandler(
       filename = function() {
         paste0("Phewas_analysis_",
-              FGpheWAS::test_phewas_results$cohorts_settings$cases_cohort$name,
+               r_phewas$cohorts_settings$cases_cohort$name,
               "_",
-              FGpheWAS::test_phewas_results$cohorts_settings$controls_cohort$name,
+              r_phewas$cohorts_settings$controls_cohort$name,
               ".html")
       },
       content = function(file) {
