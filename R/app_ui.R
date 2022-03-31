@@ -23,7 +23,7 @@ app_ui <- function(request) {
           mod_info_box_ui("info_importcohorts", shinydashboard::menuItem("Import Cohorts", tabName = "importcohorts", icon = icon("address-card"))),
           mod_info_box_ui("info_operatecohorts",shinydashboard::menuItem("Operate Cohorts", tabName = "operatecohorts", icon = icon("sliders-h"))),
           h5(" Cohort Charaterisation"),
-          shinydashboard::menuItem("PheWAS", tabName = "phewas", icon = icon("briefcase-medical"))
+          mod_info_box_ui("info_phewas", shinydashboard::menuItem("PheWAS", tabName = "phewas", icon = icon("briefcase-medical")))
         )
       ),
 

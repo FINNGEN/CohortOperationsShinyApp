@@ -36,6 +36,7 @@ app_server <- function(input, output, session) {
   # info bubbles ---------------------------------------------
   mod_info_box_server("info_importcohorts", "Import Cohorts", "info_importcohorts.md")
   mod_info_box_server("info_operatecohorts", "Operate Cohorts", "info_operatecohorts.md")
+  mod_info_box_server("info_phewas", "PheWAS", "info_phewas.md")
 
 
 
