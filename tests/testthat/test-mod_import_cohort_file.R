@@ -14,12 +14,12 @@ test_that("mod_import_cohort_file_server updates output$cohorts_reactable", {
 
   testServer(mod_import_cohort_file_server, args = list(r_cohorts = r_cohorts), {
 
-    session$setInputs(file_fi = list(datapath = "../../data-raw/test_cohortData_no_tsv.csv"))
+    session$setInputs(file_fi = list(datapath = "../../data-raw/test_cohortData_no_tsv_csv.otr"))
     # i dont understand
     r_file$tmp_file <- input$file_fi ; session$flushReact()
     #
     output$cohorts_reactable %>%
-       expect_error("Uploaded file is not a tabu")
+       expect_error("Uploaded file is not a")
 
     session$setInputs(file_fi = list(datapath = "../../data-raw/test_cohortData_missing_name.tsv"))
     # i dont understand

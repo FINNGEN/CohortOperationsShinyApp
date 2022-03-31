@@ -15,12 +15,7 @@ mod_cohorts_table_ui <- function(id){
   htmltools::tagList(
     shinyjs::useShinyjs(),
     #
-    reactable::reactableOutput(ns("summaryCohortsData_reactable")) %>%
-      CohortOperationsShinyApp::ui_load_spinner(),
-    htmltools::hr(),
-    #
-    shiny::actionButton(ns("delete_b"), "Delete selected cohorts"),
-    shiny::downloadButton(ns("download_db"), "Download selected cohorts")
+    uiOutput(ns("ui_wrap"))
   )
 }
 
@@ -36,20 +31,45 @@ mod_cohorts_table_ui <- function(id){
 #' @importFrom htmltools HTML
 #' @importFrom stringr str_c
 #' @importFrom readr write_tsv
-mod_cohorts_table_server <- function(id, r_cohorts){
+mod_cohorts_table_server <- function(id, r_cohorts,  table_editing=TRUE){
   moduleServer( id, function(input, output, session){
     ns <- session$ns
+
+    #
+    # build ui
+    #
+    output$ui_wrap <- renderUI({
+      if(table_editing){
+        htmltools::tagList(
+          reactable::reactableOutput(ns("summaryCohortsData_reactable")) %>%
+            CohortOperationsShinyApp::ui_load_spinner(),
+          htmltools::hr(),
+          shiny::actionButton(ns("delete_b"), "Delete selected cohorts"),
+          shiny::downloadButton(ns("download_db"), "Download selected cohorts")
+        )
+      }else{
+        htmltools::tagList(
+          reactable::reactableOutput(ns("summaryCohortsData_reactable")) %>%
+            CohortOperationsShinyApp::ui_load_spinner()
+        )
+      }
+    })
 
     #
     # Updates summaryCohortsData_reactable
     #
     output$summaryCohortsData_reactable <- reactable::renderReactable({
       # FinnGenTableTypes::is_cohortData(r_cohorts$cohortData, verbose = TRUE)
-      r_cohorts$summaryCohortData %>%
-        FinnGenTableTypes::table_summarycohortData(
-          selection = "multiple",
-          onClick = "select"
-        )
+      if(table_editing){
+        r_cohorts$summaryCohortData %>%
+          FinnGenTableTypes::table_summarycohortData(
+            selection = "multiple",
+            onClick = "select"
+          )
+      }else{
+        r_cohorts$summaryCohortData %>%
+          FinnGenTableTypes::table_summarycohortData( )
+      }
     })
     # reactive function to get selected values
     selected_cohorts <- reactive(reactable::getReactableState("summaryCohortsData_reactable", "selected", session))

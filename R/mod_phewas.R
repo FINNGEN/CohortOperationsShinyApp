@@ -30,7 +30,8 @@ mod_phewas_ui <- function(id){
         options = list(title = "Select controls-cohort")
       ))
     ),
-    shiny::htmlOutput(outputId = ns("cohrots_info_to")),
+    shiny::htmlOutput(outputId = ns("cohrots_info_to"))  %>%
+      CohortOperationsShinyApp::ui_load_spinner(),
     shiny::hr(),
     #
     shiny::tags$h4("Analysis Settings"),
@@ -145,6 +146,8 @@ mod_phewas_server <- function(id, r_connection, r_cohorts){
       shiny::req(input$cases_pi)
       shiny::req(input$controls_pi)
 
+      CohortOperationsShinyApp::sweetAlert_spinner("Assessing patients in cases and controls")
+
       cases_cohort <- r_cohorts$cohortData %>% dplyr::filter(COHORT_NAME == input$cases_pi)
       controls_cohort <- r_cohorts$cohortData %>% dplyr::filter(COHORT_NAME == input$controls_pi)
 
@@ -157,6 +160,8 @@ mod_phewas_server <- function(id, r_connection, r_cohorts){
         controls_cohort_name = controls_cohort %>% dplyr::distinct(COHORT_NAME) %>% dplyr::pull(COHORT_NAME),
         controls_id_list = controls_cohort %>% dplyr::pull(FINNGENID)
       )
+
+      CohortOperationsShinyApp::remove_sweetAlert_spinner()
 
     })
 
@@ -225,9 +230,9 @@ mod_phewas_server <- function(id, r_connection, r_cohorts){
     output$runphewas <- downloadHandler(
       filename = function() {
         paste0("Phewas_analysis_",
-              FGpheWAS::test_phewas_results$cohorts_settings$cases_cohort$name,
+               r_phewas$cohorts_settings$cases_cohort$name,
               "_",
-              FGpheWAS::test_phewas_results$cohorts_settings$controls_cohort$name,
+              r_phewas$cohorts_settings$controls_cohort$name,
               ".html")
       },
       content = function(file) {

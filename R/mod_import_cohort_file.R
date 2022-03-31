@@ -69,9 +69,11 @@ mod_import_cohort_file_server <- function(id, r_cohorts) {
       shiny::req(r_file$tmp_file)
       ext <- tools::file_ext(r_file$tmp_file$datapath)
 
-      shiny::validate(shiny::need(ext == "tsv", "Uploaded file is not a tabular-separated-values (.tsv) file. Please upload a tsv file."))
+      shiny::validate(shiny::need(ext == "tsv" | ext == "csv",
+                                  "Uploaded file is not a .csv or .tsv file. Please upload a csv or tsv file."))
 
-      tmp_imported_file <- readr::read_tsv(r_file$tmp_file$datapath, show_col_types = FALSE)
+      if(ext == "tsv"){ tmp_imported_file <- readr::read_tsv(r_file$tmp_file$datapath, show_col_types = FALSE) }
+      if(ext == "csv"){ tmp_imported_file <- readr::read_csv(r_file$tmp_file$datapath, show_col_types = FALSE) }
 
       # # TEMP HACK
       # # if it has columns variant and gt

@@ -2,7 +2,7 @@
 ## Cohort Operations Shiny App
 
 ### Version 
-CohortOperationsShinyApp v1.1.0
+CohortOperationsShinyApp v2.0.2
 
 
 ### Status of the connection to data

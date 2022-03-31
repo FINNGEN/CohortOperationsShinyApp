@@ -13,6 +13,7 @@ test_cohortData <- bind_rows(
 )
 
 test_cohortData %>% write_tsv("data-raw/test_cohortData_3cohorts.tsv")
+test_cohortData %>% write_csv("data-raw/test_cohortData_3cohorts.csv")
 
 test_cohortData %>%
   select(-COHORT_NAME) %>%
