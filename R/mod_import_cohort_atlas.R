@@ -68,7 +68,7 @@ mod_import_cohort_atlas_server <- function(id, r_connection, r_cohorts) {
       } else {
         shiny::selectInput(ns("database_picker"), "Select CDM database:",
           choices = r_connection$cdm_webapi_conn$CdmSources %>% dplyr::pull(sourceKey) %>% rev(),
-          selected = r_connection$cdm_webapi_conn$CdmSource$sourceKey
+          selected = r_connection$cdm_webapi_conn$CdmSources %>% dplyr::pull(sourceKey) %>% rev() %>% .[1]
         )
       }
     })

@@ -58,6 +58,11 @@ app_ui <- function(request) {
               #   "from Endploint",
               #   htmltools::h2("Possible if endpoint results in a BQ database in cohortTable format ")
               # ),
+              #### panel ENDPOINT
+              shiny::tabPanel(
+                "from Endpoint",
+                mod_import_cohort_endpoints_ui("mod_import_cohort_endpoint")
+              ),
               #### panel FILE
               shiny::tabPanel(
                 "from File",
