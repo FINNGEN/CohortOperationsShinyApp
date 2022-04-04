@@ -98,6 +98,7 @@ mod_import_cohort_endpoints_server <- function(id, r_connection, r_cohorts){
       r$endpoint_cohorts_list %>% reactable(
         groupBy = "ENDPOINT",
         selection = "multiple",
+        searchable = TRUE
       )
 
     })
