@@ -53,9 +53,9 @@
       "RemoteUsername": "FINNGEN",
       "RemoteRepo": "FGpheWAS",
       "RemoteRef": "master",
-      "RemoteSha": "251fae669f121ce5c2596cad526283bd73b3d0a0",
+      "RemoteSha": "b610a7a31d50fc03214aa3fb2ce46753ba340e77",
       "RemoteHost": "api.github.com",
-      "Hash": "3f30b0e4f228ae6d7ff312a986f2324d"
+      "Hash": "4cd6c732c5a5bba66fa858c2b947ccbc"
     },
     "FinnGenTableTypes": {
       "Package": "FinnGenTableTypes",
@@ -1150,6 +1150,13 @@
       "Source": "Repository",
       "Repository": "CRAN",
       "Hash": "1d7220fe46159fb9f5c99a44354a2bff"
+    },
+    "tippy": {
+      "Package": "tippy",
+      "Version": "0.1.0",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "39b1d69229e30314e7cba023c777f52d"
     },
     "toastui": {
       "Package": "toastui",

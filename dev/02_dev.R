@@ -47,6 +47,7 @@ golem::add_module( name = "cohorts_table" )
 golem::add_module( name = "import_cohorts" )
 golem::add_module( name = "import_cohort_file" )
 golem::add_module( name = "import_cohort_atlas" )
+golem::add_module( name = "import_cohort_endpoints" )
 #
 golem::add_module( name = "operate_cohorts" )
 #
