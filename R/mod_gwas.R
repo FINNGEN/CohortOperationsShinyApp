@@ -115,7 +115,6 @@ mod_gwas_server <- function(id, r_connection, r_cohorts){
     })
 
 
-
   })
 }
 
