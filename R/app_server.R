@@ -32,6 +32,8 @@ app_server <- function(input, output, session) {
 
   mod_cohorts_table_server("mod_cohorts_table_phewas", r_cohorts, table_editing = FALSE)
   mod_phewas_server("mod_phewas", r_connection, r_cohorts)
+  mod_cohorts_table_server("mod_cohorts_table_gwas", r_cohorts, table_editing = FALSE)
+  mod_gwas_server("mod_gwas", r_connection, r_cohorts)
 
 
   # info bubbles ---------------------------------------------

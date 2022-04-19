@@ -86,6 +86,31 @@ shinyApp(
 ```
 
 
+## mod_gwas
+
+```{r}
+devtools::load_all(".")
+
+r_connection <- reactiveValues(cdm_webapi_conn = configCDMTools(), phewas_conn = configFGpheWAS())
+
+r_cohorts <- reactiveValues(
+  cohortData = test_cohortData,
+  summaryCohortData = FinnGenTableTypes::summarise_cohortData(test_cohortData)
+)
+```
+
+
+```{r}
+devtools::load_all(".")
+
+shinyApp(
+  fluidPage(mod_gwas_ui("test")),
+  function(input,output,session){mod_gwas_server("test", r_connection, r_cohorts)}
+)
+
+```
+
+
 
 
 

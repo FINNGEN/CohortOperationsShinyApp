@@ -23,7 +23,8 @@ app_ui <- function(request) {
           mod_info_box_ui("info_importcohorts", shinydashboard::menuItem("Import Cohorts", tabName = "importcohorts", icon = icon("address-card"))),
           mod_info_box_ui("info_operatecohorts",shinydashboard::menuItem("Operate Cohorts", tabName = "operatecohorts", icon = icon("sliders-h"))),
           h5(" Cohort Charaterisation"),
-          mod_info_box_ui("info_phewas", shinydashboard::menuItem("PheWAS", tabName = "phewas", icon = icon("briefcase-medical")))
+          mod_info_box_ui("info_phewas", shinydashboard::menuItem("PheWAS", tabName = "phewas", icon = icon("briefcase-medical"))),
+          mod_info_box_ui("info_gwas", shinydashboard::menuItem("GWAS", tabName = "gwas", icon = icon("briefcase-medical")))
         )
       ),
 
@@ -107,7 +108,24 @@ app_ui <- function(request) {
               status = "primary", solidHeader = FALSE, width = 12,
               mod_phewas_ui("mod_phewas")
             )
+          ),
+          ## GWAS
+          shinydashboard::tabItem(
+            tabName = "gwas",
+            ### Cohorts workbench
+            shinydashboard::box(
+              title = mod_info_box_ui("info_workbench", tagList("Cohorts workbench ")),
+              status = "primary", solidHeader = TRUE, width = 12,
+              mod_cohorts_table_ui("mod_cohorts_table_gwas")
+            ),
+            ### gwas config
+            shinydashboard::box(
+              title = tagList(shiny::icon("clone"), "GWAS settings:"),
+              status = "primary", solidHeader = FALSE, width = 12,
+              mod_gwas_ui("mod_gwas")
+            )
           )
+
         )
       )
     )
