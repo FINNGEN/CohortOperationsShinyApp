@@ -34,7 +34,12 @@ mod_gwas_ui <- function(id){
     shiny::hr(),
     reactable::reactableOutput(ns("endpoints_overlap_rt")),
     shiny::hr(),
-    shiny::downloadButton(ns("rungwas"), "Run gwas analysis")
+    shiny::textInput(ns("gwas_name"),label = "Analysis name"),
+    shiny::textInput(ns("gwas_desc"),label = "Analysis description"),
+    shiny::textInput(ns("gwas_email"),label = "Notification email"),
+    shiny::selectInput(ns("gwas_release"),label = "Release", choices = c("finngen_R9", "finngen_R8", "finngen_R7"), selected = "finngen_R9"),
+    shiny::hr(),
+    shiny::actionButton(ns("rungwas"), "Run gwas analysis")
   )
 }
 
@@ -91,6 +96,14 @@ mod_gwas_server <- function(id, r_connection, r_cohorts){
 
       CohortOperationsShinyApp::remove_sweetAlert_spinner()
 
+      # default names
+      phenotype_name <- paste(r_phewas$cohorts_settings$cases_cohort$name, "vs", r_phewas$cohorts_settings$controls_cohort$name)
+      shiny::updateTextInput(session, "gwas_name", value = phenotype_name )
+
+      analysis_description <- paste("Cases-cohort:", r_phewas$cohorts_settings$cases_cohort$name, "from", r_phewas$cohorts_settings$cases_cohort$source,
+                                    "Controls-cohort:", r_phewas$cohorts_settings$controls_cohort$name, "from", r_phewas$cohorts_settings$controls_cohort$source)
+      shiny::updateTextInput(session, "gwas_desc", value = analysis_description )
+
     })
 
 
@@ -111,6 +124,28 @@ mod_gwas_server <- function(id, r_connection, r_cohorts){
         "Controls-cohort has {n_controls} patients, from which {n_valid_controls} patients have phenotypic information {.emogi(n_controls, n_valid_controls)}.",
         "There is {n_overlap} patients that belong to both cohorts {em_overlap}.",
         .sep="<br>"))
+
+    })
+
+
+    shiny::observeEvent(input$rungwas, {
+      req(r_phewas$cohorts_settings)
+      req(input$gwas_name)
+      req(input$gwas_desc)
+      req(input$gwas_email)
+      req(input$gwas_release)
+
+      command <- FGpheWAS::buildGWAScommand(
+        cohorts_settings = r_phewas$cohorts_settings,
+        phenotype_name = input$gwas_name,
+        analysis_description = input$gwas_desc,
+        notification_email = input$gwas_email,
+        release = input$gwas_release
+      )
+
+      print(command)
+
+      system(command)
 
     })
 
