@@ -62,7 +62,7 @@ mod_phewas_ui <- function(id){
     #
     shiny::fluidRow(
       shiny::column(6,shiny::tags$h5("Codes will be excuded from the comparison if they appear in less than ")),
-      shiny::column(1,shiny::numericInput(ns("min_count_s"), NULL, 0, min = 0, max = 100, width = "80px")),
+      shiny::column(1,shiny::numericInput(ns("min_count_s"), NULL,0, min = 0, max = 100, width = "80px")),
       shiny::column(1,shiny::tags$h5("patients."))
     ),
     #
