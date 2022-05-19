@@ -68,7 +68,7 @@ mod_import_cohort_atlas_server <- function(id, r_connection, r_cohorts) {
       } else {
         shiny::selectInput(ns("database_picker"), "Select CDM database:",
           choices = r_connection$cdm_webapi_conn$CdmSources %>% dplyr::pull(sourceKey) %>% rev(),
-          selected = r_connection$cdm_webapi_conn$CdmSources %>% dplyr::pull(sourceKey) %>% rev() %>% .[1]
+          selected = r_connection$cdm_webapi_conn$CdmSource$sourceKey
         )
       }
     })
@@ -165,8 +165,8 @@ mod_import_cohort_atlas_server <- function(id, r_connection, r_cohorts) {
         selected_cohorts %>% dplyr::pull(cohort_name),
         tmp_r_imported_cohortData %>% dplyr::count(COHORT_NAME) %>% dplyr::pull(COHORT_NAME)
       )
-      print(selected_cohorts)
-      print(tmp_r_imported_cohortData)
+      #print(selected_cohorts)
+      #print(tmp_r_imported_cohortData)
       if (length(no_patients_cohorts) != 0) {
         shinyWidgets::sendSweetAlert(
           session = session,

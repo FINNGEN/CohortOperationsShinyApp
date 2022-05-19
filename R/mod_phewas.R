@@ -58,11 +58,11 @@ mod_phewas_ui <- function(id){
       width = "80%"
     ),
     #
-    shinyWidgets::prettySwitch(ns("include_endpoints_ps"), "Compare also endpoints", value = TRUE, status = "primary"),
+    shiny::checkboxInput(ns("include_endpoints_ci"), "Compare also endpoints", value = TRUE),
     #
     shiny::fluidRow(
       shiny::column(6,shiny::tags$h5("Codes will be excuded from the comparison if they appear in less than ")),
-      shiny::column(1,shiny::numericInput(ns("min_count_s"), NULL, 5, min = 0, max = 100, width = "80px")),
+      shiny::column(1,shiny::numericInput(ns("min_count_s"), NULL, 0, min = 0, max = 100, width = "80px")),
       shiny::column(1,shiny::tags$h5("patients."))
     ),
     #
@@ -204,14 +204,14 @@ mod_phewas_server <- function(id, r_connection, r_cohorts){
       #
       shiny::req(input$sources_pi)
       shiny::req(input$vocabulary_pi)
-      shiny::req(input$ICD10fi_keep_s)
+      #shiny::req(input$ICD10fi_keep_s)
       shiny::req(input$ICD10fi_precision_s)
       shiny::req(input$ICD9fi_precision_s)
       shiny::req(input$ICD8fi_precision_s)
       shiny::req(input$ATC_precision_s)
       shiny::req(input$NOMESCOfi_precision_s)
-      shiny::req(input$ICDO3_keep_s)
-      shiny::req(input$include_endpoints_ps)
+      #shiny::req(input$ICDO3_keep_s)
+      #shiny::req(input$include_endpoints_ci)
       shiny::req(input$min_count_s)
 
 
@@ -227,9 +227,11 @@ mod_phewas_server <- function(id, r_connection, r_cohorts){
         ATC_precision = input$ATC_precision_s,
         NOMESCOfi_precision = input$NOMESCOfi_precision_s,
         keep_ICDO3_codes = input$ICDO3_keep_s,
-        include_endpoints = input$include_endpoints_ps,
+        include_endpoints = input$include_endpoints_ci,
         min_n_counts = input$min_count_s
       )
+
+      print(r_phewas$analysis_settings)
 
     })
 
