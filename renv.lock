@@ -17,8 +17,7 @@
       "RemoteHost": "api.github.com",
       "RemoteRepo": "CDMTools",
       "RemoteUsername": "FINNGEN",
-      "RemoteRef": "changes_shiny_apps",
-      "Hash": "9d5b8c174dece643fe2f562983583493"
+      "RemoteRef": "changes_shiny_apps"
     },
     "DBI": {
       "Package": "DBI",

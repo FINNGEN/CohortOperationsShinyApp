@@ -59,6 +59,7 @@ golem::add_module( name = "phewas" )
 ## Creates fct_* and utils_*
 golem::add_fct( "config_CDMTools" )
 golem::add_fct( "spiners" )
+golem::add_fct( "cohortMatch" )
 #golem::add_utils( "helpers" )
 
 ## External resources
@@ -82,6 +83,8 @@ usethis::use_test( "mod_import_cohort_file" )
 usethis::use_test( "mod_import_cohort_atlas" )
 #
 usethis::use_test( "mod_operate_cohorts")
+
+usethis::use_test( "fct_cohortMatch" )
 
 # Documentation
 
