@@ -7,14 +7,11 @@
 #' @noRd
 
 
-fct_cohortMatch <- function(cdm_webapi_conn, cohorts_settings,
+fct_cohortMatch <- function(cdm_webapi_conn, cases_ids, controls_ids,
                             n_match = 10, match_sex = TRUE, match_year = TRUE) {
 
 
   # get cohort data from cases and controls
-  cases_ids <- cohorts_settings$cases_cohort$validated_ids
-  controls_ids <- cohorts_settings$controls_cohort$validated_ids
-
   cases_cohortData <- CDMTools::getCohortDataFromFinnGenIds(cdm_webapi_conn, cases_ids)
   controls_cohortData <- CDMTools::getCohortDataFromFinnGenIds(cdm_webapi_conn, controls_ids)
 
@@ -35,6 +32,7 @@ fct_cohortMatch <- function(cdm_webapi_conn, cohorts_settings,
   mapped <- dplyr::left_join(matching_rules, to_match, by = c("gender", "birth_year")) %>%
     tidyr::nest(data=c("finngenid")) %>%
     dplyr::mutate(
+      n = n*n_match,
       matched_ids = purrr::map2(data, n, ~.safe_sample_n(.x,.y)),
       n_unmaped = n - purrr::map_int(matched_ids, nrow)
     ) %>%
@@ -45,14 +43,9 @@ fct_cohortMatch <- function(cdm_webapi_conn, cohorts_settings,
   mapped_control_id <- mapped %>% tidyr::unnest(matched_ids) %>% dplyr::pull(finngenid)
 
 
-  cohorts_settings$controls_cohort$validated_ids <- mapped_control_id
-  cohorts_settings$controls_cohort$name <- paste0("1:", n_match, " sex and birth year ",
-                                                  cohorts_settings$controls_cohort$name)
-
-
   return(
     list(
-      cohorts_settings = cohorts_settings,
+      mapped_control_id = mapped_control_id,
       per_maped = per_maped
     )
   )

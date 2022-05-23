@@ -30,6 +30,14 @@ mod_phewas_ui <- function(id){
                       options = list(title = "Select controls-cohort")
                     ))
     ),
+    #
+    #
+    shiny::fluidRow(
+      shiny::column(3,shiny::checkboxInput(ns("match_cb"), "Used matched controls.", value = FALSE)),
+      shiny::column(4,shiny::tags$h5(" Match by sex and birth year with ratio 1:")),
+      shiny::column(2,shiny::numericInput(ns("n_match_ni"), NULL, 10, min = 0, max = 100, width = "80px"))
+    ),
+    #
     shiny::htmlOutput(outputId = ns("cohrots_info_to"))  %>%
       CohortOperationsShinyApp::ui_load_spinner(),
     shiny::hr(),
@@ -151,17 +159,43 @@ mod_phewas_server <- function(id, r_connection, r_cohorts){
 
       if(nrow(cases_cohort)!=0 & nrow(controls_cohort)!=0){
 
+        cases_id_list <- cases_cohort %>% dplyr::pull(FINNGENID)
+        controls_id_list <- controls_cohort %>% dplyr::pull(FINNGENID)
+        controls_cohort_name <- controls_cohort %>% dplyr::distinct(COHORT_NAME) %>% dplyr::pull(COHORT_NAME)
+
+        per_maped <- NULL
+        if(input$match_cb == TRUE){
+
+          CohortOperationsShinyApp::sweetAlert_spinner("Finding matched controls")
+
+          res <- fct_cohortMatch(
+            cdm_webapi_conn = r_connection$cdm_webapi_conn,
+            cases_ids = cases_id_list,
+            controls_ids = controls_id_list,
+            n_match = input$n_match_ni
+          )
+
+          controls_id_list <- res$mapped_control_id
+          controls_cohort_name <- paste0("Matched 1:", input$n_match_ni, " to ", controls_cohort_name)
+          per_maped <- res$per_maped
+
+          CohortOperationsShinyApp::remove_sweetAlert_spinner()
+        }
+
+
         CohortOperationsShinyApp::sweetAlert_spinner("Assessing patients in cases and controls")
 
         cohorts_settings <- FGpheWAS::createCohortsSettings(
           connection_settings = r_connection$phewas_conn,
           cases_cohort_source = cases_cohort %>% dplyr::distinct(COHORT_SOURCE) %>% dplyr::pull(COHORT_SOURCE),
           cases_cohort_name = cases_cohort %>% dplyr::distinct(COHORT_NAME) %>% dplyr::pull(COHORT_NAME),
-          cases_id_list = cases_cohort %>% dplyr::pull(FINNGENID),
+          cases_id_list = cases_id_list,
           controls_cohort_source = controls_cohort %>% dplyr::distinct(COHORT_SOURCE) %>% dplyr::pull(COHORT_SOURCE),
-          controls_cohort_name = controls_cohort %>% dplyr::distinct(COHORT_NAME) %>% dplyr::pull(COHORT_NAME),
-          controls_id_list = controls_cohort %>% dplyr::pull(FINNGENID)
+          controls_cohort_name = controls_cohort_name,
+          controls_id_list = controls_id_list
         )
+
+        cohorts_settings$per_maped <- per_maped
 
         CohortOperationsShinyApp::remove_sweetAlert_spinner()
 
@@ -185,10 +219,23 @@ mod_phewas_server <- function(id, r_connection, r_cohorts){
 
       em_overlap <- .emogi(min(c(n_cases, n_controls)), min(c(n_cases, n_controls)) - n_overlap)
 
+      print(r_phewas$cohorts_settings)
+
+      matching_info <- ""
+      if(shiny::isTruthy(r_phewas$cohorts_settings$per_maped)){
+        matching_info <- paste0("Matching: ", {scales::percent(r_phewas$cohorts_settings$per_maped)},
+                                " of controls found all matches",
+                                .emogi(1, r_phewas$cohorts_settings$per_maped), ".")
+
+      }
+
+      print(matching_info)
+
       shiny::HTML(stringr::str_glue(
         "Cases-cohort has {n_cases} patients, from which {n_valid_cases} patients have phenotypic information {.emogi(n_cases, n_valid_cases)}.",
         "Controls-cohort has {n_controls} patients, from which {n_valid_controls} patients have phenotypic information {.emogi(n_controls, n_valid_controls)}.",
         "There is {n_overlap} patients that belong to both cohorts {em_overlap}.",
+        matching_info,
         .sep="<br>"))
 
       }else{
