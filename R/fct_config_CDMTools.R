@@ -58,8 +58,10 @@ configCDMTools <- function() {
   )
 
   # default to latest database
-  last_sourceKey <- cdm_webapi_conn$CdmSources %>% dplyr::arrange(desc(sourceId)) %>% dplyr::slice(1) %>%  dplyr::pull(sourceKey)
-  cdm_webapi_conn <-  CDMTools::changeDatabase(cdm_webapi_conn, last_sourceKey)
+  if(!is.null(cdm_webapi_conn$CdmSources)){
+    last_sourceKey <- cdm_webapi_conn$CdmSources %>% dplyr::arrange(desc(sourceId)) %>% dplyr::slice(1) %>%  dplyr::pull(sourceKey)
+    cdm_webapi_conn <-  CDMTools::changeDatabase(cdm_webapi_conn, last_sourceKey)
+  }
 
   # print(cdm_webapi_conn)
   return(cdm_webapi_conn)
