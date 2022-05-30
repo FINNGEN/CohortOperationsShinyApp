@@ -50,6 +50,7 @@ golem::add_module( name = "import_cohort_atlas" )
 golem::add_module( name = "import_cohort_endpoints" )
 #
 golem::add_module( name = "operate_cohorts" )
+golem::add_module( name = "compare_cohorts" )
 #
 golem::add_module( name = "phewas" )
 
@@ -83,6 +84,7 @@ usethis::use_test( "mod_import_cohort_file" )
 usethis::use_test( "mod_import_cohort_atlas" )
 #
 usethis::use_test( "mod_operate_cohorts")
+
 
 usethis::use_test( "fct_cohortMatch" )
 

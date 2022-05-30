@@ -17,7 +17,8 @@
       "RemoteHost": "api.github.com",
       "RemoteRepo": "CDMTools",
       "RemoteUsername": "FINNGEN",
-      "RemoteRef": "changes_shiny_apps"
+      "RemoteRef": "changes_shiny_apps",
+      "Hash": "9d5b8c174dece643fe2f562983583493"
     },
     "DBI": {
       "Package": "DBI",
@@ -52,9 +53,9 @@
       "RemoteUsername": "FINNGEN",
       "RemoteRepo": "FGpheWAS",
       "RemoteRef": "master",
-      "RemoteSha": "b5d9bf40623f9a5dc4ae9bdc6e8013090f5d8f38",
+      "RemoteSha": "6f35a35cf1d19f13b4ef27094f71857a6491685c",
       "RemoteHost": "api.github.com",
-      "Hash": "38cce605ab9935956e0c00ccf600c3b3"
+      "Hash": "f542cbf0b44e9ba2d7325d4632a26d20"
     },
     "FinnGenTableTypes": {
       "Package": "FinnGenTableTypes",
@@ -64,9 +65,9 @@
       "RemoteUsername": "FINNGEN",
       "RemoteRepo": "FinnGenTableTypes",
       "RemoteRef": "HEAD",
-      "RemoteSha": "0ca75bf03757d0716b1e54050405149cb122f08c",
+      "RemoteSha": "64a2935565a41165aa0df6a73e11ce719bcc5134",
       "RemoteHost": "api.github.com",
-      "Hash": "8854f52d026a83a41c8fd4ebe360624c"
+      "Hash": "1124a9228cd3882d2885d57cefb9014e"
     },
     "MASS": {
       "Package": "MASS",

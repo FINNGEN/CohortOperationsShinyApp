@@ -167,133 +167,27 @@ shinyApp(
 
 
 
-```{r}
-library(shiny)
-library(DT) # dev from github
-runApp(list(
-  ui = basicPage(
-    DT::dataTableOutput('mytable'),
-    h2("Selected"),
-    tableOutput("checked")
-  ),
-
-  server = function(input, output) {
-    # helper function for making checkbox
-    shinyInput = function(FUN, len, id, ...) { 
-      inputs = character(len) 
-      for (i in seq_len(len)) { 
-        inputs[i] = as.character(FUN(paste0(id, i), label = NULL, ...)) 
-      } 
-      inputs 
-    } 
-    # datatable with checkbox
-    output$mytable = DT::renderDataTable({
-      data.frame(cn,
-                 Cases=shinyInput(checkboxInput,nrow(cn),"cbox_cases"), 
-                 Excudes=shinyInput(checkboxInput,nrow(cn),"cbox_excludes"), 
-                 Controls=shinyInput(checkboxInput,nrow(cn),"cbox_controls"))
-    }, server = FALSE, escape = FALSE, 
-      selection = "none", options = list( 
-      paging=TRUE, 
-      preDrawCallback = JS('function() { 
-Shiny.unbindAll(this.api().table().node()); }'), 
-      drawCallback = JS('function() { 
-Shiny.bindAll(this.api().table().node()); } ') 
-    ) )
-    # helper function for reading checkbox
-    shinyValue = function(id, len) { 
-      unlist(lapply(seq_len(len), function(i) { 
-        value = input[[paste0(id, i)]] 
-        if (is.null(value)) NA else value 
-      })) 
-    } 
-    
-    table_cbox_selected <- shiny::reactive({
-      data.frame(selected_cases=shinyValue("cbox_cases",nrow(mtcars)), 
-                 selected_excludes=shinyValue("cbox_excludes",nrow(mtcars)),
-                 selected_controls=shinyValue("cbox_controls",nrow(mtcars)))
-    })
-    
-    # output read checkboxes
-    output$checked <- renderTable({
-      table_cbox_selected()
-    })
-  }
-))
-```
-
-
-
+## mod_compare_cohorts
 
 ```{r}
-library(shiny)
-library(reactable) # dev from github
-runApp(list(
-  ui = basicPage(
-    h2('The mtcars data'),
-    reactable::reactableOutput('mytable'),
-    h2("Selected"),
-    tableOutput("checked")
-  ),
+devtools::load_all(".")
 
-  server = function(input, output, session) {
-    
-    
-    # datatable with checkbox
-    output$mytable = reactable::renderReactable({
-      
-      data <- chickwts
-      
-      reactable(data %>% mutate(nrow=1:nrow(.), nrow2=1:nrow(.)), columns = list(
-        nrow = colDef(cell = function(value, index) {
-          checkboxInput(paste0("a",value), index, value = TRUE) 
-        }), 
-        nrow2 = colDef(cell = function(value, index) {
-          checkboxInput(paste0("b",value), index)
-        })
-      ))
-      
-    } )
-    
-    
-    # reactive function to get selected values
-    selected_cohorts <- reactive(reactable::getReactableState("mytable", NULL, session))
-    
-    
-
-    
-    # helper function for reading checkbox
-    shinyValue = function(id, len) { 
-      unlist(lapply(seq_len(len), function(i) { 
-        value = input[[paste0(id, i)]] ;
-        if (is.null(value)) NA else value 
-      })) 
-    } 
-    # output read checkboxes
-    output$checked <- renderTable({
-      print(selected_cohorts())
-      data.frame(selected=shinyValue("a",nrow(data)), selected2=shinyValue("b",nrow(data)))
-    })
-  }
-))
+r_cohorts <- reactiveValues(
+  cohortData = test_cohortData,
+  summaryCohortData = FinnGenTableTypes::summarise_cohortData(test_cohortData)
+)
 ```
 
 
 ```{r}
-library(dplyr)
+devtools::load_all(".")
 
-data <- chickwts %>%
-  group_by(feed) %>%
-  summarise(weight = list(weight)) %>%
-  mutate(boxplot = NA, sparkline = NA)
+shiny::shinyApp(
+  shiny::fluidPage(mod_compare_cohorts_ui("test")),
+  function(input,output,session){mod_compare_cohorts_server("test", r_cohorts)}
+)
 
-reactable(data %>% mutate(nrow=1:nrow(.), nrow2=1:nrow(.)), columns = list(
-  nrow = colDef(cell = function(value, index) {
-    checkboxInput(paste("a",value), index)
-  }), 
-  nrow2 = colDef(cell = function(value, index) {
-    checkboxInput(paste("a",value), index)
-  })
-))
 ```
+
+
 
