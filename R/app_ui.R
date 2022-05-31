@@ -22,7 +22,9 @@ app_ui <- function(request) {
           h5(" Cohort Creation"),
           mod_info_box_ui("info_importcohorts", shinydashboard::menuItem("Import Cohorts", tabName = "importcohorts", icon = icon("address-card"))),
           mod_info_box_ui("info_operatecohorts",shinydashboard::menuItem("Operate Cohorts", tabName = "operatecohorts", icon = icon("sliders-h"))),
-          h5(" Cohort Charaterisation"),
+          h5(" Cohort Characterisation"),
+          mod_info_box_ui("info_comparecohorts",shinydashboard::menuItem("Compare Cohorts", tabName = "comparecohorts", icon = icon("sliders-h"))),
+          h5(" Analysis"),
           mod_info_box_ui("info_phewas", shinydashboard::menuItem("PheWAS", tabName = "phewas", icon = icon("briefcase-medical"))),
           mod_info_box_ui("info_gwas", shinydashboard::menuItem("GWAS", tabName = "gwas", icon = icon("briefcase-medical")))
         )
@@ -91,6 +93,22 @@ app_ui <- function(request) {
               title = tagList(shiny::icon("clone"), "Operate Cohorts:"),
               status = "primary", solidHeader = FALSE, width = 12,
               mod_operate_cohorts_ui("mod_operate_cohorts")
+            )
+          ),
+          ## Compare Cohorts
+          shinydashboard::tabItem(
+            tabName = "comparecohorts",
+            ### Cohorts workbench
+            shinydashboard::box(
+              title = mod_info_box_ui("info_workbench", tagList("Cohorts workbench ")),
+              status = "primary", solidHeader = TRUE, width = 12,
+              mod_cohorts_table_ui("mod_cohorts_table_compare")
+            ),
+            ### compare Cohorts
+            shinydashboard::box(
+              title = tagList(shiny::icon("clone"), "Compare Cohorts:"),
+              status = "primary", solidHeader = FALSE, width = 12,
+              mod_compare_cohorts_ui("mod_compare_cohorts")
             )
           ),
           ## PheWAS
