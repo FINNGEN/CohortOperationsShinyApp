@@ -69,8 +69,9 @@ mod_operate_cohorts_server <- function(id, r_cohorts) {
     # r_to_operate only the cohorts that are not from cohortOperations
     #
     shiny::observe({
-      r_to_operate$cohortData <- r_cohorts$cohortData %>% dplyr::filter(COHORT_SOURCE!="CohortOperation")
-      r_to_operate$summaryCohortData <- r_cohorts$summaryCohortData %>% dplyr::filter(COHORT_SOURCE!="CohortOperation")
+      r_to_operate$cohortData <- r_cohorts$cohortData #%>% dplyr::filter(COHORT_SOURCE!="CohortOperation")
+      r_to_operate$summaryCohortData <- r_cohorts$summaryCohortData# %>% dplyr::filter(COHORT_SOURCE!="CohortOperation")
+      print(r_to_operate$summaryCohortData)
     })
 
     #
@@ -198,10 +199,10 @@ mod_operate_cohorts_server <- function(id, r_cohorts) {
         entry_name <- ifelse(input$entry_cohort_start_rb=="all_events",
                              "all events from ",
                              paste(input$entry_cohort_start_rb, "entry and", input$entry_cohort_end_rb, "exit from"))
-        default_name <- paste("[",entry_name,r_entry_cohort_expresion(),"]")
+        default_name <- paste("[",entry_name,r_entry_cohort_expresion(),"] ")
       }
       if(shiny::isTruthy(r_operation_expresion())){
-        default_name <- paste(
+        default_name <- paste0(
           default_name,
           r_operation_expresion() %>%
             stringr::str_replace_all("\\&\\!`", " if they are not in ") %>%
@@ -210,6 +211,7 @@ mod_operate_cohorts_server <- function(id, r_cohorts) {
             stringr::str_replace_all("`", "")
         )
       }
+      print(default_name)
       default_name
 
     })
@@ -246,6 +248,7 @@ mod_operate_cohorts_server <- function(id, r_cohorts) {
           r_results_operation$results <- "Cant or in here"
         }
       }
+      print(op_exp)
       result_operation <- tryCatch(
         {
           FinnGenTableTypes::cohortData_union(
