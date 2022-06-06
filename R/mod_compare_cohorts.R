@@ -81,24 +81,14 @@ mod_compare_cohorts_server <- function(id, r_cohorts){
      })
 
 
-    output$upset_po <- shiny::renderPlot({
-      shiny::req(r_cohorts$cohortData)
-      shiny::req(input$cohorts_pi)
-
-      selected_cohortData <- r_cohorts$cohortData %>% dplyr::filter(COHORT_NAME == input$cohorts_pi)
-
-      FinnGenTableTypes::cohortData_union(selected_cohortData)$cohortsOverlap %>%
-        FinnGenTableTypes::plot_upset_cohortsOverlap()
-
-    })
 
     output$upset_po <- shiny::renderPlot({
       shiny::req(r_cohorts$cohortData)
       shiny::req(input$cohorts_pi)
 
-      selected_cohortData <- r_cohorts$cohortData %>% dplyr::filter(COHORT_NAME == input$cohorts_pi)
+      selected_cohortData <- r_cohorts$cohortData %>% dplyr::filter(COHORT_NAME %in% input$cohorts_pi)
 
-      FinnGenTableTypes::cohortData_union(selected_cohortData)$cohortsOverlap %>%
+    FinnGenTableTypes::cohortData_union(selected_cohortData)$cohortsOverlap %>%
         FinnGenTableTypes::plot_upset_cohortsOverlap()
 
     })
@@ -110,7 +100,7 @@ mod_compare_cohorts_server <- function(id, r_cohorts){
       shiny::req(input$stratify_cbg)
       shiny::req(input$selectDate_pi)
 
-      selected_cohortData <- r_cohorts$cohortData %>% dplyr::filter(COHORT_NAME == input$cohorts_pi)
+      selected_cohortData <- r_cohorts$cohortData %>% dplyr::filter(COHORT_NAME %in% input$cohorts_pi)
 
       FinnGenTableTypes::plot_cohortData_comparison(
         selected_cohortData,
