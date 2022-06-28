@@ -32,7 +32,8 @@ mod_connection_to_db_server <- function(id, r_connection) {
     output$connection_status_reactable <- reactable::renderReactable({
       dplyr::bind_rows(
         r_connection$cdm_webapi_conn$conn_status_tibble,
-        r_connection$phewas_conn$conn_status_tibble
+        r_connection$phewas_conn$conn_status_tibble,
+        r_connection$connection_sandboxAPI$conn_status_tibble
       ) %>%
         dplyr::mutate(step = stringr::str_replace(step, "Test c", "C")) %>%
         dplyr::transmute(Status = error, Connection = step, `Error message` = message) %>%
