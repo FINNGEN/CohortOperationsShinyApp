@@ -12,6 +12,7 @@ mod_gwas_ui <- function(id){
   htmltools::tagList(
     shinyjs::useShinyjs(),
     shinyWidgets::useSweetAlert(),
+    shinyFeedback::useShinyFeedback(),
     #
     shiny::tags$h4("Cohorts to compare"),
     shiny::fluidRow(
@@ -36,8 +37,10 @@ mod_gwas_ui <- function(id){
     shiny::hr(),
     shiny::textInput(ns("gwas_name"),label = "Analysis name"),
     shiny::textInput(ns("gwas_desc"),label = "Analysis description"),
+    shiny::textInput(ns("gwas_desc_cases"),label = "Cases description"),
+    shiny::textInput(ns("gwas_desc_controls"),label = "Controls description"),
     shiny::textInput(ns("gwas_email"),label = "Notification email"),
-    shiny::selectInput(ns("gwas_release"),label = "Release", choices = c("finngen_R9", "finngen_R8", "finngen_R7"), selected = "finngen_R9"),
+    shiny::selectInput(ns("gwas_release"),label = "Release", choices = c("Regenie9"), selected = "Regenie9"),
     shiny::hr(),
     shiny::actionButton(ns("rungwas"), "Run gwas analysis")
   )
@@ -146,16 +149,40 @@ mod_gwas_server <- function(id, r_connection, r_cohorts){
       if(shiny::isTruthy(r_phewas$cohorts_settings)){
         # default names
         phenotype_name <- paste(r_phewas$cohorts_settings$cases_cohort$name, "vs", r_phewas$cohorts_settings$controls_cohort$name)
-        analysis_description <- paste("Cases-cohort:", r_phewas$cohorts_settings$cases_cohort$name, "from", r_phewas$cohorts_settings$cases_cohort$source,
-                                      "Controls-cohort:", r_phewas$cohorts_settings$controls_cohort$name, "from", r_phewas$cohorts_settings$controls_cohort$source)
+        phenotype_name <- phenotype_name %>%  stringr::str_replace_all("[^[:alnum:]]", "") %>%  stringr::str_to_upper()
+        cases_description <- paste("Cases-cohort:", r_phewas$cohorts_settings$cases_cohort$name, "from", r_phewas$cohorts_settings$cases_cohort$source)
+        controls_description <- paste("Controls-cohort:", r_phewas$cohorts_settings$controls_cohort$name, "from", r_phewas$cohorts_settings$controls_cohort$source)
+        analysis_description <- paste(cases_description, "; ", controls_description)
+        email <- r_connection$connection_sandboxAPI$notification_email
       }else{
         phenotype_name <- ""
+        cases_description <- ""
+        controls_description <- ""
         analysis_description <- ""
+        email <- ""
       }
 
       shiny::updateTextInput(session, "gwas_name", value = phenotype_name )
       shiny::updateTextInput(session, "gwas_desc", value = analysis_description )
+      shiny::updateTextInput(session, "gwas_desc_cases", value = cases_description )
+      shiny::updateTextInput(session, "gwas_desc_controls", value = controls_description )
+      shiny::updateTextInput(session, "gwas_email", value = email )
+    })
 
+
+    shiny::observe({
+      # name
+      shinyFeedback::feedbackWarning(
+        "gwas_name",
+        stringr::str_detect(input$gwas_name, "[^[:alnum:]]|[:lower:]"),
+        "Name must use only upper case characters or numbers"
+      )
+      #email
+      shinyFeedback::feedbackWarning(
+        "gwas_email",
+        !stringr::str_detect(input$gwas_email, "^[[:alnum:].-_]+@[[:alnum:].-]+$"),
+        "Not a valid email"
+      )
     })
 
 
@@ -163,20 +190,35 @@ mod_gwas_server <- function(id, r_connection, r_cohorts){
       req(r_phewas$cohorts_settings)
       req(input$gwas_name)
       req(input$gwas_desc)
+      req(input$gwas_desc_cases)
+      req(input$gwas_desc_controls)
       req(input$gwas_email)
       req(input$gwas_release)
 
-      command <- FGpheWAS::buildGWAScommand(
-        cohorts_settings = r_phewas$cohorts_settings,
-        phenotype_name = input$gwas_name,
-        analysis_description = input$gwas_desc,
+
+      CohortOperationsShinyApp::sweetAlert_spinner("Sending data to GWAS pipeline")
+
+      res_gwas <- FGpheWAS::runGWASAnalysis(
+        r_connection$connection_sandboxAPI,
+        r_phewas$cohorts_settings,
+        input$gwas_name,
+        description = input$gwas_desc,
+        cases_description = input$gwas_desc_cases,
+        controls_description = input$gwas_desc_controls,
         notification_email = input$gwas_email,
         release = input$gwas_release
+
       )
 
-      print(command)
+      CohortOperationsShinyApp::remove_sweetAlert_spinner()
 
-      system(command)
+
+      shinyWidgets:: sendSweetAlert(
+        session = session,
+        title = ifelse(res_gwas$status==TRUE, "GWAS analysis sent", "Error sending GWAS analysis"),
+        text = res_gwas$content,
+        type = ifelse(res_gwas$status==TRUE, "success", "error")
+      )
 
     })
 

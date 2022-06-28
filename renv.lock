@@ -53,9 +53,9 @@
       "RemoteUsername": "FINNGEN",
       "RemoteRepo": "FGpheWAS",
       "RemoteRef": "master",
-      "RemoteSha": "9231ae657a1a80cfdacfa3eebcd10700b2876aab",
+      "RemoteSha": "ac4de3e582de1198971a71c69404f375cc2325d5",
       "RemoteHost": "api.github.com",
-      "Hash": "89805b65be36510d3313d82def6daf67"
+      "Hash": "cf822e2a040b5e494a43b97b538bd3a7"
     },
     "FinnGenTableTypes": {
       "Package": "FinnGenTableTypes",
@@ -1024,6 +1024,13 @@
       "Source": "Repository",
       "Repository": "CRAN",
       "Hash": "00344c227c7bd0ab5d78052c5d736c44"
+    },
+    "shinyFeedback": {
+      "Package": "shinyFeedback",
+      "Version": "0.4.0",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "88a6b7ff3d135195ad0011fec04336f2"
     },
     "shinyWidgets": {
       "Package": "shinyWidgets",

@@ -33,6 +33,7 @@ usethis::use_package("markdown")
 usethis::use_package("shinyjs")
 usethis::use_package("shinycustomloader")
 usethis::use_package("stringr")
+usethis::use_package("shinyFeedback")
 
 
 ## Add modules ----
@@ -59,6 +60,8 @@ golem::add_module( name = "phewas" )
 ## Add helper functions ----
 ## Creates fct_* and utils_*
 golem::add_fct( "config_CDMTools" )
+golem::add_fct( "config_FGpheWAS" )
+golem::add_fct( "config_GWAS" )
 golem::add_fct( "spiners" )
 golem::add_fct( "cohortMatch" )
 #golem::add_utils( "helpers" )

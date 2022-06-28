@@ -91,7 +91,10 @@ shinyApp(
 ```{r}
 devtools::load_all(".")
 
-r_connection <- reactiveValues(cdm_webapi_conn = configCDMTools(), phewas_conn = configFGpheWAS())
+r_connection <- reactiveValues(cdm_webapi_conn = configCDMTools(),
+                               phewas_conn = configFGpheWAS(),
+                                connection_sandboxAPI = configGWAS() 
+                               )
 
 r_cohorts <- reactiveValues(
   cohortData = test_cohortData,

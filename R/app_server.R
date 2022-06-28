@@ -8,7 +8,10 @@ app_server <- function(input, output, session) {
   # Your application server logic
 
   # INFO connection tab ---------------------------------------------
-  r_connection <- reactiveValues(cdm_webapi_conn = configCDMTools(), phewas_conn = configFGpheWAS())
+  r_connection <- reactiveValues(
+    cdm_webapi_conn = configCDMTools(),
+    phewas_conn = configFGpheWAS(),
+    connection_sandboxAPI = configGWAS())
   r_cohorts <- reactiveValues(
     cohortData = FinnGenTableTypes::empty_cohortData(),
     summaryCohortData = FinnGenTableTypes::empty_cohortData() %>% FinnGenTableTypes::summarise_cohortData()
