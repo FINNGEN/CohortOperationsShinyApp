@@ -7,7 +7,7 @@
 #' @examples
 configGWAS <- function() {
 
-  url = "https://"
+  url = "https://internal-api.app.finngen.fi/internal-api/"
 
   .sandbox_token = Sys.getenv("SANDBOX_TOKEN")
 
