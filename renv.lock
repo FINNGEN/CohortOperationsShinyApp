@@ -53,9 +53,9 @@
       "RemoteUsername": "FINNGEN",
       "RemoteRepo": "FGpheWAS",
       "RemoteRef": "master",
-      "RemoteSha": "ac4de3e582de1198971a71c69404f375cc2325d5",
+      "RemoteSha": "ceaaea85bf3f6adce778cca408a24aa1efb6a6b2",
       "RemoteHost": "api.github.com",
-      "Hash": "cf822e2a040b5e494a43b97b538bd3a7"
+      "Hash": "3de8d87b8df88cb655c4fbd70af44109"
     },
     "FinnGenTableTypes": {
       "Package": "FinnGenTableTypes",
@@ -65,9 +65,9 @@
       "RemoteUsername": "FINNGEN",
       "RemoteRepo": "FinnGenTableTypes",
       "RemoteRef": "HEAD",
-      "RemoteSha": "fff1b790a06afb106ae3a6ce6f30943051e3ae04",
+      "RemoteSha": "64adca638bc8ddd11044b5a08d3921a49638cc9a",
       "RemoteHost": "api.github.com",
-      "Hash": "914a09b9d3bce088ad3f09937f5d0cd2"
+      "Hash": "b9915cce0dc6736fddfa468c8ea4504d"
     },
     "MASS": {
       "Package": "MASS",
