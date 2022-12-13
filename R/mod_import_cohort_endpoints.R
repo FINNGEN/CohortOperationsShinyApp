@@ -45,45 +45,28 @@ mod_import_cohort_endpoints_server <- function(id, r_connection, r_cohorts){
     # creates picker in output$updated_selectinput
     #
     output$updated_selectinput <- shiny::renderUI({
-      shiny::req(r_connection$cdm_webapi_conn)
+      shiny::req(r_connection$phewas_conn)
 
-      is_webAPI_up <- r_connection$cdm_webapi_conn$conn_status_tibble %>%
-        dplyr::filter(step == "Connection to webAPI") %>%
-        dplyr::pull(error) %>%
-        !.
+      df_endpoint_choices <- names(r_connection$phewas_conn)
 
-      if (!is_webAPI_up) {
+      if (length(df_endpoint_choices)==0) {
         shiny::selectInput(ns("database_picker"), "Select CDM database:", choices = NULL)
       } else {
         shiny::selectInput(ns("database_picker"), "Select CDM database:",
-                           choices = r_connection$cdm_webapi_conn$CdmSources %>% dplyr::pull(sourceKey) %>% rev(),
-                           selected = r_connection$cdm_webapi_conn$CdmSources %>% dplyr::pull(sourceKey) %>% rev() %>% .[1]
+                           choices = df_endpoint_choices,
+                           selected = df_endpoint_choices[1]
         )
       }
     })
-
-    #
-    # updates r_connection$cdm_webapi_conn with database_picker and refreshes r$atlas_cohorts_list
-    #
-    shiny::observeEvent(input$database_picker, {
-      is_webAPI_up <- r_connection$cdm_webapi_conn$conn_status_tibble %>%
-        dplyr::filter(step == "Connection to webAPI") %>%
-        dplyr::pull(error) %>%
-        !.
-
-      shiny::req(is_webAPI_up)
-
-      r_connection$cdm_webapi_conn <- CDMTools::changeDatabase(r_connection$cdm_webapi_conn, input$database_picker)
-
-    })
-
 
 
     #
     # updates  r$endpoint_cohorts_list with the list of endpoits
     #
     shiny::observe({
-      r$endpoint_cohorts_list <- FGpheWAS::getEndpointNames(r_connection$phewas_conn) %>%
+      shiny::req(input$database_picker)
+
+      r$endpoint_cohorts_list <- FGpheWAS::getEndpointNames(r_connection$phewas_conn[[input$database_picker]]) %>%
         dplyr::mutate(data = list(tibble(type = c("Cases", "Excludes", "Controls")))) %>%
         tidyr::unnest(data)
     })
@@ -123,6 +106,7 @@ mod_import_cohort_endpoints_server <- function(id, r_connection, r_cohorts){
     })
 
     shiny::observeEvent(input$import_b, {
+      shiny::req(r$endpoint_cohorts_list)
       shiny::req(r_selected_endpoint_cohorts())
       selected_endpoint_cohorts <- r_selected_endpoint_cohorts()
 
@@ -135,7 +119,7 @@ mod_import_cohort_endpoints_server <- function(id, r_connection, r_cohorts){
         dplyr::mutate(type = case_when(type == "Cases" ~ "case", type == "Excludes" ~ "excl",type == "Controls" ~ "control")) %>%
         dplyr::group_by(ENDPOINT) %>% summarise(types= list(type )) %>%
         #
-        dplyr::mutate(data = purrr::map2(ENDPOINT, types, ~FGpheWAS::getEndpointCohort(r_connection$phewas_conn,cdm_schema, ..1, ..2) )) %>%
+        dplyr::mutate(data = purrr::map2(ENDPOINT, types, ~FGpheWAS::getEndpointCohort(r_connection$phewas_conn[[input$database_picker]],cdm_schema, ..1, ..2) )) %>%
         dplyr::select(data) %>%
         tidyr::unnest(data)
 

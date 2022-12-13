@@ -14,6 +14,10 @@ mod_gwas_ui <- function(id){
     shinyWidgets::useSweetAlert(),
     shinyFeedback::useShinyFeedback(),
     #
+    shiny::tags$h4("Select Data Freeze"),
+    # TOFIX: couldnt make to updateSelectInput with in the module, this is plan B
+    shiny::uiOutput(ns("updated_selectinput")),
+    #
     shiny::tags$h4("Cohorts to compare"),
     shiny::fluidRow(
       shiny::column(6,shiny::tags$h5("Cases-cohort"),
@@ -58,6 +62,27 @@ mod_gwas_server <- function(id, r_connection, r_cohorts){
       analysis_settings = NULL
     )
 
+
+    #
+    # creates picker in output$updated_selectinput
+    #
+    output$updated_selectinput <- shiny::renderUI({
+      shiny::req(r_connection$phewas_conn)
+
+      df_choices <- names(r_connection$phewas_conn)
+
+      if (length(df_choices)==0) {
+        shiny::selectInput(ns("database_picker"), "Select CDM database:", choices = NULL)
+      } else {
+        shiny::selectInput(ns("database_picker"), "Select CDM database:",
+                           choices = df_choices,
+                           selected = df_choices[1]
+        )
+      }
+    })
+
+
+
     shiny::observe({
       shiny::req(r_cohorts$summaryCohortData)
 
@@ -78,7 +103,7 @@ mod_gwas_server <- function(id, r_connection, r_cohorts){
 
 
         cohorts_settings <- FGpheWAS::createCohortsSettings(
-          connection_settings = r_connection$phewas_conn,
+          connection_settings = r_connection$phewas_conn[[input$database_picker]],
           cases_cohort_source = cases_cohort %>% dplyr::distinct(COHORT_SOURCE) %>% dplyr::pull(COHORT_SOURCE),
           cases_cohort_name = cases_cohort %>% dplyr::distinct(COHORT_NAME) %>% dplyr::pull(COHORT_NAME),
           cases_id_list = cases_cohort %>% dplyr::pull(FINNGENID),
@@ -129,7 +154,7 @@ mod_gwas_server <- function(id, r_connection, r_cohorts){
         CohortOperationsShinyApp::sweetAlert_spinner("Checking ovelap with endpoints")
 
         closests_endpoints <- FGpheWAS::findClosestEndpoints(
-          r_connection$phewas_conn,
+          r_connection$phewas_conn[[input$database_picker]],
           r_phewas$cohorts_settings
         )
 

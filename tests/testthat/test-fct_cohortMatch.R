@@ -12,7 +12,7 @@ cdm_webapi_conn = configCDMTools()
 # authenticate
 bigrquery::bq_auth(path = Sys.getenv("GCP_SERVICE_KEY"))
 
-testing_phewas_schema <- "phewas_dummy_1k"
+testing_phewas_schema <- "sandbox_tools_r6"
 
 connection_details <- DatabaseConnector::createConnectionDetails(
   dbms = "bigquery-dbi",

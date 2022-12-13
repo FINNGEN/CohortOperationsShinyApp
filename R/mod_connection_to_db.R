@@ -29,10 +29,16 @@ mod_connection_to_db_server <- function(id, r_connection) {
     ns <- session$ns
 
 
+
     output$connection_status_reactable <- reactable::renderReactable({
+
+      phewas_conn_status_tibble <- r_connection$phewas_conn %>% unlist(recursive = FALSE)
+      phewas_conn_status_tibble <- phewas_conn_status_tibble[str_detect(names(phewas_conn_status_tibble), "conn_status_tibble")]  %>%
+        dplyr::bind_rows()
+
       dplyr::bind_rows(
         r_connection$cdm_webapi_conn$conn_status_tibble,
-        r_connection$phewas_conn$conn_status_tibble,
+        phewas_conn_status_tibble,
         r_connection$connection_sandboxAPI$conn_status_tibble
       ) %>%
         dplyr::mutate(step = stringr::str_replace(step, "Test c", "C")) %>%
@@ -51,6 +57,7 @@ mod_connection_to_db_server <- function(id, r_connection) {
       r_connection$cdm_webapi_conn <- NULL
       r_connection$cdm_webapi_conn <- CohortOperationsShinyApp::configCDMTools()
     })
+
   })
 }
 

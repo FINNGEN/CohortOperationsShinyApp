@@ -2,7 +2,15 @@
 ## Cohort Operations Shiny App
 
 ### Version 
-CohortOperationsShinyApp v2.0.2
+CohortOperationsShinyApp v2.1.0
+
+**New features**
+
+- Support for DataFreeze 10
+- PheWAS renamed to CodeWAS
+- Fixed CodeWAS error with infinite values
+
+
 
 
 ### Status of the connection to data

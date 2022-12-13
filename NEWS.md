@@ -1,3 +1,5 @@
-# CohortOperationsShinyApp 0.0.0.9000
+# CohortOperationsShinyApp v2.1.0
 
-* Added a `NEWS.md` file to track changes to the package.
+- Support for DataFreeze 10
+- PheWAS renamed to CodeWAS
+- Fixed CodeWAS error with infinite values

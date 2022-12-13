@@ -25,7 +25,7 @@ app_ui <- function(request) {
           h5(" Cohort Characterisation"),
           mod_info_box_ui("info_comparecohorts",shinydashboard::menuItem("Compare Cohorts", tabName = "comparecohorts", icon = icon("sliders-h"))),
           h5(" Analysis"),
-          mod_info_box_ui("info_phewas", shinydashboard::menuItem("PheWAS", tabName = "phewas", icon = icon("briefcase-medical"))),
+          mod_info_box_ui("info_phewas", shinydashboard::menuItem("CodeWAS", tabName = "phewas", icon = icon("briefcase-medical"))),
           mod_info_box_ui("info_gwas", shinydashboard::menuItem("GWAS", tabName = "gwas", icon = icon("briefcase-medical")))
         )
       ),
