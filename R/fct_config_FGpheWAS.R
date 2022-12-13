@@ -89,22 +89,22 @@ configFGpheWAS <- function() {
       sandbox_tools_r9 = FGpheWAS::createConnectionSettings(
         name = "r9",
         connection_details = connection_details,
-        phewas_schema = "finngen-production-library.sandbox_tools_r9",
+        phewas_schema = "sandbox_tools_r9",
         endpoint_cohorts_table = "endpoint_cohorts",
         code_counts_table = "code_counts",
         df9_flag = TRUE,
-        codes_info_schema = "finngen-production-library.sandbox_tools_r9",
+        codes_info_schema = "sandbox_tools_r9",
         fg_codes_info_table = "fg_codes_info"
       ),
       #
       sandbox_tools_r10 = FGpheWAS::createConnectionSettings(
         name = "r10",
         connection_details = connection_details,
-        phewas_schema = "finngen-production-library.sandbox_tools_r10",
+        phewas_schema = "sandbox_tools_r10",
         endpoint_cohorts_table = "endpoint_cohorts_r10_v1",
         code_counts_table = "code_counts_r10_v1",
         df9_flag = FALSE,
-        codes_info_schema = "finngen-production-library.medical_codes",
+        codes_info_schema = "medical_codes",
         fg_codes_info_table = "fg_codes_info_v1"
       )
     )
