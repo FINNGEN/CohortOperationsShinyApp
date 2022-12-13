@@ -42,23 +42,23 @@ configFGpheWAS <- function() {
 
     connection_settings_n <- list(
       #
-      sandbox_tools_r6 = FGpheWAS::createConnectionSettings(
-        name = "r6",
-        connection_details = connection_details,
-        phewas_schema = "sandbox_tools_r6",
-        endpoint_cohorts_table = "endpoint_cohorts_dummy50k_v1",
-        code_counts_table = "code_counts_dummy50k_v1",
-        df9_flag = FALSE,
-        codes_info_schema = "medical_codes",
-        fg_codes_info_table = "fg_codes_info_v1"
-      ),
-      #
       sandbox_tools_r10 = FGpheWAS::createConnectionSettings(
         name = "r10",
         connection_details = connection_details,
         phewas_schema = "sandbox_tools_r10",
         endpoint_cohorts_table = "endpoint_cohorts_r10_v1",
         code_counts_table = "code_counts_r10_v1",
+        df9_flag = FALSE,
+        codes_info_schema = "medical_codes",
+        fg_codes_info_table = "fg_codes_info_v1"
+      ),
+      #
+      sandbox_tools_r6 = FGpheWAS::createConnectionSettings(
+        name = "r6",
+        connection_details = connection_details,
+        phewas_schema = "sandbox_tools_r6",
+        endpoint_cohorts_table = "endpoint_cohorts_dummy50k_v1",
+        code_counts_table = "code_counts_dummy50k_v1",
         df9_flag = FALSE,
         codes_info_schema = "medical_codes",
         fg_codes_info_table = "fg_codes_info_v1"
@@ -86,17 +86,6 @@ configFGpheWAS <- function() {
 
     connection_settings_n <- list(
       #
-      sandbox_tools_r9 = FGpheWAS::createConnectionSettings(
-        name = "r9",
-        connection_details = connection_details,
-        phewas_schema = "sandbox_tools_r9",
-        endpoint_cohorts_table = "endpoint_cohorts",
-        code_counts_table = "code_counts",
-        df9_flag = TRUE,
-        codes_info_schema = "sandbox_tools_r9",
-        fg_codes_info_table = "fg_codes_info"
-      ),
-      #
       sandbox_tools_r10 = FGpheWAS::createConnectionSettings(
         name = "r10",
         connection_details = connection_details,
@@ -106,7 +95,19 @@ configFGpheWAS <- function() {
         df9_flag = FALSE,
         codes_info_schema = "medical_codes",
         fg_codes_info_table = "fg_codes_info_v1"
+      ),
+      #
+      sandbox_tools_r9 = FGpheWAS::createConnectionSettings(
+        name = "r9",
+        connection_details = connection_details,
+        phewas_schema = "sandbox_tools_r9",
+        endpoint_cohorts_table = "endpoint_cohorts",
+        code_counts_table = "code_counts",
+        df9_flag = TRUE,
+        codes_info_schema = "sandbox_tools_r9",
+        fg_codes_info_table = "fg_codes_info"
       )
+      #
     )
   }
 
