@@ -44,7 +44,6 @@ mod_gwas_ui <- function(id){
     shiny::textInput(ns("gwas_desc_cases"),label = "Cases description"),
     shiny::textInput(ns("gwas_desc_controls"),label = "Controls description"),
     shiny::textInput(ns("gwas_email"),label = "Notification email"),
-    shiny::selectInput(ns("gwas_release"),label = "Release", choices = c("Regenie9"), selected = "Regenie9"),
     shiny::hr(),
     shiny::actionButton(ns("rungwas"), "Run gwas analysis")
   )
@@ -218,7 +217,11 @@ mod_gwas_server <- function(id, r_connection, r_cohorts){
       req(input$gwas_desc_cases)
       req(input$gwas_desc_controls)
       req(input$gwas_email)
-      req(input$gwas_release)
+      #
+      req(input$database_picker)
+
+      release <- "Regine9"
+      if(input$database_picker=="sandbox_tools_r10"){release <- "Regine10"}
 
 
       CohortOperationsShinyApp::sweetAlert_spinner("Sending data to GWAS pipeline")
@@ -231,8 +234,7 @@ mod_gwas_server <- function(id, r_connection, r_cohorts){
         cases_description = input$gwas_desc_cases,
         controls_description = input$gwas_desc_controls,
         notification_email = input$gwas_email,
-        release = input$gwas_release
-
+        release = release
       )
 
       CohortOperationsShinyApp::remove_sweetAlert_spinner()

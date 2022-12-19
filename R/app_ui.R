@@ -20,13 +20,18 @@ app_ui <- function(request) {
         shinydashboard::sidebarMenu(
           shinydashboard::menuItem("Status", tabName = "info", icon = icon("info")),
           h5(" Cohort Creation"),
-          mod_info_box_ui("info_importcohorts", shinydashboard::menuItem("Import Cohorts", tabName = "importcohorts", icon = icon("address-card"))),
-          mod_info_box_ui("info_operatecohorts",shinydashboard::menuItem("Operate Cohorts", tabName = "operatecohorts", icon = icon("sliders-h"))),
+          # mod_info_box_ui("info_importcohorts", shinydashboard::menuItem("Import Cohorts", tabName = "importcohorts", icon = icon("address-card"))),
+          # mod_info_box_ui("info_operatecohorts",shinydashboard::menuItem("Operate Cohorts", tabName = "operatecohorts", icon = icon("sliders-h"))),
+          shinydashboard::menuItem("Import Cohorts", tabName = "importcohorts", icon = icon("address-card")),
+          shinydashboard::menuItem("Operate Cohorts", tabName = "operatecohorts", icon = icon("sliders-h")),
           h5(" Cohort Characterisation"),
-          mod_info_box_ui("info_comparecohorts",shinydashboard::menuItem("Compare Cohorts", tabName = "comparecohorts", icon = icon("sliders-h"))),
+          #mod_info_box_ui("info_comparecohorts",shinydashboard::menuItem("Compare Cohorts", tabName = "comparecohorts", icon = icon("sliders-h"))),
+          shinydashboard::menuItem("Compare Cohorts", tabName = "comparecohorts", icon = icon("sliders-h")),
           h5(" Analysis"),
-          mod_info_box_ui("info_phewas", shinydashboard::menuItem("CodeWAS", tabName = "phewas", icon = icon("briefcase-medical"))),
-          mod_info_box_ui("info_gwas", shinydashboard::menuItem("GWAS", tabName = "gwas", icon = icon("briefcase-medical")))
+          # mod_info_box_ui("info_phewas", shinydashboard::menuItem("CodeWAS", tabName = "phewas", icon = icon("briefcase-medical"))),
+          # mod_info_box_ui("info_gwas", shinydashboard::menuItem("GWAS", tabName = "gwas", icon = icon("briefcase-medical")))
+          shinydashboard::menuItem("CodeWAS", tabName = "phewas", icon = icon("briefcase-medical")),
+          shinydashboard::menuItem("GWAS", tabName = "gwas", icon = icon("briefcase-medical"))
         )
       ),
 
@@ -84,7 +89,7 @@ app_ui <- function(request) {
             tabName = "operatecohorts",
             ### Cohorts workbench
             shinydashboard::box(
-              title = mod_info_box_ui("info_workbench", tagList("Cohorts workbench ")),
+              title = "Cohorts workbench ",# mod_info_box_ui("info_workbench", tagList("Cohorts workbench ")),
               status = "primary", solidHeader = TRUE, width = 12,
               mod_cohorts_table_ui("mod_cohorts_table_operate")
             ),
@@ -100,7 +105,7 @@ app_ui <- function(request) {
             tabName = "comparecohorts",
             ### Cohorts workbench
             shinydashboard::box(
-              title = mod_info_box_ui("info_workbench", tagList("Cohorts workbench ")),
+              title = "Cohorts workbench ",#mod_info_box_ui("info_workbench", tagList("Cohorts workbench ")),
               status = "primary", solidHeader = TRUE, width = 12,
               mod_cohorts_table_ui("mod_cohorts_table_compare")
             ),
@@ -116,13 +121,13 @@ app_ui <- function(request) {
             tabName = "phewas",
             ### Cohorts workbench
             shinydashboard::box(
-              title = mod_info_box_ui("info_workbench", tagList("Cohorts workbench ")),
+              title = "Cohorts workbench ", #mod_info_box_ui("info_workbench", tagList("Cohorts workbench ")),
               status = "primary", solidHeader = TRUE, width = 12,
               mod_cohorts_table_ui("mod_cohorts_table_phewas")
             ),
             ### phewas config
             shinydashboard::box(
-              title = tagList(shiny::icon("clone"), "PheWAS settings:"),
+              title = tagList(shiny::icon("clone"), "CodeWAS settings:"),
               status = "primary", solidHeader = FALSE, width = 12,
               mod_phewas_ui("mod_phewas")
             )
@@ -132,7 +137,7 @@ app_ui <- function(request) {
             tabName = "gwas",
             ### Cohorts workbench
             shinydashboard::box(
-              title = mod_info_box_ui("info_workbench", tagList("Cohorts workbench ")),
+              title = "Cohorts workbench ",# mod_info_box_ui("info_workbench", tagList("Cohorts workbench ")),
               status = "primary", solidHeader = TRUE, width = 12,
               mod_cohorts_table_ui("mod_cohorts_table_gwas")
             ),

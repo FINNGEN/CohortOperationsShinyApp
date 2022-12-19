@@ -131,7 +131,7 @@ mod_phewas_ui <- function(id){
       )
     ),
     shiny::hr(),
-    shiny::downloadButton(ns("runphewas"), "Run PheWAS analysis & download results")
+    shiny::downloadButton(ns("runphewas"), "Run CodeWAS analysis & download results")
   )
 }
 
