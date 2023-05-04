@@ -222,6 +222,7 @@ mod_gwas_server <- function(id, r_connection, r_cohorts){
 
       release <- "Regenie9"
       if(input$database_picker=="sandbox_tools_r10"){release <- "Regenie10"}
+      if(input$database_picker=="sandbox_tools_r11"){release <- "Regenie11"}
 
 
       CohortOperationsShinyApp::sweetAlert_spinner("Sending data to GWAS pipeline")
