@@ -1,6 +1,6 @@
 # CohortOperationsShinyApp v2.2.0
 
-- Support for DataFreeze 10
+- Support for DataFreeze 11
 
 # CohortOperationsShinyApp v2.1.1
 
