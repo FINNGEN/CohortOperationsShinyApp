@@ -9,7 +9,7 @@ dev_laptop_javier:
   CDMTOOLS_dbms: bigquery-dbi
   GCP_PROJECT_ID: atlas-development-270609
   GCP_BILLING_PROJECT_ID: atlas-development-270609
-  CDMTOOLS_webapi_url: http://localhost/WebAPI
+  CDMTOOLS_webapi_url: http://localhost:8080/WebAPI
   GCP_SERVICE_KEY: /Users/javier/keys/atlas-development-270609-410deaacc58b.json
   CDMTOOLS_CDM_source_key_test: dummy_df6v2_1k_13_finngen_omop_bq
   gc_shiny.maxRequestSize: 314572800
