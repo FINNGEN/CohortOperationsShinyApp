@@ -286,10 +286,9 @@ mod_phewas_server <- function(id, r_connection, r_cohorts){
       shiny::req(input$min_count_s)
 
 
-
       r_phewas$analysis_settings <- FGpheWAS::createAnalysisSettings(
         longdata_sources = input$sources_pi,
-        longdata_vocabulary_ids = input$vocabulary_pi |> stringr::str_replace("NCSPfi(NOMESCOfi)", "NOMESCOfi"),
+        longdata_vocabulary_ids = input$vocabulary_pi |> stringr::str_replace("NCSPfi\\(NOMESCOfi\\)", "NOMESCOfi"),
         #
         keep_ICD10fi_codes = input$ICD10fi_keep_s,
         ICD10fi_precision = input$ICD10fi_precision_s,
