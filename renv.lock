@@ -53,9 +53,8 @@
       "RemoteUsername": "FINNGEN",
       "RemoteRepo": "FGpheWAS",
       "RemoteRef": "master",
-      "RemoteSha": "9a36ffa629f871ce69c1fb67ef4197f7fdee3c8a",
-      "RemoteHost": "api.github.com",
-      "Hash": "f27f8028e30d317088d68bcea710008f"
+      "RemoteSha": "ed5aa2d6b5a2d43c6d6db9e5c5ef7536f0f18673",
+      "RemoteHost": "api.github.com"
     },
     "FinnGenTableTypes": {
       "Package": "FinnGenTableTypes",
