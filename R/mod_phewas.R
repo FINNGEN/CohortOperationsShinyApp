@@ -62,8 +62,8 @@ mod_phewas_ui <- function(id){
     shinyWidgets::pickerInput(
       inputId = ns("vocabulary_pi"),
       label = NULL,
-      choices = FGpheWAS::valid_longdata_values$vocabulary_id,
-      selected = FGpheWAS::valid_longdata_values$vocabulary_id,
+      choices = FGpheWAS::valid_longdata_values$vocabulary_id |> stringr::str_replace("NOMESCOfi", "NCSPfi(NOMESCOfi)"),
+      selected = FGpheWAS::valid_longdata_values$vocabulary_id |> stringr::str_replace("NOMESCOfi", "NCSPfi(NOMESCOfi)"),
       options = list(
         `actions-box` = TRUE),
       multiple = TRUE,
@@ -116,7 +116,7 @@ mod_phewas_ui <- function(id){
         shiny::column(3, shinyWidgets::sliderTextInput(inputId = ns("ATC_precision_s"),label = NULL, choices = 1:7, selected = 7))
       ),
       shiny::fluidRow(
-        shiny::column(2, shiny::tags$h5("NOMESCOfi precision")),
+        shiny::column(2, shiny::tags$h5("NCSPfi(NOMESCOfi) precision")),
         shiny::column(3, shinyWidgets::sliderTextInput(inputId = ns("NOMESCOfi_precision_s"),label = NULL, choices = 1:5, selected = 5))
       ),
       shiny::fluidRow(
@@ -289,7 +289,7 @@ mod_phewas_server <- function(id, r_connection, r_cohorts){
 
       r_phewas$analysis_settings <- FGpheWAS::createAnalysisSettings(
         longdata_sources = input$sources_pi,
-        longdata_vocabulary_ids = input$vocabulary_pi,
+        longdata_vocabulary_ids = input$vocabulary_pi |> stringr::str_replace("NCSPfi(NOMESCOfi)", "NOMESCOfi"),
         #
         keep_ICD10fi_codes = input$ICD10fi_keep_s,
         ICD10fi_precision = input$ICD10fi_precision_s,
