@@ -1,4 +1,4 @@
-FROM rocker/r-ver:4.1.2
+FROM --platform=linux/amd64 rocker/r-ver:4.1.2
 
 LABEL name="CohortOperationsShinyApp"
 LABEL maintainer="javier.graciatabuenca@tuni.fi"
