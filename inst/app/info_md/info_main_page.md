@@ -1,7 +1,8 @@
 
 ## Cohort Operations Shiny App
 
-### Version CohortOperationsShinyApp v2.3.0
+### Version 
+CohortOperationsShinyApp v2.3.0
 
 **New features**
 
