@@ -54,7 +54,8 @@
       "RemoteRepo": "FGpheWAS",
       "RemoteRef": "master",
       "RemoteSha": "ed5aa2d6b5a2d43c6d6db9e5c5ef7536f0f18673",
-      "RemoteHost": "api.github.com"
+      "RemoteHost": "api.github.com",
+      "Hash": "ce7f7e3ed128ec9fd1c82c26a90be576"
     },
     "FinnGenTableTypes": {
       "Package": "FinnGenTableTypes",
@@ -172,10 +173,10 @@
     },
     "bigrquery": {
       "Package": "bigrquery",
-      "Version": "1.4.0",
+      "Version": "1.3.2",
       "Source": "Repository",
       "Repository": "CRAN",
-      "Hash": "b6cb8e90ca26de6e3c541a7f69a76574"
+      "Hash": "291310a62466cabbc40fcbc8601e6412"
     },
     "bit": {
       "Package": "bit",
