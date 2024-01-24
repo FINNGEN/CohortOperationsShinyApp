@@ -40,11 +40,10 @@
       "Source": "GitHub",
       "RemoteType": "github",
       "RemoteHost": "api.github.com",
-      "RemoteUsername": "shanmukhasampath",
       "RemoteRepo": "DatabaseConnector",
-      "RemoteRef": "d7731f7deb602a11adc7b4d8f9999bbfbcebbd40",
-      "RemoteSha": "d7731f7deb602a11adc7b4d8f9999bbfbcebbd40",
-      "Hash": "a659c13fbcf13e064a898a60d522dfae"
+      "RemoteUsername": "FINNGEN",
+      "RemoteRef": "bigrquery",
+      "Hash": "994e0df9f596b1fa8db96a2257af28ab"
     },
     "FGpheWAS": {
       "Package": "FGpheWAS",
@@ -55,8 +54,7 @@
       "RemoteRepo": "FGpheWAS",
       "RemoteRef": "master",
       "RemoteSha": "ed5aa2d6b5a2d43c6d6db9e5c5ef7536f0f18673",
-      "RemoteHost": "api.github.com",
-      "Hash": "ce7f7e3ed128ec9fd1c82c26a90be576"
+      "RemoteHost": "api.github.com"
     },
     "FinnGenTableTypes": {
       "Package": "FinnGenTableTypes",
