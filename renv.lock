@@ -40,10 +40,11 @@
       "Source": "GitHub",
       "RemoteType": "github",
       "RemoteHost": "api.github.com",
+      "RemoteUsername": "shanmukhasampath",
       "RemoteRepo": "DatabaseConnector",
-      "RemoteUsername": "FINNGEN",
-      "RemoteRef": "bigrquery",
-      "Hash": "994e0df9f596b1fa8db96a2257af28ab"
+      "RemoteRef": "d7731f7deb602a11adc7b4d8f9999bbfbcebbd40",
+      "RemoteSha": "d7731f7deb602a11adc7b4d8f9999bbfbcebbd40",
+      "Hash": "a659c13fbcf13e064a898a60d522dfae"
     },
     "FGpheWAS": {
       "Package": "FGpheWAS",
@@ -173,10 +174,10 @@
     },
     "bigrquery": {
       "Package": "bigrquery",
-      "Version": "1.3.2",
+      "Version": "1.4.0",
       "Source": "Repository",
       "Repository": "CRAN",
-      "Hash": "291310a62466cabbc40fcbc8601e6412"
+      "Hash": "b6cb8e90ca26de6e3c541a7f69a76574"
     },
     "bit": {
       "Package": "bit",
