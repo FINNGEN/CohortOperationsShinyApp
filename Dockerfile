@@ -39,4 +39,4 @@ RUN rm -rf /build_zone
 
 # RUNTIME
 EXPOSE $port
-CMD R -e "options(shiny.port=$port,shiny.host='$host');CohortOperationsShinyApp::run_app()"
+CMD R -e "options(databaseconnector_page_size=100000,shiny.port=$port,shiny.host='$host');CohortOperationsShinyApp::run_app()"

@@ -13,6 +13,16 @@ dev_laptop_javier:
   GCP_SERVICE_KEY: C:\Users\javier\.ssh\gq\computerenginedfault.json
   CDMTOOLS_CDM_source_key_test: dummy_df6v2_1k_13_finngen_omop_bq
   gc_shiny.maxRequestSize: 314572800
+dev_laptop_sam:
+  enviroment: atlas-development
+  app_prod: no
+  CDMTOOLS_dbms: bigquery-dbi
+  GCP_PROJECT_ID: atlas-development-270609
+  GCP_BILLING_PROJECT_ID: atlas-development-270609
+  CDMTOOLS_webapi_url: http://127.0.0.1:8787/WebAPI
+  GCP_SERVICE_KEY: c:\Users\Localadmin_padmanab\Documents\FinnGen\keys.json
+  CDMTOOLS_CDM_source_key_test: etl_sam_dev_omop_bq
+  gc_shiny.maxRequestSize: 314572800
 dev_sandbox_javier:
   enviroment: sandbox
   app_prod: no

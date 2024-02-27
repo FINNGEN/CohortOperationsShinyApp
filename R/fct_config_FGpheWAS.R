@@ -42,6 +42,17 @@ configFGpheWAS <- function() {
 
     connection_settings_n <- list(
       #
+      sandbox_tools_r12 = FGpheWAS::createConnectionSettings(
+        name = "r12",
+        connection_details = connection_details,
+        phewas_schema = "sandbox_tools_r12",
+        endpoint_cohorts_table = "endpoint_cohorts_r12_v1",
+        code_counts_table = "code_counts_r12_v1",
+        df9_flag = FALSE,
+        codes_info_schema = "medical_codes",
+        fg_codes_info_table = "fg_codes_info_v5"
+      ),
+      #
       sandbox_tools_r11 = FGpheWAS::createConnectionSettings(
         name = "r11",
         connection_details = connection_details,
@@ -96,6 +107,17 @@ configFGpheWAS <- function() {
     )
 
     connection_settings_n <- list(
+      #
+      sandbox_tools_r12 = FGpheWAS::createConnectionSettings(
+        name = "r12",
+        connection_details = connection_details,
+        phewas_schema = "sandbox_tools_r12",
+        endpoint_cohorts_table = "endpoint_cohorts_r12_v1",
+        code_counts_table = "code_counts_r12_v1",
+        df9_flag = FALSE,
+        codes_info_schema = "medical_codes",
+        fg_codes_info_table = "fg_codes_info_v5"
+      ),
       #
       sandbox_tools_r11 = FGpheWAS::createConnectionSettings(
         name = "r11",

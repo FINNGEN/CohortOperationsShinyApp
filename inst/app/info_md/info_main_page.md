@@ -2,11 +2,11 @@
 ## Cohort Operations Shiny App
 
 ### Version 
-CohortOperationsShinyApp v2.2.0
+CohortOperationsShinyApp v2.3.0
 
 **New features**
 
-- Support for DataFreeze 11
+- Support for DataFreeze 12
 
 
 ### Status of the connection to data
